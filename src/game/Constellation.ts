@@ -12,6 +12,7 @@ export class Constellation {
   private isAnimating: boolean = false;
   private animationTime: number = 0;
   private revealedConnections: number = 0;
+  private currentConnectionProgress: number = 0;  // 0-1 progress through current connection
   private lastRevealedConnections: number = 0;  // Track for sound triggers
   private onAnimationComplete: (() => void) | null = null;
   private onConnectionRevealed: ((index: number, total: number) => void) | null = null;
@@ -121,9 +122,13 @@ export class Constellation {
     if (this.isAnimating) {
       this.animationTime += 0.016;  // Approximate frame delta
 
-      // Calculate which connections should be revealed
-      const progress = this.animationTime / this.animationDuration;
-      const newRevealedConnections = Math.floor(progress * this.data.connections.length);
+      // Calculate continuous progress through all connections
+      const totalProgress = this.animationTime / this.animationDuration;
+      const connectionProgress = totalProgress * this.data.connections.length;
+      const newRevealedConnections = Math.floor(connectionProgress);
+
+      // Track partial progress through current connection (0-1)
+      this.currentConnectionProgress = connectionProgress - newRevealedConnections;
 
       // Play sound for each newly revealed connection
       if (newRevealedConnections > this.revealedConnections && this.onConnectionRevealed) {
@@ -136,6 +141,7 @@ export class Constellation {
       if (this.animationTime >= this.animationDuration) {
         this.isAnimating = false;
         this.revealedConnections = this.data.connections.length;
+        this.currentConnectionProgress = 0;
 
         // Trigger completion callback
         if (this.onAnimationComplete) {
@@ -218,6 +224,7 @@ export class Constellation {
       ? this.revealedConnections
       : this.data.connections.length;
 
+    // Draw fully revealed connections
     for (let i = 0; i < connectionsToRender; i++) {
       const connection = this.data.connections[i];
       if (!connection) continue;
@@ -237,6 +244,33 @@ export class Constellation {
       ctx.moveTo(x1, y1);
       ctx.lineTo(x2, y2);
       ctx.stroke();
+    }
+
+    // Draw the current connection being animated (partial line)
+    if (this.isAnimating && this.revealedConnections < this.data.connections.length) {
+      const currentConnection = this.data.connections[this.revealedConnections];
+      if (currentConnection) {
+        const [starIdx1, starIdx2] = currentConnection;
+        const star1 = this.data.stars[starIdx1];
+        const star2 = this.data.stars[starIdx2];
+
+        if (star1 && star2) {
+          const x1 = star1.x - viewX + canvasWidth / 2;
+          const y1 = star1.y - viewY + canvasHeight / 2;
+          const x2 = star2.x - viewX + canvasWidth / 2;
+          const y2 = star2.y - viewY + canvasHeight / 2;
+
+          // Interpolate to the current progress point
+          const progress = this.currentConnectionProgress;
+          const currentX = x1 + (x2 - x1) * progress;
+          const currentY = y1 + (y2 - y1) * progress;
+
+          ctx.beginPath();
+          ctx.moveTo(x1, y1);
+          ctx.lineTo(currentX, currentY);
+          ctx.stroke();
+        }
+      }
     }
 
     // Draw stars
