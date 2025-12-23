@@ -98,6 +98,62 @@ export class Constellation {
     this.isAnimating = true;
     this.animationTime = 0;
     this.revealedConnections = 0;
+    this.starActivationTimes.clear();
+  }
+
+  /**
+   * Update animation state (call every frame, independent of render)
+   */
+  update(deltaTime: number): void {
+    if (!this.isAnimating) return;
+
+    this.animationTime += deltaTime;
+
+    // Calculate continuous progress through all connections
+    const totalProgress = Math.min(1, this.animationTime / this.animationDuration);
+    const connectionProgress = totalProgress * this.data.connections.length;
+    const newRevealedConnections = Math.floor(connectionProgress);
+
+    // Track partial progress through current connection (0-1)
+    this.currentConnectionProgress = connectionProgress - newRevealedConnections;
+
+    // Play sound and activate stars for each newly revealed connection
+    if (newRevealedConnections > this.revealedConnections) {
+      for (let i = this.revealedConnections; i < newRevealedConnections; i++) {
+        // Play sound
+        if (this.onConnectionRevealed) {
+          this.onConnectionRevealed(i, this.data.connections.length);
+        }
+
+        // Mark the destination star as activated (for flash effect)
+        const connection = this.data.connections[i];
+        if (connection) {
+          const [starIdx1, starIdx2] = connection;
+          // First connection activates starting star too
+          if (i === 0 && starIdx1 !== undefined) {
+            this.starActivationTimes.set(starIdx1, this.animationTime);
+          }
+          if (starIdx2 !== undefined) {
+            this.starActivationTimes.set(starIdx2, this.animationTime);
+          }
+        }
+      }
+    }
+    this.revealedConnections = newRevealedConnections;
+
+    // Check if animation is complete
+    if (this.animationTime >= this.animationDuration) {
+      this.isAnimating = false;
+      this.revealedConnections = this.data.connections.length;
+      this.currentConnectionProgress = 0;
+
+      // Trigger completion callback
+      if (this.onAnimationComplete) {
+        this.onAnimationComplete();
+        this.onAnimationComplete = null;
+        this.onConnectionRevealed = null;
+      }
+    }
   }
 
   /**
@@ -118,53 +174,6 @@ export class Constellation {
     if (Math.abs(centerScreenX - canvasWidth / 2) > canvasWidth ||
       Math.abs(centerScreenY - canvasHeight / 2) > canvasHeight) {
       return;
-    }
-
-    // Update animation
-    if (this.isAnimating) {
-      this.animationTime += 0.016;  // Approximate frame delta
-
-      // Calculate continuous progress through all connections
-      const totalProgress = this.animationTime / this.animationDuration;
-      const connectionProgress = totalProgress * this.data.connections.length;
-      const newRevealedConnections = Math.floor(connectionProgress);
-
-      // Track partial progress through current connection (0-1)
-      this.currentConnectionProgress = connectionProgress - newRevealedConnections;
-
-      // Play sound and activate stars for each newly revealed connection
-      if (newRevealedConnections > this.revealedConnections && this.onConnectionRevealed) {
-        for (let i = this.revealedConnections; i < newRevealedConnections; i++) {
-          this.onConnectionRevealed(i, this.data.connections.length);
-
-          // Mark the destination star as activated (for flash effect)
-          const connection = this.data.connections[i];
-          if (connection) {
-            const [starIdx1, starIdx2] = connection;
-            // First connection activates starting star too
-            if (i === 0 && starIdx1 !== undefined) {
-              this.starActivationTimes.set(starIdx1, this.animationTime);
-            }
-            if (starIdx2 !== undefined) {
-              this.starActivationTimes.set(starIdx2, this.animationTime);
-            }
-          }
-        }
-      }
-      this.revealedConnections = newRevealedConnections;
-
-      if (this.animationTime >= this.animationDuration) {
-        this.isAnimating = false;
-        this.revealedConnections = this.data.connections.length;
-        this.currentConnectionProgress = 0;
-
-        // Trigger completion callback
-        if (this.onAnimationComplete) {
-          this.onAnimationComplete();
-          this.onAnimationComplete = null;
-          this.onConnectionRevealed = null;
-        }
-      }
     }
 
     // Render based on state

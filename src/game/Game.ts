@@ -150,6 +150,11 @@ export class Game {
 
     // Check for constellation discovery
     this.checkConstellationDiscovery(deltaTime);
+
+    // Update constellation animations (for sound sync)
+    for (const constellation of this.constellations) {
+      constellation.update(deltaTime);
+    }
   }
 
   /**
