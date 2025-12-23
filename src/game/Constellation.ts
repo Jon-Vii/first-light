@@ -296,34 +296,33 @@ export class Constellation {
       const screenX = star.x - viewX + canvasWidth / 2;
       const screenY = star.y - viewY + canvasHeight / 2;
 
-      // During animation, only show stars that have been activated
       const activationTime = this.starActivationTimes.get(starIdx);
       const isActivated = activationTime !== undefined;
-
-      // Skip drawing this star if we're animating and it hasn't been activated yet
-      if (this.isAnimating && !isActivated) {
-        continue;
-      }
 
       let size = 3 + star.brightness * 3;
       let starAlpha = baseAlpha + flashIntensity;
       let glowMultiplier = 1;
 
-      // Flash effect for recently activated stars
-      if (isActivated && this.isAnimating) {
-        const timeSinceActivation = this.animationTime - activationTime;
-        if (timeSinceActivation < this.starFlashDuration) {
-          // Calculate flash progress (0 to 1)
-          const flashProgress = timeSinceActivation / this.starFlashDuration;
-          // Use sine curve for smooth pulse: grows then shrinks
-          const pulse = Math.sin(flashProgress * Math.PI);
+      // During animation: unactivated stars are dimmer, activated stars can flash
+      if (this.isAnimating) {
+        if (!isActivated) {
+          // Dim unactivated stars during animation
+          starAlpha *= 0.3;
+          size *= 0.7;
+        } else {
+          // Flash effect for recently activated stars
+          const timeSinceActivation = this.animationTime - activationTime;
+          if (timeSinceActivation < this.starFlashDuration) {
+            const flashProgress = timeSinceActivation / this.starFlashDuration;
+            const pulse = Math.sin(flashProgress * Math.PI);
 
-          // Subtle size increase during flash (up to 30% larger)
-          size *= 1 + pulse * 0.3;
-          // Subtle glow increase
-          glowMultiplier = 1 + pulse * 0.5;
-          // Slightly brighten the star
-          starAlpha = Math.min(1, starAlpha + pulse * 0.2);
+            // Subtle size increase during flash (up to 30% larger)
+            size *= 1 + pulse * 0.3;
+            // Subtle glow increase
+            glowMultiplier = 1 + pulse * 0.5;
+            // Slightly brighten the star
+            starAlpha = Math.min(1, starAlpha + pulse * 0.2);
+          }
         }
       }
 
