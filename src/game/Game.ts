@@ -189,6 +189,11 @@ export class Game {
     const data = constellation.getData();
     this.state.discoveredCount++;
 
+    // Play sound for each connection as it's revealed
+    constellation.setOnConnectionRevealed((index, total) => {
+      this.audioManager.playStarConnectionSound(index, total);
+    });
+
     // Set up callback for when path-tracing animation completes
     constellation.setOnAnimationComplete(() => {
       // Play completion sound

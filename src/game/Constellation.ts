@@ -12,7 +12,9 @@ export class Constellation {
   private isAnimating: boolean = false;
   private animationTime: number = 0;
   private revealedConnections: number = 0;
+  private lastRevealedConnections: number = 0;  // Track for sound triggers
   private onAnimationComplete: (() => void) | null = null;
+  private onConnectionRevealed: ((index: number, total: number) => void) | null = null;
 
   // Discovery parameters
   private readonly hoverTimeRequired = 2.0;  // Seconds of hover to discover
@@ -41,6 +43,13 @@ export class Constellation {
    */
   setOnAnimationComplete(callback: () => void): void {
     this.onAnimationComplete = callback;
+  }
+
+  /**
+   * Set callback for when a new connection is revealed
+   */
+  setOnConnectionRevealed(callback: (index: number, total: number) => void): void {
+    this.onConnectionRevealed = callback;
   }
 
 
@@ -114,7 +123,15 @@ export class Constellation {
 
       // Calculate which connections should be revealed
       const progress = this.animationTime / this.animationDuration;
-      this.revealedConnections = Math.floor(progress * this.data.connections.length);
+      const newRevealedConnections = Math.floor(progress * this.data.connections.length);
+
+      // Play sound for each newly revealed connection
+      if (newRevealedConnections > this.revealedConnections && this.onConnectionRevealed) {
+        for (let i = this.revealedConnections; i < newRevealedConnections; i++) {
+          this.onConnectionRevealed(i, this.data.connections.length);
+        }
+      }
+      this.revealedConnections = newRevealedConnections;
 
       if (this.animationTime >= this.animationDuration) {
         this.isAnimating = false;
@@ -123,7 +140,8 @@ export class Constellation {
         // Trigger completion callback
         if (this.onAnimationComplete) {
           this.onAnimationComplete();
-          this.onAnimationComplete = null;  // Only call once
+          this.onAnimationComplete = null;
+          this.onConnectionRevealed = null;
         }
       }
     }
