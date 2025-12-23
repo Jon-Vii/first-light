@@ -12,6 +12,7 @@ export class Constellation {
   private isAnimating: boolean = false;
   private animationTime: number = 0;
   private revealedConnections: number = 0;
+  private onAnimationComplete: (() => void) | null = null;
 
   // Discovery parameters
   private readonly hoverTimeRequired = 2.0;  // Seconds of hover to discover
@@ -27,6 +28,21 @@ export class Constellation {
   getData(): ConstellationData {
     return this.data;
   }
+
+  /**
+   * Get animation duration for timing external events
+   */
+  getAnimationDuration(): number {
+    return this.animationDuration;
+  }
+
+  /**
+   * Set callback for when animation completes
+   */
+  setOnAnimationComplete(callback: () => void): void {
+    this.onAnimationComplete = callback;
+  }
+
 
   /**
    * Check if constellation is discovered
@@ -103,6 +119,12 @@ export class Constellation {
       if (this.animationTime >= this.animationDuration) {
         this.isAnimating = false;
         this.revealedConnections = this.data.connections.length;
+
+        // Trigger completion callback
+        if (this.onAnimationComplete) {
+          this.onAnimationComplete();
+          this.onAnimationComplete = null;  // Only call once
+        }
       }
     }
 

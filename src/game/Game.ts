@@ -189,14 +189,17 @@ export class Game {
     const data = constellation.getData();
     this.state.discoveredCount++;
 
-    // Play discovery animation and sounds
-    this.audioManager.playDiscoverySound();
+    // Set up callback for when path-tracing animation completes
+    constellation.setOnAnimationComplete(() => {
+      // Play completion sound
+      this.audioManager.playDiscoverySound();
 
-    // Update UI
-    this.discoveriesTab.addDiscovery(data);
+      // Update UI
+      this.discoveriesTab.addDiscovery(data);
 
-    // Show notification
-    this.showDiscoveryNotification(data.name);
+      // Show notification
+      this.showDiscoveryNotification(data.name);
+    });
   }
 
   /**
