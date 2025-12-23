@@ -141,11 +141,11 @@ export class Constellation {
           this.onConnectionRevealed(i, this.data.connections.length);
         }
 
-        // Mark the destination star as activated (for flash effect)
+        // Mark the destination star as activated (for flash effect) - only if not already activated
         const connection = this.data.connections[i];
         if (connection) {
           const [, starIdx2] = connection;
-          if (starIdx2 !== undefined) {
+          if (starIdx2 !== undefined && !this.starActivationTimes.has(starIdx2)) {
             this.starActivationTimes.set(starIdx2, this.animationTime);
           }
         }
