@@ -296,13 +296,21 @@ export class Constellation {
       const screenX = star.x - viewX + canvasWidth / 2;
       const screenY = star.y - viewY + canvasHeight / 2;
 
+      // During animation, only show stars that have been activated
+      const activationTime = this.starActivationTimes.get(starIdx);
+      const isActivated = activationTime !== undefined;
+
+      // Skip drawing this star if we're animating and it hasn't been activated yet
+      if (this.isAnimating && !isActivated) {
+        continue;
+      }
+
       let size = 3 + star.brightness * 3;
       let starAlpha = baseAlpha + flashIntensity;
       let glowMultiplier = 1;
 
-      // Check if this star was recently activated (flash effect)
-      const activationTime = this.starActivationTimes.get(starIdx);
-      if (activationTime !== undefined && this.isAnimating) {
+      // Flash effect for recently activated stars
+      if (isActivated && this.isAnimating) {
         const timeSinceActivation = this.animationTime - activationTime;
         if (timeSinceActivation < this.starFlashDuration) {
           // Calculate flash progress (0 to 1)
@@ -310,12 +318,12 @@ export class Constellation {
           // Use sine curve for smooth pulse: grows then shrinks
           const pulse = Math.sin(flashProgress * Math.PI);
 
-          // Increase size during flash (up to 2x)
-          size *= 1 + pulse * 1.0;
-          // Increase glow during flash
-          glowMultiplier = 1 + pulse * 2;
-          // Brighten the star
-          starAlpha = Math.min(1, starAlpha + pulse * 0.5);
+          // Subtle size increase during flash (up to 30% larger)
+          size *= 1 + pulse * 0.3;
+          // Subtle glow increase
+          glowMultiplier = 1 + pulse * 0.5;
+          // Slightly brighten the star
+          starAlpha = Math.min(1, starAlpha + pulse * 0.2);
         }
       }
 
@@ -326,7 +334,7 @@ export class Constellation {
         screenX, screenY, 0,
         screenX, screenY, size * 4 * glowMultiplier
       );
-      glowGradient.addColorStop(0, `rgba(255, 217, 61, ${starAlpha * 0.6 * glowMultiplier})`);
+      glowGradient.addColorStop(0, `rgba(255, 217, 61, ${starAlpha * 0.6})`);
       glowGradient.addColorStop(0.5, `rgba(255, 217, 61, ${starAlpha * 0.2})`);
       glowGradient.addColorStop(1, 'rgba(255, 217, 61, 0)');
       ctx.fillStyle = glowGradient;
