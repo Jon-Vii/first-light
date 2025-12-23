@@ -186,9 +186,7 @@ export class AudioManager {
    * Play a single star connection sound
    */
   playStarConnectionSound(index: number, total: number): void {
-    console.log(`🔊 Playing connection sound ${index + 1}/${total}`);
     if (!this.ensureInitialized() || !this.audioContext || !this.masterGain) {
-      console.warn('Audio not initialized for connection sound');
       return;
     }
 

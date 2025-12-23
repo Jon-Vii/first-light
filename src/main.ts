@@ -9,31 +9,20 @@ import { Game } from './game/Game';
 document.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('sky-canvas') as HTMLCanvasElement;
   const telescopeOverlay = document.getElementById('telescope-overlay') as HTMLDivElement;
-  const loadingScreen = document.getElementById('loading-screen') as HTMLDivElement;
-  const loadingProgress = document.querySelector('.loading-progress') as HTMLDivElement;
+  const startScreen = document.getElementById('start-screen') as HTMLDivElement;
+  const startButton = document.getElementById('start-button') as HTMLButtonElement;
 
   if (!canvas || !telescopeOverlay) {
     console.error('Required elements not found');
     return;
   }
 
-  // Initialize the game
+  // Initialize the game (but don't start yet)
   const game = new Game(canvas, telescopeOverlay);
 
-  // Simulate loading (in real app, this would track asset loading)
-  let progress = 0;
-  const loadingInterval = setInterval(() => {
-    progress += Math.random() * 15 + 5;
-    if (progress >= 100) {
-      progress = 100;
-      clearInterval(loadingInterval);
-
-      // Hide loading screen
-      setTimeout(() => {
-        loadingScreen.classList.add('hidden');
-        game.start();
-      }, 500);
-    }
-    loadingProgress.style.width = `${progress}%`;
-  }, 200);
+  // Start game when button is clicked (this also unlocks audio)
+  startButton?.addEventListener('click', () => {
+    startScreen.classList.add('hidden');
+    game.start();
+  });
 });
