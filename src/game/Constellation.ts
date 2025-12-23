@@ -16,10 +16,12 @@ export class Constellation {
   private lastRevealedConnections: number = 0;  // Track for sound triggers
   private onAnimationComplete: (() => void) | null = null;
   private onConnectionRevealed: ((index: number, total: number) => void) | null = null;
+  private starActivationTimes: Map<number, number> = new Map();  // Star index -> activation time
 
   // Discovery parameters
   private readonly hoverTimeRequired = 2.0;  // Seconds of hover to discover
   private readonly animationDuration = 2.5;  // Duration of discovery animation
+  private readonly starFlashDuration = 0.4;  // How long the star flash lasts
 
   constructor(data: ConstellationData) {
     this.data = { ...data };
@@ -130,10 +132,23 @@ export class Constellation {
       // Track partial progress through current connection (0-1)
       this.currentConnectionProgress = connectionProgress - newRevealedConnections;
 
-      // Play sound for each newly revealed connection
+      // Play sound and activate stars for each newly revealed connection
       if (newRevealedConnections > this.revealedConnections && this.onConnectionRevealed) {
         for (let i = this.revealedConnections; i < newRevealedConnections; i++) {
           this.onConnectionRevealed(i, this.data.connections.length);
+
+          // Mark the destination star as activated (for flash effect)
+          const connection = this.data.connections[i];
+          if (connection) {
+            const [starIdx1, starIdx2] = connection;
+            // First connection activates starting star too
+            if (i === 0 && starIdx1 !== undefined) {
+              this.starActivationTimes.set(starIdx1, this.animationTime);
+            }
+            if (starIdx2 !== undefined) {
+              this.starActivationTimes.set(starIdx2, this.animationTime);
+            }
+          }
         }
       }
       this.revealedConnections = newRevealedConnections;
@@ -274,21 +289,44 @@ export class Constellation {
     }
 
     // Draw stars
-    for (const star of this.data.stars) {
+    for (let starIdx = 0; starIdx < this.data.stars.length; starIdx++) {
+      const star = this.data.stars[starIdx];
+      if (!star) continue;
+
       const screenX = star.x - viewX + canvasWidth / 2;
       const screenY = star.y - viewY + canvasHeight / 2;
 
-      const size = 3 + star.brightness * 3;
-      const starAlpha = baseAlpha + flashIntensity;
+      let size = 3 + star.brightness * 3;
+      let starAlpha = baseAlpha + flashIntensity;
+      let glowMultiplier = 1;
+
+      // Check if this star was recently activated (flash effect)
+      const activationTime = this.starActivationTimes.get(starIdx);
+      if (activationTime !== undefined && this.isAnimating) {
+        const timeSinceActivation = this.animationTime - activationTime;
+        if (timeSinceActivation < this.starFlashDuration) {
+          // Calculate flash progress (0 to 1)
+          const flashProgress = timeSinceActivation / this.starFlashDuration;
+          // Use sine curve for smooth pulse: grows then shrinks
+          const pulse = Math.sin(flashProgress * Math.PI);
+
+          // Increase size during flash (up to 2x)
+          size *= 1 + pulse * 1.0;
+          // Increase glow during flash
+          glowMultiplier = 1 + pulse * 2;
+          // Brighten the star
+          starAlpha = Math.min(1, starAlpha + pulse * 0.5);
+        }
+      }
 
       // Glow
       ctx.beginPath();
-      ctx.arc(screenX, screenY, size * 4, 0, Math.PI * 2);
+      ctx.arc(screenX, screenY, size * 4 * glowMultiplier, 0, Math.PI * 2);
       const glowGradient = ctx.createRadialGradient(
         screenX, screenY, 0,
-        screenX, screenY, size * 4
+        screenX, screenY, size * 4 * glowMultiplier
       );
-      glowGradient.addColorStop(0, `rgba(255, 217, 61, ${starAlpha * 0.6})`);
+      glowGradient.addColorStop(0, `rgba(255, 217, 61, ${starAlpha * 0.6 * glowMultiplier})`);
       glowGradient.addColorStop(0.5, `rgba(255, 217, 61, ${starAlpha * 0.2})`);
       glowGradient.addColorStop(1, 'rgba(255, 217, 61, 0)');
       ctx.fillStyle = glowGradient;
