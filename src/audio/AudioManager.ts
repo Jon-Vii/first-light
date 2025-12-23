@@ -9,6 +9,7 @@ export class AudioManager {
   private ambientGain: GainNode | null = null;
   private ambientNodes: OscillatorNode[] = [];
   private isAmbientPlaying: boolean = false;
+  private initialized: boolean = false;
 
   constructor() {
     // Audio context will be created on first user interaction
@@ -20,21 +21,7 @@ export class AudioManager {
    */
   private initOnInteraction(): void {
     const initAudio = () => {
-      if (!this.audioContext) {
-        this.audioContext = new AudioContext();
-        this.masterGain = this.audioContext.createGain();
-        this.masterGain.gain.value = 0.3;
-        this.masterGain.connect(this.audioContext.destination);
-
-        this.ambientGain = this.audioContext.createGain();
-        this.ambientGain.gain.value = 0;
-        this.ambientGain.connect(this.masterGain);
-      }
-
-      if (this.audioContext.state === 'suspended') {
-        this.audioContext.resume();
-      }
-
+      this.ensureInitialized();
       document.removeEventListener('click', initAudio);
       document.removeEventListener('keydown', initAudio);
       document.removeEventListener('mousemove', initAudio);
@@ -46,10 +33,41 @@ export class AudioManager {
   }
 
   /**
+   * Ensure audio context is initialized
+   */
+  private ensureInitialized(): boolean {
+    if (this.initialized && this.audioContext) {
+      if (this.audioContext.state === 'suspended') {
+        this.audioContext.resume();
+      }
+      return true;
+    }
+
+    try {
+      this.audioContext = new AudioContext();
+      this.masterGain = this.audioContext.createGain();
+      this.masterGain.gain.value = 0.3;
+      this.masterGain.connect(this.audioContext.destination);
+
+      this.ambientGain = this.audioContext.createGain();
+      this.ambientGain.gain.value = 0;
+      this.ambientGain.connect(this.masterGain);
+
+      this.initialized = true;
+      console.log('🔊 Audio initialized');
+      return true;
+    } catch (e) {
+      console.warn('Audio initialization failed:', e);
+      return false;
+    }
+  }
+
+  /**
    * Start ambient background sounds
    */
   startAmbient(): void {
-    if (this.isAmbientPlaying || !this.audioContext || !this.ambientGain) return;
+    if (this.isAmbientPlaying) return;
+    if (!this.ensureInitialized() || !this.audioContext || !this.ambientGain) return;
     this.isAmbientPlaying = true;
 
     // Create ethereal drone using multiple oscillators
@@ -101,8 +119,7 @@ export class AudioManager {
    * Play discovery sound sequence
    */
   playDiscoverySound(): void {
-    if (!this.audioContext || !this.masterGain) {
-      // Try to initialize if needed
+    if (!this.ensureInitialized() || !this.audioContext || !this.masterGain) {
       return;
     }
 
@@ -160,7 +177,7 @@ export class AudioManager {
    * Play a single star connection sound
    */
   playStarConnectionSound(index: number, total: number): void {
-    if (!this.audioContext || !this.masterGain) return;
+    if (!this.ensureInitialized() || !this.audioContext || !this.masterGain) return;
 
     const ctx = this.audioContext;
     const now = ctx.currentTime;
