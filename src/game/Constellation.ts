@@ -107,7 +107,23 @@ export class Constellation {
   update(deltaTime: number): void {
     if (!this.isAnimating) return;
 
+    const wasFirstFrame = this.animationTime === 0;
     this.animationTime += deltaTime;
+
+    // On first frame, activate the starting star and play initial sound
+    if (wasFirstFrame && this.data.connections.length > 0) {
+      const firstConnection = this.data.connections[0];
+      if (firstConnection) {
+        const [starIdx1] = firstConnection;
+        if (starIdx1 !== undefined) {
+          this.starActivationTimes.set(starIdx1, this.animationTime);
+          // Play sound for first star (-1 means "starting star")
+          if (this.onConnectionRevealed) {
+            this.onConnectionRevealed(-1, this.data.connections.length);
+          }
+        }
+      }
+    }
 
     // Calculate continuous progress through all connections
     const totalProgress = Math.min(1, this.animationTime / this.animationDuration);
@@ -128,11 +144,7 @@ export class Constellation {
         // Mark the destination star as activated (for flash effect)
         const connection = this.data.connections[i];
         if (connection) {
-          const [starIdx1, starIdx2] = connection;
-          // First connection activates starting star too
-          if (i === 0 && starIdx1 !== undefined) {
-            this.starActivationTimes.set(starIdx1, this.animationTime);
-          }
+          const [, starIdx2] = connection;
           if (starIdx2 !== undefined) {
             this.starActivationTimes.set(starIdx2, this.animationTime);
           }
