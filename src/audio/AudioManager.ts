@@ -33,13 +33,16 @@ export class AudioManager {
   }
 
   /**
-   * Ensure audio context is initialized
+   * Ensure audio context is initialized and will be running
+   * Note: Sounds scheduled on a suspended context will play when resumed
    */
   private ensureInitialized(): boolean {
+    // Already initialized - just try to resume if needed
     if (this.initialized && this.audioContext) {
       if (this.audioContext.state === 'suspended') {
         this.audioContext.resume();
       }
+      // Return true even if suspended - scheduled sounds will play when resumed
       return true;
     }
 
@@ -54,7 +57,13 @@ export class AudioManager {
       this.ambientGain.connect(this.masterGain);
 
       this.initialized = true;
-      console.log('🔊 Audio initialized');
+      console.log('🔊 Audio initialized, state:', this.audioContext.state);
+
+      // Try to resume immediately
+      if (this.audioContext.state === 'suspended') {
+        this.audioContext.resume();
+      }
+
       return true;
     } catch (e) {
       console.warn('Audio initialization failed:', e);
@@ -177,7 +186,11 @@ export class AudioManager {
    * Play a single star connection sound
    */
   playStarConnectionSound(index: number, total: number): void {
-    if (!this.ensureInitialized() || !this.audioContext || !this.masterGain) return;
+    console.log(`🔊 Playing connection sound ${index + 1}/${total}`);
+    if (!this.ensureInitialized() || !this.audioContext || !this.masterGain) {
+      console.warn('Audio not initialized for connection sound');
+      return;
+    }
 
     const ctx = this.audioContext;
     const now = ctx.currentTime;

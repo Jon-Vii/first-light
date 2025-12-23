@@ -119,6 +119,7 @@ export class Constellation {
 
     // Play sound and activate stars for each newly revealed connection
     if (newRevealedConnections > this.revealedConnections) {
+      console.log(`Revealing connections ${this.revealedConnections} to ${newRevealedConnections}, callback exists: ${!!this.onConnectionRevealed}`);
       for (let i = this.revealedConnections; i < newRevealedConnections; i++) {
         // Play sound
         if (this.onConnectionRevealed) {
