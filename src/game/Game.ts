@@ -1,0 +1,294 @@
+/**
+ * Main Game class - orchestrates all game systems
+ */
+
+import { StarField } from './StarField';
+import { Telescope } from './Telescope';
+import { Constellation } from './Constellation';
+import { DiscoveriesTab } from '../ui/DiscoveriesTab';
+import { AudioManager } from '../audio/AudioManager';
+import { CONSTELLATIONS, SKY_WIDTH, SKY_HEIGHT, type ConstellationData } from '../data/constellations';
+
+
+export interface GameState {
+  running: boolean;
+  mouseX: number;
+  mouseY: number;
+  viewX: number;  // Current view center in sky coordinates
+  viewY: number;
+  discoveredCount: number;
+}
+
+export class Game {
+  private canvas: HTMLCanvasElement;
+  private ctx: CanvasRenderingContext2D;
+  private telescopeOverlay: HTMLDivElement;
+
+  private state: GameState;
+  private starField: StarField;
+  private telescope: Telescope;
+  private constellations: Constellation[];
+  private discoveriesTab: DiscoveriesTab;
+  private audioManager: AudioManager;
+
+  private lastFrameTime: number = 0;
+  private animationFrameId: number = 0;
+
+  constructor(canvas: HTMLCanvasElement, telescopeOverlay: HTMLDivElement) {
+    this.canvas = canvas;
+    this.telescopeOverlay = telescopeOverlay;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) {
+      throw new Error('Could not get 2D context');
+    }
+    this.ctx = ctx;
+
+    // Initialize state - start view in center of sky
+    this.state = {
+      running: false,
+      mouseX: window.innerWidth / 2,
+      mouseY: window.innerHeight / 2,
+      viewX: SKY_WIDTH / 2,
+      viewY: SKY_HEIGHT / 2,
+      discoveredCount: 0
+    };
+
+    // Initialize subsystems
+    this.starField = new StarField(SKY_WIDTH, SKY_HEIGHT);
+    this.telescope = new Telescope(telescopeOverlay);
+    this.constellations = CONSTELLATIONS.map(data => new Constellation(data));
+    this.discoveriesTab = new DiscoveriesTab();
+    this.audioManager = new AudioManager();
+
+    // Set up event listeners
+    this.setupEventListeners();
+    this.resizeCanvas();
+  }
+
+  private setupEventListeners(): void {
+    // Mouse movement
+    window.addEventListener('mousemove', (e) => {
+      this.state.mouseX = e.clientX;
+      this.state.mouseY = e.clientY;
+    });
+
+    // Window resize
+    window.addEventListener('resize', () => this.resizeCanvas());
+
+    // Discoveries panel toggle
+    const toggle = document.getElementById('discoveries-toggle');
+    const panel = document.getElementById('discoveries-panel');
+    if (toggle && panel) {
+      toggle.addEventListener('click', () => {
+        panel.classList.toggle('collapsed');
+      });
+    }
+  }
+
+  private resizeCanvas(): void {
+    this.canvas.width = window.innerWidth;
+    this.canvas.height = window.innerHeight;
+  }
+
+  /**
+   * Start the game loop
+   */
+  start(): void {
+    this.state.running = true;
+    this.lastFrameTime = performance.now();
+    this.audioManager.startAmbient();
+    this.gameLoop();
+  }
+
+  /**
+   * Stop the game loop
+   */
+  stop(): void {
+    this.state.running = false;
+    if (this.animationFrameId) {
+      cancelAnimationFrame(this.animationFrameId);
+    }
+    this.audioManager.stopAmbient();
+  }
+
+  /**
+   * Main game loop
+   */
+  private gameLoop = (): void => {
+    if (!this.state.running) return;
+
+    const currentTime = performance.now();
+    const deltaTime = (currentTime - this.lastFrameTime) / 1000;  // Convert to seconds
+    this.lastFrameTime = currentTime;
+
+    this.update(deltaTime);
+    this.render();
+
+    this.animationFrameId = requestAnimationFrame(this.gameLoop);
+  };
+
+  /**
+   * Update game state
+   */
+  private update(deltaTime: number): void {
+    // Update telescope position with lag effect
+    this.telescope.update(this.state.mouseX, this.state.mouseY, deltaTime);
+
+    // Update view position based on mouse (telescope sweeps the sky)
+    const telescopePos = this.telescope.getPosition();
+    const viewSpeedX = (telescopePos.x - window.innerWidth / 2) * 0.5;
+    const viewSpeedY = (telescopePos.y - window.innerHeight / 2) * 0.5;
+
+    this.state.viewX += viewSpeedX * deltaTime;
+    this.state.viewY += viewSpeedY * deltaTime;
+
+    // Clamp view to sky bounds
+    const margin = 400;
+    this.state.viewX = Math.max(margin, Math.min(SKY_WIDTH - margin, this.state.viewX));
+    this.state.viewY = Math.max(margin, Math.min(SKY_HEIGHT - margin, this.state.viewY));
+
+    // Check for constellation discovery
+    this.checkConstellationDiscovery(deltaTime);
+  }
+
+  /**
+   * Check if player is hovering over any undiscovered constellation
+   */
+  private checkConstellationDiscovery(deltaTime: number): void {
+    const telescopePos = this.telescope.getPosition();
+    const telescopeRadius = this.telescope.getRadius();
+
+    // Convert screen position to sky coordinates
+    const skyX = this.state.viewX + (telescopePos.x - window.innerWidth / 2);
+    const skyY = this.state.viewY + (telescopePos.y - window.innerHeight / 2);
+
+    for (const constellation of this.constellations) {
+      if (constellation.isDiscovered()) continue;
+
+      const data = constellation.getData();
+      const distance = Math.hypot(skyX - data.centerX, skyY - data.centerY);
+
+      if (distance < data.radius + telescopeRadius * 0.3) {
+        // Player is hovering over this constellation
+        const discovered = constellation.addHoverTime(deltaTime);
+
+        if (discovered) {
+          this.onConstellationDiscovered(constellation);
+        }
+      } else {
+        constellation.resetHoverTime();
+      }
+    }
+  }
+
+  /**
+   * Handle constellation discovery
+   */
+  private onConstellationDiscovered(constellation: Constellation): void {
+    const data = constellation.getData();
+    this.state.discoveredCount++;
+
+    // Play discovery animation and sounds
+    this.audioManager.playDiscoverySound();
+
+    // Update UI
+    this.discoveriesTab.addDiscovery(data);
+
+    // Show notification
+    this.showDiscoveryNotification(data.name);
+  }
+
+  /**
+   * Show discovery notification popup
+   */
+  private showDiscoveryNotification(name: string): void {
+    const notification = document.getElementById('discovery-notification');
+    const nameEl = notification?.querySelector('.constellation-name');
+
+    if (notification && nameEl) {
+      notification.classList.remove('hidden');
+      nameEl.textContent = name;
+
+      // Trigger animation
+      requestAnimationFrame(() => {
+        notification.classList.add('visible');
+      });
+
+      // Hide after delay
+      setTimeout(() => {
+        notification.classList.remove('visible');
+        setTimeout(() => {
+          notification.classList.add('hidden');
+        }, 500);
+      }, 3000);
+    }
+  }
+
+  /**
+   * Render the game
+   */
+  private render(): void {
+    const { ctx, canvas } = this;
+    const { viewX, viewY } = this.state;
+
+    // Clear canvas with deep space color
+    ctx.fillStyle = '#050510';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Get telescope position and radius for clipping
+    const telescopePos = this.telescope.getPosition();
+    const telescopeRadius = this.telescope.getRadius();
+
+    // Create circular clipping region for telescope view
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(telescopePos.x, telescopePos.y, telescopeRadius, 0, Math.PI * 2);
+    ctx.clip();
+
+    // Draw star field within telescope view
+    this.starField.render(ctx, viewX, viewY, canvas.width, canvas.height, telescopePos);
+
+    // Draw constellations
+    for (const constellation of this.constellations) {
+      constellation.render(ctx, viewX, viewY, canvas.width, canvas.height);
+    }
+
+    ctx.restore();
+
+    // Draw background stars (outside telescope, faint)
+    this.renderBackgroundStars();
+  }
+
+  /**
+   * Render faint background stars visible outside the telescope
+   */
+  private renderBackgroundStars(): void {
+    const { ctx, canvas } = this;
+    const telescopePos = this.telescope.getPosition();
+    const telescopeRadius = this.telescope.getRadius();
+
+    // Use seeded random for consistent background
+    const bgStars = this.starField.getBackgroundStars();
+
+    ctx.save();
+
+    // Invert clip - draw outside telescope
+    ctx.beginPath();
+    ctx.rect(0, 0, canvas.width, canvas.height);
+    ctx.arc(telescopePos.x, telescopePos.y, telescopeRadius + 30, 0, Math.PI * 2, true);
+    ctx.clip();
+
+    for (const star of bgStars) {
+      const screenX = (star.x / SKY_WIDTH) * canvas.width;
+      const screenY = (star.y / SKY_HEIGHT) * canvas.height;
+
+      ctx.beginPath();
+      ctx.arc(screenX, screenY, star.size * 0.5, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(200, 210, 255, ${star.brightness * 0.3})`;
+      ctx.fill();
+    }
+
+    ctx.restore();
+  }
+}

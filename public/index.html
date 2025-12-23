@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Discover constellations through an antique telescope in this atmospheric exploration game">
+  <title>Seeing Stars</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="game-container">
+    <!-- Main canvas for the star field and telescope -->
+    <canvas id="sky-canvas"></canvas>
+    
+    <!-- Telescope overlay (the brass rim effect) -->
+    <div id="telescope-overlay"></div>
+    
+    <!-- Discoveries panel -->
+    <aside id="discoveries-panel" class="collapsed">
+      <button id="discoveries-toggle" aria-label="Toggle discoveries panel">
+        <span class="toggle-icon">★</span>
+        <span class="discovery-count">0</span>
+      </button>
+      <div class="discoveries-content">
+        <h2>Discoveries</h2>
+        <div id="discoveries-list"></div>
+      </div>
+    </aside>
+    
+    <!-- Discovery notification (appears when constellation is found) -->
+    <div id="discovery-notification" class="hidden">
+      <div class="notification-content">
+        <span class="notification-title">Constellation Discovered</span>
+        <span class="constellation-name"></span>
+      </div>
+    </div>
+    
+    <!-- Loading screen -->
+    <div id="loading-screen">
+      <div class="loading-content">
+        <h1>Seeing Stars</h1>
+        <p class="loading-text">Aligning telescope...</p>
+        <div class="loading-bar">
+          <div class="loading-progress"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script type="module" src="./main.js"></script>
+</body>
+</html>
