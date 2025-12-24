@@ -1,33 +1,32 @@
 /**
- * Telescope - Handles the telescope viewport and cursor-following behavior
+ * Telescope - Handles the telescope viewport (fixed at screen center)
+ * Mouse movement controls view panning with smooth drift/parallax effect
  */
 
 export class Telescope {
   private element: HTMLDivElement;
-  private currentX: number;
-  private currentY: number;
-  private targetX: number;
-  private targetY: number;
   private radius: number;
 
-  // Lag/drift parameters
-  private readonly lagFactor = 0.08;  // Lower = more lag
-  private readonly maxLag = 50;       // Maximum pixels of lag
+  // View offset with drift/parallax effect
+  private currentOffsetX: number = 0;
+  private currentOffsetY: number = 0;
+  private targetOffsetX: number = 0;
+  private targetOffsetY: number = 0;
+
+  // Lag/drift parameters for smooth parallax
+  private readonly lagFactor = 0.06;  // Lower = more lag/drift
 
   constructor(element: HTMLDivElement) {
     this.element = element;
-    this.currentX = window.innerWidth / 2;
-    this.currentY = window.innerHeight / 2;
-    this.targetX = this.currentX;
-    this.targetY = this.currentY;
     this.radius = this.calculateRadius();
 
-    // Update radius on resize
+    // Update radius and position on resize
     window.addEventListener('resize', () => {
       this.radius = this.calculateRadius();
+      this.updateElementPosition();
     });
 
-    // Initial position
+    // Position telescope at center
     this.updateElementPosition();
   }
 
@@ -36,36 +35,49 @@ export class Telescope {
   }
 
   /**
-   * Update telescope position with smooth lag effect
+   * Update view offset based on mouse position with smooth drift effect
    */
   update(mouseX: number, mouseY: number, deltaTime: number): void {
-    this.targetX = mouseX;
-    this.targetY = mouseY;
+    // Calculate target offset from center (how far mouse is from center)
+    this.targetOffsetX = mouseX - window.innerWidth / 2;
+    this.targetOffsetY = mouseY - window.innerHeight / 2;
 
-    // Calculate distance to target
-    const dx = this.targetX - this.currentX;
-    const dy = this.targetY - this.currentY;
-
-    // Apply lag with deltaTime for frame-independent movement
+    // Apply smooth lag/drift to create parallax feel
     const lagAmount = 1 - Math.pow(1 - this.lagFactor, deltaTime * 60);
 
-    this.currentX += dx * lagAmount;
-    this.currentY += dy * lagAmount;
+    const dx = this.targetOffsetX - this.currentOffsetX;
+    const dy = this.targetOffsetY - this.currentOffsetY;
 
-    // Update DOM element position
-    this.updateElementPosition();
+    this.currentOffsetX += dx * lagAmount;
+    this.currentOffsetY += dy * lagAmount;
   }
 
   private updateElementPosition(): void {
-    this.element.style.left = `${this.currentX}px`;
-    this.element.style.top = `${this.currentY}px`;
+    // Telescope stays fixed at screen center
+    const centerX = window.innerWidth / 2;
+    const centerY = window.innerHeight / 2;
+    this.element.style.left = `${centerX}px`;
+    this.element.style.top = `${centerY}px`;
   }
 
   /**
-   * Get current telescope center position
+   * Get telescope center position (always screen center)
    */
   getPosition(): { x: number; y: number } {
-    return { x: this.currentX, y: this.currentY };
+    return {
+      x: window.innerWidth / 2,
+      y: window.innerHeight / 2
+    };
+  }
+
+  /**
+   * Get current view offset with drift applied (for panning the star field)
+   */
+  getViewOffset(): { x: number; y: number } {
+    return {
+      x: this.currentOffsetX,
+      y: this.currentOffsetY
+    };
   }
 
   /**

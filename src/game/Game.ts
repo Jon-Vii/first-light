@@ -132,13 +132,13 @@ export class Game {
    * Update game state
    */
   private update(deltaTime: number): void {
-    // Update telescope position with lag effect
+    // Update telescope view offset with drift effect
     this.telescope.update(this.state.mouseX, this.state.mouseY, deltaTime);
 
-    // Update view position based on mouse (telescope sweeps the sky)
-    const telescopePos = this.telescope.getPosition();
-    const viewSpeedX = (telescopePos.x - window.innerWidth / 2) * 0.5;
-    const viewSpeedY = (telescopePos.y - window.innerHeight / 2) * 0.5;
+    // Update view position based on mouse offset (with smooth drift/parallax)
+    const viewOffset = this.telescope.getViewOffset();
+    const viewSpeedX = viewOffset.x * 0.5;
+    const viewSpeedY = viewOffset.y * 0.5;
 
     this.state.viewX += viewSpeedX * deltaTime;
     this.state.viewY += viewSpeedY * deltaTime;
@@ -164,9 +164,9 @@ export class Game {
     const telescopePos = this.telescope.getPosition();
     const telescopeRadius = this.telescope.getRadius();
 
-    // Convert screen position to sky coordinates
-    const skyX = this.state.viewX + (telescopePos.x - window.innerWidth / 2);
-    const skyY = this.state.viewY + (telescopePos.y - window.innerHeight / 2);
+    // Sky coordinates are simply the current view position (telescope is at center)
+    const skyX = this.state.viewX;
+    const skyY = this.state.viewY;
 
     for (const constellation of this.constellations) {
       if (constellation.isDiscovered()) continue;
