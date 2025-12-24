@@ -1,0 +1,123 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800">
+  <defs>
+    <!-- Metallic Gold/Brass Gradients -->
+    <linearGradient id="brassDark" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#8B5A2B"/>
+      <stop offset="50%" stop-color="#4A3015"/>
+      <stop offset="100%" stop-color="#8B5A2B"/>
+    </linearGradient>
+    
+    <linearGradient id="brassLight" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#D4AF37"/>
+      <stop offset="25%" stop-color="#F9E29C"/>
+      <stop offset="50%" stop-color="#C59228"/>
+      <stop offset="75%" stop-color="#E5C15D"/>
+      <stop offset="100%" stop-color="#B8860B"/>
+    </linearGradient>
+
+    <linearGradient id="brassMedium" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#C59228"/>
+      <stop offset="50%" stop-color="#F9E29C"/>
+      <stop offset="100%" stop-color="#C59228"/>
+    </linearGradient>
+
+    <radialGradient id="screwHead" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#F9E29C"/>
+      <stop offset="80%" stop-color="#8B5A2B"/>
+      <stop offset="100%" stop-color="#4A3015"/>
+    </radialGradient>
+
+    <radialGradient id="vignette" cx="50%" cy="50%" r="50%">
+      <stop offset="90%" stop-color="transparent"/>
+      <stop offset="100%" stop-color="rgba(0,0,0,0.8)"/>
+    </radialGradient>
+    
+    <filter id="dropShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="15"/>
+      <feOffset dx="5" dy="5" result="offsetblur"/>
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.7"/>
+      </feComponentTransfer>
+      <feMerge> 
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/> 
+      </feMerge>
+    </filter>
+
+    <mask id="centerHole">
+      <rect x="0" y="0" width="800" height="800" fill="white"/>
+      <circle cx="400" cy="400" r="310" fill="black"/>
+    </mask>
+  </defs>
+
+  <!-- Main Group with Shadow and Mask -->
+  <g filter="url(#dropShadow)" mask="url(#centerHole)">
+    
+    <!-- Heavy Outer Rim (Dark Brass) -->
+    <circle cx="400" cy="400" r="395" fill="url(#brassDark)" stroke="#2a1a0a" stroke-width="2"/>
+    <circle cx="400" cy="400" r="385" fill="none" stroke="#2a1a0a" stroke-width="1" opacity="0.5"/>
+
+    <!-- Main Decorative Band (Light Brass) -->
+    <circle cx="400" cy="400" r="375" fill="url(#brassLight)" stroke="#4A3015" stroke-width="2"/>
+
+    <!-- Filigree Pattern (Repeated) -->
+    <g opacity="0.4">
+       <!-- Simplified scrollwork moved outwards -->
+       <path d="M400,35 Q430,55 450,35 T500,35" fill="none" stroke="#4A3015" stroke-width="3" transform="rotate(0, 400, 400)"/>
+       <path d="M400,35 Q430,55 450,35 T500,35" fill="none" stroke="#4A3015" stroke-width="3" transform="rotate(45, 400, 400)"/>
+       <path d="M400,35 Q430,55 450,35 T500,35" fill="none" stroke="#4A3015" stroke-width="3" transform="rotate(90, 400, 400)"/>
+       <path d="M400,35 Q430,55 450,35 T500,35" fill="none" stroke="#4A3015" stroke-width="3" transform="rotate(135, 400, 400)"/>
+       <path d="M400,35 Q430,55 450,35 T500,35" fill="none" stroke="#4A3015" stroke-width="3" transform="rotate(180, 400, 400)"/>
+       <path d="M400,35 Q430,55 450,35 T500,35" fill="none" stroke="#4A3015" stroke-width="3" transform="rotate(225, 400, 400)"/>
+       <path d="M400,35 Q430,55 450,35 T500,35" fill="none" stroke="#4A3015" stroke-width="3" transform="rotate(270, 400, 400)"/>
+       <path d="M400,35 Q430,55 450,35 T500,35" fill="none" stroke="#4A3015" stroke-width="3" transform="rotate(315, 400, 400)"/>
+    </g>
+
+    <!-- Inner Stepped Ring (Medium Brass) -->
+    <!-- Increased radius to make rim thinner -->
+    <circle cx="400" cy="400" r="340" fill="url(#brassMedium)" stroke="#4A3015" stroke-width="1"/>
+    
+    <!-- Gear Teeth Effect (Inner) - pushed out -->
+    <g transform="scale(1.13) translate(-46, -46)"> 
+        <!-- Using transform to push generic gear teeth out quickly or redraw -->
+        <!-- Redrawing simplified for cleaner code at new radius -->
+    </g>
+    <!-- Manual redraw of gear teeth at new radius ~340 -->
+    <path d="M400,60 L405,75 L395,75 Z" fill="#4A3015" transform="rotate(0, 400, 400)"/>
+    <path d="M400,60 L405,75 L395,75 Z" fill="#4A3015" transform="rotate(15, 400, 400)"/>
+    <path d="M400,60 L405,75 L395,75 Z" fill="#4A3015" transform="rotate(30, 400, 400)"/>
+    <path d="M400,60 L405,75 L395,75 Z" fill="#4A3015" transform="rotate(45, 400, 400)"/>
+
+    
+    <!-- Inner Lip (Dark Brass) -->
+    <circle cx="400" cy="400" r="325" fill="url(#brassDark)" stroke="#2a1a0a" stroke-width="2"/>
+
+    <!-- Compass Medallions (N, S, E, W) -->
+    <!-- Pushed out closer to edge -->
+    <g id="medallion">
+        <circle cx="400" cy="45" r="20" fill="url(#brassLight)" stroke="#4A3015" stroke-width="2"/>
+        <path d="M400,30 L404,45 L400,60 L396,45 Z" fill="#4A3015"/>
+    </g>
+    <use href="#medallion" transform="rotate(90, 400, 400)"/>
+    <use href="#medallion" transform="rotate(180, 400, 400)"/>
+    <use href="#medallion" transform="rotate(270, 400, 400)"/>
+
+    <!-- Rivets/Screws around Outer Rim -->
+    <g id="rivetLine">
+        <circle cx="400" cy="15" r="6" fill="url(#screwHead)" stroke="#2a1a0a" stroke-width="1"/>
+    </g>
+    <use href="#rivetLine" transform="rotate(30, 400, 400)"/>
+    <use href="#rivetLine" transform="rotate(60, 400, 400)"/>
+    <use href="#rivetLine" transform="rotate(120, 400, 400)"/>
+    <use href="#rivetLine" transform="rotate(150, 400, 400)"/>
+    <use href="#rivetLine" transform="rotate(210, 400, 400)"/>
+    <use href="#rivetLine" transform="rotate(240, 400, 400)"/>
+    <use href="#rivetLine" transform="rotate(300, 400, 400)"/>
+    <use href="#rivetLine" transform="rotate(330, 400, 400)"/>
+
+    <!-- Innermost Rim (The actual view hole boundary) -->
+    <circle cx="400" cy="400" r="315" fill="none" stroke="#D4AF37" stroke-width="4"/>
+    <circle cx="400" cy="400" r="310" fill="none" stroke="#4A3015" stroke-width="1"/>
+    
+  </g>
+</svg>

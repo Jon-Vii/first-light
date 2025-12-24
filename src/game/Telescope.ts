@@ -31,7 +31,10 @@ export class Telescope {
   }
 
   private calculateRadius(): number {
-    return Math.min(window.innerWidth, window.innerHeight) * 0.425;
+    // Telescope diameter is 92% of min viewport dimension (from CSS)
+    // The visual hole in the SVG is radius 310 out of 400 (77.5%)
+    // Effective radius factor = 0.5 * 0.92 * 0.775 = 0.3565
+    return Math.min(window.innerWidth, window.innerHeight) * 0.36;
   }
 
   /**

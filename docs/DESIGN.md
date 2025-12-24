@@ -128,8 +128,9 @@ All sounds are generated procedurally—no external audio files required.
 | Sound | Implementation |
 |-------|----------------|
 | **Ambient drone** | Multiple sine oscillators at harmonic frequencies (55, 82.5, 110, 165 Hz) |
-| **Connection chime** | Triangle wave, frequency increases with progress (400-800 Hz) |
-| **Completion chord** | Ascending notes (C5, E5, G5, C6) + final resonant C5 tone |
+| **Connection chime** | Layered detuned sines (±3 Hz) + octave harmonic, pentatonic scale (C-D-E-G-A) |
+| **Discovery build-up** | Rising multi-oscillator hum that intensifies as discovery approaches |
+| **Cosmic flash** | Sub-bass thump (50→30 Hz) + filtered noise whoosh + high shimmer harmonics |
 
 ### Audio Initialization
 
@@ -213,26 +214,44 @@ bun run serve
 | `bun run dev` | Build with watch mode |
 | `bun run serve` | Start local server (port 3000) |
 | `bun run build` | Production build (minified) |
-| `bun run typecheck` | TypeScript type checking |
+| `bun run typecheck` | TypeScript type checking |\n| `bun test` | Run test suite |\n| `bun test --watch` | Run tests in watch mode (TDD) |
 
 ---
 
-## Testing Philosophy (TODO)
+## Testing
 
-> **Status:** Not yet implemented. Documented here for future sessions with coding agents.
+> **Status:** ✅ Implemented — 52 tests across 3 test suites.
 
-### Recommended Approach
+### Test Suites
 
-**Test game logic, not visuals.** Use unit tests for:
-- Discovery mechanics (hover timing, state transitions)
-- Animation state machine (connection progress, star activation)
-- Audio scheduling (timing, note sequences)
-- Data validation (constellation definitions)
+| Suite | Coverage |
+|-------|----------|
+| `Telescope.test.ts` | Drift calculations, viewport positioning, radius calculation |
+| `Constellation.test.ts` | Discovery state machine, hover timing, animation callbacks |
+| `constellations.test.ts` | Data utilities, constellation structure validation |
+
+### Philosophy
+
+**Test game logic, not visuals:**
+- ✅ Discovery mechanics (hover timing, state transitions)
+- ✅ Animation state machine (connection progress, callbacks)
+- ✅ Data validation (constellation definitions)
+- ⏳ Audio scheduling (not yet tested)
 
 **Skip testing for:**
 - Canvas rendering output (subjective, hard to maintain)
 - Visual effects (rely on manual verification)
 - CSS/styling
+
+### Running Tests
+
+```bash
+# Run all tests
+bun test
+
+# Watch mode for TDD
+bun test --watch
+```
 
 ### Why This Matters for AI Agents
 
@@ -241,10 +260,8 @@ Tests provide clear pass/fail signals that help agents:
 - Catch regressions early (vs. "refresh and look at it")
 - Work more autonomously on logic changes
 
-### Suggested Stack
-- **Test framework:** Vitest or Bun's built-in test runner
-- **Mocking:** Vitest mocks for AudioContext, requestAnimationFrame
-- **No snapshot testing** for canvas (too fragile)
+> [!IMPORTANT]
+> **Agents should follow TDD:** Write or update tests *before* implementing features. Always run `bun test` after making changes to verify nothing broke. Use the `/run-tests` workflow.
 
 ---
 

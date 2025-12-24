@@ -151,9 +151,26 @@ export class Game {
     // Check for constellation discovery
     this.checkConstellationDiscovery(deltaTime);
 
-    // Update constellation animations (for sound sync)
+    // Update constellation animations - pass whether each is in view
+    const skyX = this.state.viewX;
+    const skyY = this.state.viewY;
+    const telescopeRadius = this.telescope.getRadius();
+
     for (const constellation of this.constellations) {
-      constellation.update(deltaTime);
+      const data = constellation.getData();
+      const distance = Math.hypot(skyX - data.centerX, skyY - data.centerY);
+      const isInView = distance < data.radius + telescopeRadius * 0.5;
+
+      // Cancel animation if moved out of view
+      if (!isInView && constellation.isAnimatingDiscovery()) {
+        constellation.cancelDiscovery();
+        // Decrement count since discovery was cancelled
+        if (this.state.discoveredCount > 0) {
+          this.state.discoveredCount--;
+        }
+      }
+
+      constellation.update(deltaTime, isInView);
     }
   }
 
@@ -168,6 +185,8 @@ export class Game {
     const skyX = this.state.viewX;
     const skyY = this.state.viewY;
 
+    let isHoveringAny = false;
+
     for (const constellation of this.constellations) {
       if (constellation.isDiscovered()) continue;
 
@@ -176,14 +195,25 @@ export class Game {
 
       if (distance < data.radius + telescopeRadius * 0.3) {
         // Player is hovering over this constellation
+        isHoveringAny = true;
         const discovered = constellation.addHoverTime(deltaTime);
 
+        // Play build-up sound based on discovery progress
+        const progress = constellation.getDiscoveryProgress();
+        this.audioManager.playDiscoveryBuildUp(progress);
+
         if (discovered) {
+          this.audioManager.stopDiscoveryBuildUp();
           this.onConstellationDiscovered(constellation);
         }
       } else {
         constellation.resetHoverTime();
       }
+    }
+
+    // Stop build-up if not hovering over any constellation
+    if (!isHoveringAny) {
+      this.audioManager.stopDiscoveryBuildUp();
     }
   }
 

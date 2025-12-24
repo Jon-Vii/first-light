@@ -25,7 +25,7 @@
   --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 
   /* Sizing */
-  --telescope-diameter: min(85vw, 85vh);
+  --telescope-diameter: min(92vw, 92vh);
   --telescope-border-width: 24px;
 
   /* Transitions */
@@ -78,41 +78,22 @@ body {
   position: fixed;
   width: var(--telescope-diameter);
   height: var(--telescope-diameter);
-  border-radius: 50%;
   pointer-events: none;
   transform: translate(-50%, -50%);
   transition: opacity 0.3s ease;
+  z-index: 50;
 
-  /* Multi-layered border for depth */
-  box-shadow:
-    /* Inner shadow for depth */
-    inset 0 0 60px 20px rgba(0, 0, 0, 0.8),
-    inset 0 0 100px 40px rgba(0, 0, 0, 0.6),
-    /* Outer brass rim */
-    0 0 0 var(--telescope-border-width) var(--color-brass),
-    0 0 0 calc(var(--telescope-border-width) + 3px) var(--color-brass-dark),
-    /* Outer glow */
-    0 0 80px 20px rgba(0, 0, 0, 0.9);
+  /* Use SVG overlay */
+  background-image: url('assets/telescope_overlay_detailed.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 
-  /* Vignette effect */
-  background: radial-gradient(circle at center,
-      transparent 0%,
-      transparent 60%,
-      rgba(0, 0, 0, 0.3) 80%,
-      rgba(0, 0, 0, 0.7) 100%);
+  /* Drop shadow for extra depth on top of the SVG's internal shadow */
+  filter: drop-shadow(0 0 20px rgba(0, 0, 0, 0.8));
 }
 
-#telescope-overlay::before {
-  content: '';
-  position: absolute;
-  top: -4px;
-  left: -4px;
-  right: -4px;
-  bottom: -4px;
-  border-radius: 50%;
-  border: 2px solid var(--color-brass-light);
-  opacity: 0.5;
-}
+
 
 /* Lens reflection/glint effect */
 #telescope-overlay::after {
@@ -130,18 +111,20 @@ body {
   filter: blur(2px);
 }
 
-/* Discoveries Panel */
+/* Discoveries Panel - Cosmic Journal Style */
 #discoveries-panel {
   position: fixed;
   right: 0;
   top: 0;
   height: 100%;
-  width: 320px;
-  background: linear-gradient(180deg,
-      rgba(15, 16, 32, 0.95) 0%,
-      rgba(10, 10, 26, 0.98) 100%);
-  backdrop-filter: blur(20px);
-  border-left: 1px solid rgba(184, 134, 11, 0.3);
+  width: 360px;
+  /* Slightly wider for better card layout */
+
+  /* Deep Space Background */
+  background: linear-gradient(135deg, #0b0c15 0%, #151625 100%);
+  border-left: 2px solid var(--color-brass-dark);
+  box-shadow: -10px 0 50px rgba(0, 0, 0, 0.8), inset 2px 0 20px rgba(0, 0, 0, 0.5);
+
   transform: translateX(calc(100% - 60px));
   transition: transform var(--transition-smooth);
   z-index: 100;
@@ -158,224 +141,254 @@ body {
   left: 0;
   top: 50%;
   transform: translate(-50%, -50%);
-  width: 48px;
-  height: 48px;
+  width: 56px;
+  height: 56px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--color-brass) 0%, var(--color-brass-dark) 100%);
-  border: 2px solid var(--color-brass-light);
-  color: var(--color-void);
-  font-size: 1.25rem;
+
+  left: -50px;
+  /* Extrude from panel */
+  top: 50%;
+  transform: translateY(-50%);
+  width: 50px;
+  height: 80px;
+  background: linear-gradient(to right, var(--color-brass-dark), var(--color-brass-light) 40%, var(--color-brass-dark));
+  border: 1px solid #3e2b17;
+  border-right: none;
+  border-radius: 8px 0 0 8px;
   cursor: pointer;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  transition: all var(--transition-bounce);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  box-shadow: -5px 0 10px rgba(0, 0, 0, 0.5);
+  transition: width 0.2s;
 }
 
 #discoveries-toggle:hover {
-  transform: translate(-50%, -50%) scale(1.1);
-  box-shadow: 0 6px 24px rgba(184, 134, 11, 0.3);
+  width: 55px;
+  left: -55px;
 }
 
 .toggle-icon {
-  transition: transform var(--transition-bounce);
-}
-
-#discoveries-panel:not(.collapsed) .toggle-icon {
-  transform: rotate(72deg);
+  font-size: 1.5rem;
+  color: var(--color-wood-dark);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
 .discovery-count {
-  position: absolute;
-  top: -4px;
-  right: -4px;
-  background: var(--color-accent);
-  color: white;
-  font-size: 0.7rem;
-  font-weight: 600;
-  min-width: 18px;
-  height: 18px;
-  border-radius: 9px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 4px;
+  font-family: var(--font-serif);
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--color-wood-dark);
+  margin-top: 4px;
 }
 
 .discoveries-content {
-  padding: 24px;
-  padding-left: 32px;
+  padding: 30px;
+  height: 100%;
   overflow-y: auto;
-  flex: 1;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-brass-dark) var(--color-wood-dark);
 }
 
 .discoveries-content h2 {
-  font-family: var(--font-display);
-  font-size: 1.75rem;
-  font-weight: 400;
-  color: var(--color-star-gold);
-  margin-bottom: 24px;
-  letter-spacing: 0.05em;
-}
-
-#discoveries-list {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.discovery-card {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(184, 134, 11, 0.2);
-  border-radius: 12px;
-  padding: 16px;
-  transition: all var(--transition-smooth);
-}
-
-.discovery-card:hover {
-  background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(184, 134, 11, 0.4);
-  transform: translateX(-4px);
-}
-
-.discovery-card h3 {
-  font-family: var(--font-display);
-  font-size: 1.1rem;
-  font-weight: 500;
-  color: var(--color-star-white);
-  margin-bottom: 4px;
-}
-
-.discovery-card p {
-  font-size: 0.85rem;
-  color: var(--color-text-muted);
-}
-
-/* Discovery Notification */
-#discovery-notification {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0.9);
-  background: radial-gradient(ellipse at center,
-      rgba(255, 217, 61, 0.15) 0%,
-      rgba(15, 16, 32, 0.95) 70%);
-  border: 2px solid var(--color-star-gold);
-  border-radius: 20px;
-  padding: 40px 60px;
+  font-family: var(--font-serif);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--color-brass-light);
   text-align: center;
-  opacity: 0;
-  visibility: hidden;
-  transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-  z-index: 200;
-  box-shadow:
-    0 0 60px var(--color-discovery-glow),
-    0 0 120px var(--color-discovery-glow);
+  padding-bottom: 15px;
+  border-bottom: 2px double var(--color-brass-dark);
+  margin-bottom: 25px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
-#discovery-notification.visible {
+/* Discovery Cards - Parchment Slips */
+.discovery-card {
+  background-color: var(--color-parchment);
+  color: var(--color-ink);
+  padding: 10px;
+  margin-bottom: 20px;
+  border-radius: 2px;
+  box-shadow:
+    0 2px 5px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  position: relative;
+  transform-origin: top center;
+}
+
+/* Pin effect */
+.discovery-card::after {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, var(--color-brass-light), var(--color-brass-dark));
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  transform: translateX(-50%);
+}
+
+.discovery-icon {
+  width: 60px;
+  height: 60px;
+  flex-shrink: 0;
+  background: rgba(0, 0, 0, 0.05);
+  /* Faint box for the map */
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 4px;
+}
+
+.discovery-info h3 {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  font-size: 1.3rem;
+  margin: 0 0 4px 0;
+  color: var(--color-wood-dark);
+}
+
+.discovery-info p {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.95rem;
+  margin: 0;
+  color: #554433;
+  /* Faded ink */
+}
+
+/* Notifications - Old Letter style */
+#discovery-notification {
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--color-parchment);
+  color: var(--color-ink);
+  padding: 15px 40px;
+  border: 1px solid var(--color-wood-light);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  text-align: center;
+  z-index: 100;
   opacity: 1;
-  visibility: visible;
-  transform: translate(-50%, -50%) scale(1);
+  transition: opacity 1s;
+  pointer-events: none;
+}
+
+#discovery-notification::before,
+#discovery-notification::after {
+  /* Fancy borders logic could go here, keeping it simple for now */
+}
+
+#discovery-notification.hidden {
+  opacity: 0;
 }
 
 .notification-title {
   display: block;
+  font-family: var(--font-serif);
   font-size: 0.9rem;
-  color: var(--color-text-muted);
+  letter-spacing: 2px;
   text-transform: uppercase;
-  letter-spacing: 0.2em;
-  margin-bottom: 8px;
+  color: var(--color-wood-light);
+  margin-bottom: 5px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  padding-bottom: 5px;
 }
 
 .constellation-name {
   display: block;
-  font-family: var(--font-display);
-  font-size: 2.5rem;
-  font-weight: 400;
-  color: var(--color-star-gold);
-  text-shadow: 0 0 20px var(--color-discovery-glow);
-}
-
-#discovery-notification.hidden {
-  display: none;
+  font-family: var(--font-serif);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-wood-dark);
 }
 
 /* Start Screen */
 #start-screen {
-  position: fixed;
-  inset: 0;
-  background: radial-gradient(ellipse at center, var(--color-night) 0%, var(--color-void) 100%);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #000;
   display: flex;
-  align-items: center;
   justify-content: center;
-  z-index: 1000;
-  transition: opacity 0.8s ease, visibility 0.8s ease;
-}
-
-#start-screen.hidden {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
+  align-items: center;
+  z-index: 100;
+  transition: opacity 1s ease-out;
 }
 
 .start-content {
   text-align: center;
+  color: var(--color-text);
+  max-width: 500px;
 }
 
-.start-content h1 {
-  font-family: var(--font-display);
+h1 {
+  font-family: var(--font-serif);
   font-size: 4rem;
+  margin-bottom: 0.5rem;
   font-weight: 300;
+  letter-spacing: 0.2rem;
   color: var(--color-star-white);
-  letter-spacing: 0.15em;
-  margin-bottom: 12px;
-  text-shadow: 0 0 60px rgba(184, 192, 255, 0.4);
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
 }
 
 .start-subtitle {
-  font-size: 1.1rem;
-  color: var(--color-text-muted);
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
   font-style: italic;
-  margin-bottom: 48px;
-  letter-spacing: 0.05em;
+  margin-bottom: 3rem;
+  opacity: 0.8;
 }
 
 #start-button {
-  background: linear-gradient(135deg, var(--color-brass) 0%, var(--color-brass-dark) 100%);
-  color: var(--color-void);
-  border: 2px solid var(--color-brass-light);
-  padding: 16px 48px;
-  font-family: var(--font-display);
-  font-size: 1.3rem;
-  font-weight: 500;
-  letter-spacing: 0.1em;
-  border-radius: 50px;
+  background: transparent;
+  border: 1px solid var(--color-star-white);
+  color: var(--color-star-white);
+  padding: 1rem 3rem;
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  letter-spacing: 0.1rem;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow:
-    0 4px 20px rgba(184, 134, 11, 0.3),
-    0 0 40px rgba(184, 134, 11, 0.1);
+  text-transform: uppercase;
 }
 
 #start-button:hover {
-  transform: scale(1.05);
-  box-shadow:
-    0 6px 30px rgba(184, 134, 11, 0.5),
-    0 0 60px rgba(184, 134, 11, 0.2);
-}
-
-#start-button:active {
-  transform: scale(0.98);
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
 }
 
 .start-hint {
-  margin-top: 48px;
-  font-size: 0.85rem;
-  color: var(--color-text-muted);
-  opacity: 0.7;
-  line-height: 1.6;
+  margin-top: 3rem;
+  font-family: var(--font-ui);
+  font-size: 0.9rem;
+  opacity: 0.5;
+  line-height: 1.5;
+}
+
+.pulse {
+  animation: pulse-animation 0.5s ease-in-out;
+}
+
+@keyframes pulse-animation {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.1);
+  }
+
+  100% {
+    transform: scale(1);
+  }
 }
 
 /* Utility Classes */
@@ -391,6 +404,6 @@ body {
   }
 
   #discoveries-panel {
-    width: 280px;
+    width: 300px;
   }
 }

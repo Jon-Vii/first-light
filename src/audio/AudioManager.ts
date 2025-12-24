@@ -11,6 +11,21 @@ export class AudioManager {
   private isAmbientPlaying: boolean = false;
   private initialized: boolean = false;
 
+  // Discovery build-up state
+  private buildUpOscillators: OscillatorNode[] = [];
+  private buildUpGains: GainNode[] = [];
+  private isBuildUpPlaying: boolean = false;
+
+  // Pentatonic scale frequencies (C major pentatonic: C, D, E, G, A)
+  private readonly pentatonicScale = [
+    523.25,  // C5
+    587.33,  // D5
+    659.25,  // E5
+    783.99,  // G5
+    880.00,  // A5
+    1046.50, // C6
+  ];
+
   constructor() {
     // Audio context will be created on first user interaction
     this.initOnInteraction();
@@ -125,9 +140,18 @@ export class AudioManager {
   }
 
   /**
-   * Play discovery sound sequence
+   * Play discovery sound sequence (kept for compatibility, but cosmic flash is now separate)
    */
   playDiscoverySound(): void {
+    // Now primarily handled by playCosmicFlash
+    this.playCosmicFlash();
+  }
+
+  /**
+   * Play cosmic flash sound - dramatic completion effect
+   * Combines sub-bass thump, rising whoosh, and resonant shimmer
+   */
+  playCosmicFlash(): void {
     if (!this.ensureInitialized() || !this.audioContext || !this.masterGain) {
       return;
     }
@@ -135,12 +159,55 @@ export class AudioManager {
     const ctx = this.audioContext;
     const now = ctx.currentTime;
 
-    // Ascending chime sequence
-    const notes = [523.25, 659.25, 783.99, 1046.5];  // C5, E5, G5, C6
-    const noteDuration = 0.15;
+    // === SUB-BASS THUMP ===
+    const subOsc = ctx.createOscillator();
+    const subGain = ctx.createGain();
+    subOsc.type = 'sine';
+    subOsc.frequency.setValueAtTime(50, now);
+    subOsc.frequency.exponentialRampToValueAtTime(30, now + 0.3);
 
-    for (let i = 0; i < notes.length; i++) {
-      const freq = notes[i];
+    subGain.gain.setValueAtTime(0, now);
+    subGain.gain.linearRampToValueAtTime(0.5, now + 0.02);
+    subGain.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
+
+    subOsc.connect(subGain);
+    subGain.connect(this.masterGain);
+    subOsc.start(now);
+    subOsc.stop(now + 0.6);
+
+    // === RISING WHOOSH (filtered noise) ===
+    const bufferSize = ctx.sampleRate * 0.8;
+    const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+    const noiseData = noiseBuffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) {
+      noiseData[i] = Math.random() * 2 - 1;
+    }
+
+    const noiseSource = ctx.createBufferSource();
+    noiseSource.buffer = noiseBuffer;
+
+    const noiseFilter = ctx.createBiquadFilter();
+    noiseFilter.type = 'bandpass';
+    noiseFilter.frequency.setValueAtTime(200, now);
+    noiseFilter.frequency.exponentialRampToValueAtTime(3000, now + 0.4);
+    noiseFilter.Q.value = 1;
+
+    const noiseGain = ctx.createGain();
+    noiseGain.gain.setValueAtTime(0, now);
+    noiseGain.gain.linearRampToValueAtTime(0.15, now + 0.1);
+    noiseGain.gain.linearRampToValueAtTime(0.2, now + 0.3);
+    noiseGain.gain.exponentialRampToValueAtTime(0.01, now + 0.7);
+
+    noiseSource.connect(noiseFilter);
+    noiseFilter.connect(noiseGain);
+    noiseGain.connect(this.masterGain);
+    noiseSource.start(now);
+    noiseSource.stop(now + 0.8);
+
+    // === RESONANT SHIMMER (high harmonics) ===
+    const shimmerFreqs = [1046.5, 1318.5, 1568, 2093]; // C6, E6, G6, C7
+    for (let i = 0; i < shimmerFreqs.length; i++) {
+      const freq = shimmerFreqs[i];
       if (!freq) continue;
 
       const osc = ctx.createOscillator();
@@ -149,41 +216,21 @@ export class AudioManager {
       osc.type = 'sine';
       osc.frequency.value = freq;
 
-      const startTime = now + i * noteDuration;
-
+      const startTime = now + 0.1 + i * 0.05;
       gain.gain.setValueAtTime(0, startTime);
-      gain.gain.linearRampToValueAtTime(0.3, startTime + 0.02);
-      gain.gain.exponentialRampToValueAtTime(0.01, startTime + noteDuration * 2);
+      gain.gain.linearRampToValueAtTime(0.12, startTime + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.01, startTime + 1.2);
 
       osc.connect(gain);
       gain.connect(this.masterGain);
-
       osc.start(startTime);
-      osc.stop(startTime + noteDuration * 3);
+      osc.stop(startTime + 1.5);
     }
-
-    // Final resonant tone
-    const finalOsc = ctx.createOscillator();
-    const finalGain = ctx.createGain();
-
-    finalOsc.type = 'sine';
-    finalOsc.frequency.value = 523.25;  // C5
-
-    const finalStart = now + notes.length * noteDuration;
-
-    finalGain.gain.setValueAtTime(0, finalStart);
-    finalGain.gain.linearRampToValueAtTime(0.4, finalStart + 0.1);
-    finalGain.gain.exponentialRampToValueAtTime(0.01, finalStart + 1.5);
-
-    finalOsc.connect(finalGain);
-    finalGain.connect(this.masterGain);
-
-    finalOsc.start(finalStart);
-    finalOsc.stop(finalStart + 2);
   }
 
   /**
-   * Play a single star connection sound
+   * Play a single star connection sound - rich bell-like chime
+   * Uses pentatonic scale, layered oscillators with detuning
    */
   playStarConnectionSound(index: number, total: number): void {
     if (!this.ensureInitialized() || !this.audioContext || !this.masterGain) {
@@ -193,24 +240,162 @@ export class AudioManager {
     const ctx = this.audioContext;
     const now = ctx.currentTime;
 
-    // Ascending pitch based on progress
-    const baseFreq = 400;
-    const freq = baseFreq + (index / total) * 400;
+    // Pick note from pentatonic scale (cycles through)
+    const noteIndex = index % this.pentatonicScale.length;
+    const baseFreq = this.pentatonicScale[noteIndex] || 523.25;
 
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
+    // === MAIN OSCILLATORS WITH SLIGHT DETUNING ===
+    const detuneAmount = 3; // Hz
 
-    osc.type = 'triangle';
-    osc.frequency.value = freq;
+    // Primary oscillator (slightly flat)
+    const osc1 = ctx.createOscillator();
+    const gain1 = ctx.createGain();
+    osc1.type = 'sine';
+    osc1.frequency.value = baseFreq - detuneAmount;
 
-    gain.gain.setValueAtTime(0, now);
-    gain.gain.linearRampToValueAtTime(0.15, now + 0.01);
-    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+    // Secondary oscillator (slightly sharp)
+    const osc2 = ctx.createOscillator();
+    const gain2 = ctx.createGain();
+    osc2.type = 'sine';
+    osc2.frequency.value = baseFreq + detuneAmount;
 
-    osc.connect(gain);
-    gain.connect(this.masterGain);
+    // === HARMONIC SHIMMER (octave above, quieter) ===
+    const harmOsc = ctx.createOscillator();
+    const harmGain = ctx.createGain();
+    harmOsc.type = 'sine';
+    harmOsc.frequency.value = baseFreq * 2;
 
-    osc.start(now);
-    osc.stop(now + 0.3);
+    // === ENVELOPE SETTINGS ===
+    const attackTime = 0.015;
+    const decayTime = 0.6;
+    const mainVolume = 0.12;
+    const harmVolume = 0.04;
+
+    // Main oscillator envelopes
+    for (const [osc, gain] of [[osc1, gain1], [osc2, gain2]] as [OscillatorNode, GainNode][]) {
+      gain.gain.setValueAtTime(0, now);
+      gain.gain.linearRampToValueAtTime(mainVolume, now + attackTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + decayTime);
+
+      osc.connect(gain);
+      gain.connect(this.masterGain);
+      osc.start(now);
+      osc.stop(now + decayTime + 0.1);
+    }
+
+    // Harmonic envelope (slightly delayed attack for shimmer)
+    harmGain.gain.setValueAtTime(0, now);
+    harmGain.gain.linearRampToValueAtTime(harmVolume, now + attackTime * 2);
+    harmGain.gain.exponentialRampToValueAtTime(0.001, now + decayTime * 0.8);
+
+    harmOsc.connect(harmGain);
+    harmGain.connect(this.masterGain);
+    harmOsc.start(now);
+    harmOsc.stop(now + decayTime);
+  }
+
+  /**
+   * Start or update discovery build-up sound
+   * Called continuously while hovering over a constellation
+   */
+  playDiscoveryBuildUp(progress: number): void {
+    if (!this.ensureInitialized() || !this.audioContext || !this.masterGain) {
+      return;
+    }
+
+    const ctx = this.audioContext;
+
+    // If not already playing, create the build-up oscillators
+    if (!this.isBuildUpPlaying) {
+      this.isBuildUpPlaying = true;
+
+      // Low rumble oscillator
+      const lowOsc = ctx.createOscillator();
+      const lowGain = ctx.createGain();
+      lowOsc.type = 'sine';
+      lowOsc.frequency.value = 80;
+      lowGain.gain.value = 0;
+      lowOsc.connect(lowGain);
+      lowGain.connect(this.masterGain);
+      lowOsc.start();
+      this.buildUpOscillators.push(lowOsc);
+      this.buildUpGains.push(lowGain);
+
+      // Mid tone oscillator
+      const midOsc = ctx.createOscillator();
+      const midGain = ctx.createGain();
+      midOsc.type = 'sine';
+      midOsc.frequency.value = 220;
+      midGain.gain.value = 0;
+      midOsc.connect(midGain);
+      midGain.connect(this.masterGain);
+      midOsc.start();
+      this.buildUpOscillators.push(midOsc);
+      this.buildUpGains.push(midGain);
+
+      // High shimmer oscillator
+      const highOsc = ctx.createOscillator();
+      const highGain = ctx.createGain();
+      highOsc.type = 'sine';
+      highOsc.frequency.value = 440;
+      highGain.gain.value = 0;
+      highOsc.connect(highGain);
+      highGain.connect(this.masterGain);
+      highOsc.start();
+      this.buildUpOscillators.push(highOsc);
+      this.buildUpGains.push(highGain);
+    }
+
+    // Update based on progress (0-1)
+    const now = ctx.currentTime;
+
+    // Low rumble - constant low volume
+    if (this.buildUpGains[0]) {
+      this.buildUpGains[0].gain.setTargetAtTime(0.03 * progress, now, 0.1);
+    }
+
+    // Mid oscillator - pitch rises with progress
+    if (this.buildUpOscillators[1] && this.buildUpGains[1]) {
+      const midFreq = 220 + progress * 180; // 220 -> 400 Hz
+      this.buildUpOscillators[1].frequency.setTargetAtTime(midFreq, now, 0.1);
+      this.buildUpGains[1].gain.setTargetAtTime(0.04 * progress, now, 0.1);
+    }
+
+    // High shimmer - fades in later in the progress
+    if (this.buildUpOscillators[2] && this.buildUpGains[2]) {
+      const highProgress = Math.max(0, (progress - 0.5) * 2); // Only after 50%
+      const highFreq = 440 + highProgress * 200;
+      this.buildUpOscillators[2].frequency.setTargetAtTime(highFreq, now, 0.1);
+      this.buildUpGains[2].gain.setTargetAtTime(0.025 * highProgress, now, 0.1);
+    }
+  }
+
+  /**
+   * Stop discovery build-up sound with smooth fade-out
+   */
+  stopDiscoveryBuildUp(): void {
+    if (!this.isBuildUpPlaying || !this.audioContext) return;
+
+    const now = this.audioContext.currentTime;
+
+    // Fade out all build-up gains
+    for (const gain of this.buildUpGains) {
+      gain.gain.setTargetAtTime(0, now, 0.15);
+    }
+
+    // Stop and clean up after fade
+    setTimeout(() => {
+      for (const osc of this.buildUpOscillators) {
+        try {
+          osc.stop();
+          osc.disconnect();
+        } catch (e) {
+          // Ignore if already stopped
+        }
+      }
+      this.buildUpOscillators = [];
+      this.buildUpGains = [];
+      this.isBuildUpPlaying = false;
+    }, 300);
   }
 }

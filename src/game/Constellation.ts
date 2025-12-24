@@ -34,8 +34,23 @@ export class Constellation {
   private readonly starFlashDuration = 0.6;  // How long the star flash lasts
   private readonly cosmicFlashDuration = 1.2;  // Duration of completion flash
 
+  // Scale factor to fit constellations better in view
+  private readonly scale = 0.85;
+
   constructor(data: ConstellationData) {
     this.data = { ...data };
+  }
+
+  /**
+   * Get star position scaled relative to constellation center
+   */
+  private getScaledStarPosition(star: { x: number, y: number }): { x: number, y: number } {
+    const dx = star.x - this.data.centerX;
+    const dy = star.y - this.data.centerY;
+    return {
+      x: this.data.centerX + dx * this.scale,
+      y: this.data.centerY + dy * this.scale
+    };
   }
 
   /**
@@ -75,6 +90,13 @@ export class Constellation {
   }
 
   /**
+   * Get current discovery progress (0-1)
+   */
+  getDiscoveryProgress(): number {
+    return this.discoveryProgress;
+  }
+
+  /**
    * Add hover time and check for discovery
    * Returns true if just discovered
    */
@@ -96,9 +118,9 @@ export class Constellation {
    * Reset hover time (when player moves away)
    */
   resetHoverTime(): void {
-    // Gradual decay for smoother feel
-    this.hoverTime = Math.max(0, this.hoverTime - 0.1);
-    this.discoveryProgress = this.hoverTime / this.hoverTimeRequired;
+    // Immediate reset - discovery requires continuous hover
+    this.hoverTime = 0;
+    this.discoveryProgress = 0;
   }
 
   /**
@@ -114,10 +136,45 @@ export class Constellation {
   }
 
   /**
-   * Update animation state (call every frame, independent of render)
+   * Cancel an in-progress discovery animation
+   * Called when player moves away before animation completes
    */
-  update(deltaTime: number): void {
+  cancelDiscovery(): void {
     if (!this.isAnimating) return;
+
+    // Reset all state
+    this.data.discovered = false;
+    this.isAnimating = false;
+    this.animationTime = 0;
+    this.revealedConnections = 0;
+    this.currentConnectionProgress = 0;
+    this.starActivationTimes.clear();
+    this.cosmicFlashTime = 0;
+    this.hoverTime = 0;
+    this.discoveryProgress = 0;
+
+    // Clear callbacks
+    this.onAnimationComplete = null;
+    this.onConnectionRevealed = null;
+  }
+
+  /**
+   * Check if currently animating
+   */
+  isAnimatingDiscovery(): boolean {
+    return this.isAnimating;
+  }
+
+  /**
+   * Update animation state (call every frame, independent of render)
+   * @param deltaTime - Time since last frame in seconds
+   * @param isInView - Whether the constellation is currently visible in the telescope
+   */
+  update(deltaTime: number, isInView: boolean = true): void {
+    if (!this.isAnimating) return;
+
+    // Only progress animation when constellation is in view
+    if (!isInView) return;
 
     const wasFirstFrame = this.animationTime === 0;
     this.animationTime += deltaTime;
@@ -222,8 +279,9 @@ export class Constellation {
 
     // Subtle pulsing stars
     for (const star of this.data.stars) {
-      const screenX = star.x - viewX + canvasWidth / 2;
-      const screenY = star.y - viewY + canvasHeight / 2;
+      const pos = this.getScaledStarPosition(star);
+      const screenX = pos.x - viewX + canvasWidth / 2;
+      const screenY = pos.y - viewY + canvasHeight / 2;
 
       const pulse = Math.sin(Date.now() * 0.005) * 0.3 + 0.7;
       const size = 3 + star.brightness * 2;
@@ -322,10 +380,13 @@ export class Constellation {
 
       if (!star1 || !star2) continue;
 
-      const x1 = star1.x - viewX + canvasWidth / 2;
-      const y1 = star1.y - viewY + canvasHeight / 2;
-      const x2 = star2.x - viewX + canvasWidth / 2;
-      const y2 = star2.y - viewY + canvasHeight / 2;
+      const pos1 = this.getScaledStarPosition(star1);
+      const pos2 = this.getScaledStarPosition(star2);
+
+      const x1 = pos1.x - viewX + canvasWidth / 2;
+      const y1 = pos1.y - viewY + canvasHeight / 2;
+      const x2 = pos2.x - viewX + canvasWidth / 2;
+      const y2 = pos2.y - viewY + canvasHeight / 2;
 
       this.drawGlowingLine(ctx, x1, y1, x2, y2, lineAlpha);
     }
@@ -339,28 +400,25 @@ export class Constellation {
         const star2 = this.data.stars[starIdx2];
 
         if (star1 && star2) {
-          const x1 = star1.x - viewX + canvasWidth / 2;
-          const y1 = star1.y - viewY + canvasHeight / 2;
-          const x2 = star2.x - viewX + canvasWidth / 2;
-          const y2 = star2.y - viewY + canvasHeight / 2;
+          const pos1 = this.getScaledStarPosition(star1);
+          const pos2 = this.getScaledStarPosition(star2);
 
-          // If destination is already activated, draw full line immediately
-          const destAlreadyLit = starIdx2 !== undefined && this.starActivationTimes.has(starIdx2);
+          const x1 = pos1.x - viewX + canvasWidth / 2;
+          const y1 = pos1.y - viewY + canvasHeight / 2;
+          const x2 = pos2.x - viewX + canvasWidth / 2;
+          const y2 = pos2.y - viewY + canvasHeight / 2;
 
-          if (destAlreadyLit) {
-            this.drawGlowingLine(ctx, x1, y1, x2, y2, lineAlpha);
-          } else {
-            // Animate the line drawing with spark head
-            const progress = this.currentConnectionProgress;
-            const currentX = x1 + (x2 - x1) * progress;
-            const currentY = y1 + (y2 - y1) * progress;
+          // Animate the line drawing with spark head
+          // (Star flash is already skipped for already-lit stars in update())
+          const progress = this.currentConnectionProgress;
+          const currentX = x1 + (x2 - x1) * progress;
+          const currentY = y1 + (y2 - y1) * progress;
 
-            // Draw partial glowing line
-            this.drawGlowingLine(ctx, x1, y1, currentX, currentY, lineAlpha);
+          // Draw partial glowing line
+          this.drawGlowingLine(ctx, x1, y1, currentX, currentY, lineAlpha);
 
-            // Draw spark head at leading edge
-            this.drawSparkHead(ctx, currentX, currentY);
-          }
+          // Draw spark head at leading edge
+          this.drawSparkHead(ctx, currentX, currentY);
         }
       }
     }
@@ -370,8 +428,9 @@ export class Constellation {
       const star = this.data.stars[starIdx];
       if (!star) continue;
 
-      const screenX = star.x - viewX + canvasWidth / 2;
-      const screenY = star.y - viewY + canvasHeight / 2;
+      const pos = this.getScaledStarPosition(star);
+      const screenX = pos.x - viewX + canvasWidth / 2;
+      const screenY = pos.y - viewY + canvasHeight / 2;
 
       const activationTime = this.starActivationTimes.get(starIdx);
       const isActivated = activationTime !== undefined;
