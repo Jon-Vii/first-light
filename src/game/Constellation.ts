@@ -380,22 +380,34 @@ export class Constellation {
       let starAlpha = baseAlpha + cosmicFlashIntensity * 0.3;
       let flashProgress = 0;
 
-      // During animation: unactivated stars are dimmer, activated stars can flash
-      if (this.isAnimating) {
-        if (!isActivated) {
-          starAlpha *= 0.25;
-          size *= 0.6;
-        } else {
-          const timeSinceActivation = this.animationTime - activationTime;
-          if (timeSinceActivation < this.starFlashDuration) {
-            flashProgress = Math.sin((timeSinceActivation / this.starFlashDuration) * Math.PI);
-            size *= 1 + flashProgress * 0.4;
-            starAlpha = Math.min(1, starAlpha + flashProgress * 0.3);
-          }
+      // During animation: activated stars flash and are bright, unactivated stay faint
+      if (this.isAnimating && !isActivated) {
+        // Render unactivated stars with simple hint-style glow (same as before discovery)
+        const hintAlpha = 0.35;
+        const hintSize = 3 + star.brightness * 2;
+        const pulse = Math.sin(Date.now() * 0.005) * 0.3 + 0.7;
+
+        ctx.beginPath();
+        ctx.arc(screenX, screenY, hintSize * 3, 0, Math.PI * 2);
+        const glowGradient = ctx.createRadialGradient(screenX, screenY, 0, screenX, screenY, hintSize * 3);
+        glowGradient.addColorStop(0, `rgba(255, 217, 61, ${hintAlpha * pulse * 0.5})`);
+        glowGradient.addColorStop(1, 'rgba(255, 217, 61, 0)');
+        ctx.fillStyle = glowGradient;
+        ctx.fill();
+        continue;  // Skip the cosmic star rendering
+      }
+
+      // Activated stars during animation can flash
+      if (this.isAnimating && isActivated) {
+        const timeSinceActivation = this.animationTime - activationTime;
+        if (timeSinceActivation < this.starFlashDuration) {
+          flashProgress = Math.sin((timeSinceActivation / this.starFlashDuration) * Math.PI);
+          size *= 1 + flashProgress * 0.4;
+          starAlpha = Math.min(1, starAlpha + flashProgress * 0.3);
         }
       }
 
-      // Render star with multi-layer corona
+      // Render star with multi-layer corona (activated stars only during animation, all stars after)
       this.renderCosmicStar(ctx, screenX, screenY, size, starAlpha, isActivated, flashProgress);
     }
 

@@ -217,6 +217,37 @@ bun run serve
 
 ---
 
+## Testing Philosophy (TODO)
+
+> **Status:** Not yet implemented. Documented here for future sessions with coding agents.
+
+### Recommended Approach
+
+**Test game logic, not visuals.** Use unit tests for:
+- Discovery mechanics (hover timing, state transitions)
+- Animation state machine (connection progress, star activation)
+- Audio scheduling (timing, note sequences)
+- Data validation (constellation definitions)
+
+**Skip testing for:**
+- Canvas rendering output (subjective, hard to maintain)
+- Visual effects (rely on manual verification)
+- CSS/styling
+
+### Why This Matters for AI Agents
+
+Tests provide clear pass/fail signals that help agents:
+- Verify changes didn't break existing functionality
+- Catch regressions early (vs. "refresh and look at it")
+- Work more autonomously on logic changes
+
+### Suggested Stack
+- **Test framework:** Vitest or Bun's built-in test runner
+- **Mocking:** Vitest mocks for AudioContext, requestAnimationFrame
+- **No snapshot testing** for canvas (too fragile)
+
+---
+
 ## Open Questions / Future Considerations
 
 1. **Branching animation:** Should connections to multiple stars animate simultaneously? (Tried BFS, reverted to sequential for cleaner feel)

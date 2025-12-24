@@ -367,17 +367,25 @@ class Constellation {
       let size = 3 + star.brightness * 3;
       let starAlpha = baseAlpha + cosmicFlashIntensity * 0.3;
       let flashProgress = 0;
-      if (this.isAnimating) {
-        if (!isActivated) {
-          starAlpha *= 0.25;
-          size *= 0.6;
-        } else {
-          const timeSinceActivation = this.animationTime - activationTime;
-          if (timeSinceActivation < this.starFlashDuration) {
-            flashProgress = Math.sin(timeSinceActivation / this.starFlashDuration * Math.PI);
-            size *= 1 + flashProgress * 0.4;
-            starAlpha = Math.min(1, starAlpha + flashProgress * 0.3);
-          }
+      if (this.isAnimating && !isActivated) {
+        const hintAlpha = 0.35;
+        const hintSize = 3 + star.brightness * 2;
+        const pulse = Math.sin(Date.now() * 0.005) * 0.3 + 0.7;
+        ctx.beginPath();
+        ctx.arc(screenX, screenY, hintSize * 3, 0, Math.PI * 2);
+        const glowGradient = ctx.createRadialGradient(screenX, screenY, 0, screenX, screenY, hintSize * 3);
+        glowGradient.addColorStop(0, `rgba(255, 217, 61, ${hintAlpha * pulse * 0.5})`);
+        glowGradient.addColorStop(1, "rgba(255, 217, 61, 0)");
+        ctx.fillStyle = glowGradient;
+        ctx.fill();
+        continue;
+      }
+      if (this.isAnimating && isActivated) {
+        const timeSinceActivation = this.animationTime - activationTime;
+        if (timeSinceActivation < this.starFlashDuration) {
+          flashProgress = Math.sin(timeSinceActivation / this.starFlashDuration * Math.PI);
+          size *= 1 + flashProgress * 0.4;
+          starAlpha = Math.min(1, starAlpha + flashProgress * 0.3);
         }
       }
       this.renderCosmicStar(ctx, screenX, screenY, size, starAlpha, isActivated, flashProgress);
@@ -1032,5 +1040,5 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-//# debugId=663B04FCA702D1D064756E2164756E21
+//# debugId=3E83BDCE67DBE22B64756E2164756E21
 //# sourceMappingURL=main.js.map
