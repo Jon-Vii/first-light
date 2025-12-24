@@ -283,6 +283,7 @@ export class Constellation {
     }
 
     // Draw the current connection being animated (partial line)
+    // Skip animation if destination star is already lit (loop-back connections)
     if (this.isAnimating && this.revealedConnections < this.data.connections.length) {
       const currentConnection = this.data.connections[this.revealedConnections];
       if (currentConnection) {
@@ -296,15 +297,26 @@ export class Constellation {
           const x2 = star2.x - viewX + canvasWidth / 2;
           const y2 = star2.y - viewY + canvasHeight / 2;
 
-          // Interpolate to the current progress point
-          const progress = this.currentConnectionProgress;
-          const currentX = x1 + (x2 - x1) * progress;
-          const currentY = y1 + (y2 - y1) * progress;
+          // If destination is already activated, draw full line immediately (no animation)
+          const destAlreadyLit = starIdx2 !== undefined && this.starActivationTimes.has(starIdx2);
 
-          ctx.beginPath();
-          ctx.moveTo(x1, y1);
-          ctx.lineTo(currentX, currentY);
-          ctx.stroke();
+          if (destAlreadyLit) {
+            // Draw full line instantly for loop-back connections
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.stroke();
+          } else {
+            // Animate the line drawing
+            const progress = this.currentConnectionProgress;
+            const currentX = x1 + (x2 - x1) * progress;
+            const currentY = y1 + (y2 - y1) * progress;
+
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(currentX, currentY);
+            ctx.stroke();
+          }
         }
       }
     }
