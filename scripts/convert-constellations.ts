@@ -259,7 +259,7 @@ async function main() {
       description: meta.description,
       centerX,
       centerY,
-      radius: Math.min(Math.max(radius, 50), 300), // Min 50, max 300
+      radius: Math.min(Math.max(radius, 50), 150), // Min 50, max 150 for tight detection
       discovered: false,
       observatory,
       stars,
