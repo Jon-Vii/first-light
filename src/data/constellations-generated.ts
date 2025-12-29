@@ -33,7 +33,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Chained Princess - Home to the Andromeda Galaxy, our nearest major galaxy.",
     "centerX": 500,
     "centerY": 866,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "northern",
     "stars": [
@@ -41,103 +41,103 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "and-0",
         "x": 879,
         "y": 795,
-        "brightness": 0.8950578821724232
+        "brightness": 0.9375582852183797
       },
       {
         "id": "and-1",
         "x": 654,
         "y": 906,
-        "brightness": 0.9888786305278082
+        "brightness": 0.8643710677156199
       },
       {
         "id": "and-2",
         "x": 527,
         "y": 986,
-        "brightness": 0.9696249825344323
+        "brightness": 0.9803506696160826
       },
       {
         "id": "and-3",
         "x": 398,
         "y": 1015,
-        "brightness": 0.939587568454149
+        "brightness": 0.8605973603062563
       },
       {
         "id": "and-4",
         "x": 601,
         "y": 1110,
-        "brightness": 0.8315819744188855
+        "brightness": 0.9370745937803668
       },
       {
         "id": "and-5",
         "x": 560,
         "y": 1096,
-        "brightness": 0.8717871554610234
+        "brightness": 0.8110430976966274
       },
       {
         "id": "and-6",
         "x": 524,
         "y": 1011,
-        "brightness": 0.9492547582039561
+        "brightness": 0.9402132872932293
       },
       {
         "id": "and-7",
         "x": 517,
         "y": 938,
-        "brightness": 0.9150025399676622
+        "brightness": 0.8980436016088597
       },
       {
         "id": "and-8",
         "x": 272,
         "y": 779,
-        "brightness": 0.8247400720064836
+        "brightness": 0.8701508728405307
       },
       {
         "id": "and-9",
         "x": 121,
         "y": 795,
-        "brightness": 0.987746502452018
+        "brightness": 0.9624129362440448
       },
       {
         "id": "and-10",
         "x": 281,
         "y": 761,
-        "brightness": 0.9279181456887171
+        "brightness": 0.8229692870305597
       },
       {
         "id": "and-11",
         "x": 270,
         "y": 726,
-        "brightness": 0.8731236376981757
+        "brightness": 0.804693130383449
       },
       {
         "id": "and-12",
         "x": 599,
         "y": 858,
-        "brightness": 0.8197241512096402
+        "brightness": 0.8430055029667244
       },
       {
         "id": "and-13",
         "x": 571,
         "y": 815,
-        "brightness": 0.9770716696479503
+        "brightness": 0.8270665391747344
       },
       {
         "id": "and-14",
         "x": 653,
         "y": 713,
-        "brightness": 0.9250315407533999
+        "brightness": 0.9909091179959015
       },
       {
         "id": "and-15",
         "x": 771,
         "y": 690,
-        "brightness": 0.8235259745975135
+        "brightness": 0.9781205951299423
       },
       {
         "id": "and-16",
         "x": 305,
         "y": 726,
-        "brightness": 0.974840546029785
+        "brightness": 0.8354973173440987
       }
     ],
     "connections": [
@@ -214,7 +214,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Eagle - Contains Altair, one of the Summer Triangle stars.",
     "centerX": 4913,
     "centerY": 1420,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "northern",
     "stars": [
@@ -222,49 +222,49 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "aql-0",
         "x": 4943,
         "y": 1323,
-        "brightness": 0.8915661726472409
+        "brightness": 0.8237206158524826
       },
       {
         "id": "aql-1",
         "x": 4962,
         "y": 1352,
-        "brightness": 0.9604187035865185
+        "brightness": 0.9058729218855743
       },
       {
         "id": "aql-2",
         "x": 4980,
         "y": 1393,
-        "brightness": 0.954841810331394
+        "brightness": 0.887409729080544
       },
       {
         "id": "aql-3",
         "x": 5047,
         "y": 1514,
-        "brightness": 0.990661886523809
+        "brightness": 0.8918306021762243
       },
       {
         "id": "aql-4",
         "x": 4969,
         "y": 1483,
-        "brightness": 0.8320650396742492
+        "brightness": 0.9748668997517576
       },
       {
         "id": "aql-5",
         "x": 4856,
         "y": 1448,
-        "brightness": 0.882163612003207
+        "brightness": 0.8164036155207374
       },
       {
         "id": "aql-6",
         "x": 4773,
         "y": 1269,
-        "brightness": 0.9193513063781334
+        "brightness": 0.9666029642274089
       },
       {
         "id": "aql-7",
         "x": 4776,
         "y": 1581,
-        "brightness": 0.8528563728444136
+        "brightness": 0.8703438212759205
       }
     ],
     "connections": [
@@ -313,7 +313,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Ram - A zodiac constellation marking the spring equinox.",
     "centerX": 547,
     "centerY": 1122,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "northern",
     "stars": [
@@ -321,25 +321,25 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "ari-0",
         "x": 708,
         "y": 1046,
-        "brightness": 0.8468359554479514
+        "brightness": 0.8160305697181074
       },
       {
         "id": "ari-1",
         "x": 530,
         "y": 1109,
-        "brightness": 0.8370853961550095
+        "brightness": 0.8878684376116663
       },
       {
         "id": "ari-2",
         "x": 478,
         "y": 1153,
-        "brightness": 0.8614532230602919
+        "brightness": 0.9857505201689274
       },
       {
         "id": "ari-3",
         "x": 473,
         "y": 1178,
-        "brightness": 0.8729471054405451
+        "brightness": 0.8053245919301938
       }
     ],
     "connections": [
@@ -364,7 +364,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Charioteer - Contains bright Capella, the sixth-brightest star.",
     "centerX": 1356,
     "centerY": 814,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "northern",
     "stars": [
@@ -372,55 +372,55 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "aur-0",
         "x": 1498,
         "y": 751,
-        "brightness": 0.9098443212269587
+        "brightness": 0.9202017635752425
       },
       {
         "id": "aur-1",
         "x": 1320,
         "y": 733,
-        "brightness": 0.989357483867286
+        "brightness": 0.8254838735782861
       },
       {
         "id": "aur-2",
         "x": 1277,
         "y": 813,
-        "brightness": 0.8498277254618718
+        "brightness": 0.9625576757032173
       },
       {
         "id": "aur-3",
         "x": 1237,
         "y": 947,
-        "brightness": 0.961749547138517
+        "brightness": 0.920341411845181
       },
       {
         "id": "aur-4",
         "x": 1360,
         "y": 1023,
-        "brightness": 0.8429557610625682
+        "brightness": 0.9690367153649326
       },
       {
         "id": "aur-5",
         "x": 1499,
         "y": 880,
-        "brightness": 0.8429304910404565
+        "brightness": 0.9055335633687515
       },
       {
         "id": "aur-6",
         "x": 1498,
         "y": 595,
-        "brightness": 0.9439923317021996
+        "brightness": 0.801170419957829
       },
       {
         "id": "aur-7",
         "x": 1258,
         "y": 770,
-        "brightness": 0.8466577996393241
+        "brightness": 0.9900507107930745
       },
       {
         "id": "aur-8",
         "x": 1260,
         "y": 815,
-        "brightness": 0.8801716491756252
+        "brightness": 0.9752583886612727
       }
     ],
     "connections": [
@@ -473,7 +473,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Herdsman - Contains Arcturus, the fourth-brightest star in the sky.",
     "centerX": 3618,
     "centerY": 961,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "northern",
     "stars": [
@@ -481,73 +481,73 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "boo-0",
         "x": 3447,
         "y": 1209,
-        "brightness": 0.8320854517957882
+        "brightness": 0.9185674927606091
       },
       {
         "id": "boo-1",
         "x": 3478,
         "y": 1193,
-        "brightness": 0.9240870698154828
+        "brightness": 0.8182991588486515
       },
       {
         "id": "boo-2",
         "x": 3565,
         "y": 1180,
-        "brightness": 0.8224811803507956
+        "brightness": 0.8719056168207151
       },
       {
         "id": "boo-3",
         "x": 3633,
         "y": 994,
-        "brightness": 0.8637552943113052
+        "brightness": 0.9799262548827188
       },
       {
         "id": "boo-4",
         "x": 3634,
         "y": 862,
-        "brightness": 0.856954540785495
+        "brightness": 0.96890558476477
       },
       {
         "id": "boo-5",
         "x": 3758,
         "y": 827,
-        "brightness": 0.9226492908852277
+        "brightness": 0.8712482310865762
       },
       {
         "id": "boo-6",
         "x": 3815,
         "y": 945,
-        "brightness": 0.9325384825674067
+        "brightness": 0.8652963226999777
       },
       {
         "id": "boo-7",
         "x": 3687,
         "y": 1049,
-        "brightness": 0.9772288825410835
+        "brightness": 0.8172564509595424
       },
       {
         "id": "boo-8",
         "x": 3671,
         "y": 1271,
-        "brightness": 0.9703000583045798
+        "brightness": 0.8078886537644546
       },
       {
         "id": "boo-9",
         "x": 3568,
         "y": 732,
-        "brightness": 0.9586908178172299
+        "brightness": 0.9922550232333689
       },
       {
         "id": "boo-10",
         "x": 3556,
         "y": 637,
-        "brightness": 0.9697586441447866
+        "brightness": 0.807262242525289
       },
       {
         "id": "boo-11",
         "x": 3605,
         "y": 636,
-        "brightness": 0.9762315751486654
+        "brightness": 0.9918573020582508
       }
     ],
     "connections": [
@@ -612,7 +612,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Giraffe - A large but faint northern constellation.",
     "centerX": 1231,
     "centerY": 409,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "northern",
     "stars": [
@@ -620,49 +620,49 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "cam-0",
         "x": 1239,
         "y": 604,
-        "brightness": 0.92706362161739
+        "brightness": 0.8655675641044233
       },
       {
         "id": "cam-1",
         "x": 1264,
         "y": 493,
-        "brightness": 0.8645401340394891
+        "brightness": 0.8116810297154639
       },
       {
         "id": "cam-2",
         "x": 1225,
         "y": 394,
-        "brightness": 0.8494636307169164
+        "brightness": 0.9908256530402874
       },
       {
         "id": "cam-3",
         "x": 960,
         "y": 311,
-        "brightness": 0.8803943261964131
+        "brightness": 0.8145405736921394
       },
       {
         "id": "cam-4",
         "x": 956,
         "y": 408,
-        "brightness": 0.8991333000198225
+        "brightness": 0.9791138165879705
       },
       {
         "id": "cam-5",
         "x": 871,
         "y": 501,
-        "brightness": 0.9070796750506427
+        "brightness": 0.9707957685268981
       },
       {
         "id": "cam-6",
         "x": 1579,
         "y": 345,
-        "brightness": 0.9648813665903793
+        "brightness": 0.9714283115924144
       },
       {
         "id": "cam-7",
         "x": 1750,
         "y": 217,
-        "brightness": 0.9379405774672621
+        "brightness": 0.9043658768335676
       }
     ],
     "connections": [
@@ -703,7 +703,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Crab - A zodiac constellation containing the Beehive Cluster.",
     "centerX": 2175,
     "centerY": 1202,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "northern",
     "stars": [
@@ -711,31 +711,31 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "cnc-0",
         "x": 2244,
         "y": 1302,
-        "brightness": 0.9509479878114881
+        "brightness": 0.8122152692985105
       },
       {
         "id": "cnc-1",
         "x": 2186,
         "y": 1197,
-        "brightness": 0.9445545246122207
+        "brightness": 0.9856645896516351
       },
       {
         "id": "cnc-2",
         "x": 2180,
         "y": 1142,
-        "brightness": 0.904168697426923
+        "brightness": 0.9293999782200385
       },
       {
         "id": "cnc-3",
         "x": 2194,
         "y": 1021,
-        "brightness": 0.9930437002413958
+        "brightness": 0.8916758223759518
       },
       {
         "id": "cnc-4",
         "x": 2069,
         "y": 1347,
-        "brightness": 0.8195743782806009
+        "brightness": 0.9042871872894883
       }
     ],
     "connections": [
@@ -772,13 +772,13 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "cvn-0",
         "x": 3233,
         "y": 861,
-        "brightness": 0.9100572373826654
+        "brightness": 0.8106745893821512
       },
       {
         "id": "cvn-1",
         "x": 3141,
         "y": 811,
-        "brightness": 0.9217057266914422
+        "brightness": 0.914704356965006
       }
     ],
     "connections": [
@@ -803,13 +803,13 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "cmi-0",
         "x": 1914,
         "y": 1413,
-        "brightness": 0.9618863585824863
+        "brightness": 0.8987752691240288
       },
       {
         "id": "cmi-1",
         "x": 1863,
         "y": 1362,
-        "brightness": 0.9316856745802532
+        "brightness": 0.9293763832224498
       }
     ],
     "connections": [
@@ -826,7 +826,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Queen - Famous W-shaped constellation circling the North Pole.",
     "centerX": 500,
     "centerY": 499,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "northern",
     "stars": [
@@ -834,31 +834,31 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "cas-0",
         "x": 721,
         "y": 439,
-        "brightness": 0.8200025148429221
+        "brightness": 0.9405684032337527
       },
       {
         "id": "cas-1",
         "x": 602,
         "y": 496,
-        "brightness": 0.9543687043279266
+        "brightness": 0.9763312769785535
       },
       {
         "id": "cas-2",
         "x": 480,
         "y": 488,
-        "brightness": 0.9743511255947109
+        "brightness": 0.8835194402857586
       },
       {
         "id": "cas-3",
         "x": 413,
         "y": 558,
-        "brightness": 0.8741637813394459
+        "brightness": 0.8893325036866582
       },
       {
         "id": "cas-4",
         "x": 282,
         "y": 514,
-        "brightness": 0.8540657750288205
+        "brightness": 0.8228194365250537
       }
     ],
     "connections": [
@@ -887,7 +887,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The King - A circumpolar constellation, husband of Cassiopeia.",
     "centerX": 5479,
     "centerY": 443,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "northern",
     "stars": [
@@ -895,61 +895,61 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "cep-0",
         "x": 5123,
         "y": 450,
-        "brightness": 0.9988532599246838
+        "brightness": 0.8030102177571133
       },
       {
         "id": "cep-1",
         "x": 5189,
         "y": 469,
-        "brightness": 0.813030656688205
+        "brightness": 0.8275196544516668
       },
       {
         "id": "cep-2",
         "x": 5327,
         "y": 457,
-        "brightness": 0.9424655660954349
+        "brightness": 0.8832566459023572
       },
       {
         "id": "cep-3",
         "x": 5431,
         "y": 520,
-        "brightness": 0.8809223607557944
+        "brightness": 0.8615545996791879
       },
       {
         "id": "cep-4",
         "x": 5563,
         "y": 549,
-        "brightness": 0.8590535497544546
+        "brightness": 0.9381010116221367
       },
       {
         "id": "cep-5",
         "x": 5545,
         "y": 530,
-        "brightness": 0.8410047441943881
+        "brightness": 0.8590611189532162
       },
       {
         "id": "cep-6",
         "x": 5622,
         "y": 526,
-        "brightness": 0.8023611108045179
+        "brightness": 0.916707976313216
       },
       {
         "id": "cep-7",
         "x": 5707,
         "y": 397,
-        "brightness": 0.9941140668331885
+        "brightness": 0.8749121748842145
       },
       {
         "id": "cep-8",
         "x": 5914,
         "y": 206,
-        "brightness": 0.8369613814353428
+        "brightness": 0.9452755749673805
       },
       {
         "id": "cep-9",
         "x": 5369,
         "y": 324,
-        "brightness": 0.9824799593366587
+        "brightness": 0.9143651585503993
       }
     ],
     "connections": [
@@ -1006,7 +1006,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "Berenice's Hair - Named after an Egyptian queen's sacrifice.",
     "centerX": 3234,
     "centerY": 1091,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "northern",
     "stars": [
@@ -1014,19 +1014,19 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "com-0",
         "x": 3292,
         "y": 1208,
-        "brightness": 0.9436206318242598
+        "brightness": 0.8972030246331358
       },
       {
         "id": "com-1",
         "x": 3299,
         "y": 1035,
-        "brightness": 0.9987053547233018
+        "brightness": 0.9841738911464145
       },
       {
         "id": "com-2",
         "x": 3112,
         "y": 1029,
-        "brightness": 0.8735125091438471
+        "brightness": 0.8375009885576339
       }
     ],
     "connections": [
@@ -1055,43 +1055,43 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "crb-0",
         "x": 3887,
         "y": 977,
-        "brightness": 0.8458278151613847
+        "brightness": 0.9713727668920464
       },
       {
         "id": "crb-1",
         "x": 3866,
         "y": 1015,
-        "brightness": 0.9957209339574424
+        "brightness": 0.8422260232856883
       },
       {
         "id": "crb-2",
         "x": 3895,
         "y": 1055,
-        "brightness": 0.9650323807088179
+        "brightness": 0.8834952221144612
       },
       {
         "id": "crb-3",
         "x": 3928,
         "y": 1062,
-        "brightness": 0.8373627426883739
+        "brightness": 0.8570591737481655
       },
       {
         "id": "crb-4",
         "x": 3957,
         "y": 1066,
-        "brightness": 0.951195429873808
+        "brightness": 0.872351181579184
       },
       {
         "id": "crb-5",
         "x": 3990,
         "y": 1052,
-        "brightness": 0.9153289345635862
+        "brightness": 0.8551619773502872
       },
       {
         "id": "crb-6",
         "x": 4006,
         "y": 1002,
-        "brightness": 0.9691780201631005
+        "brightness": 0.8432161481637126
       }
     ],
     "connections": [
@@ -1128,7 +1128,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Swan - Contains Deneb and the Northern Cross asterism.",
     "centerX": 5029,
     "centerY": 828,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "northern",
     "stars": [
@@ -1136,55 +1136,55 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "cyg-0",
         "x": 5304,
         "y": 996,
-        "brightness": 0.8549009407008945
+        "brightness": 0.9113902623269505
       },
       {
         "id": "cyg-1",
         "x": 5193,
         "y": 934,
-        "brightness": 0.901889067346866
+        "brightness": 0.818293781537504
       },
       {
         "id": "cyg-2",
         "x": 5093,
         "y": 829,
-        "brightness": 0.9472784067501169
+        "brightness": 0.9648877256658148
       },
       {
         "id": "cyg-3",
         "x": 4937,
         "y": 748,
-        "brightness": 0.9848227518775443
+        "brightness": 0.9338300727957107
       },
       {
         "id": "cyg-4",
         "x": 4874,
         "y": 638,
-        "brightness": 0.8776538521571859
+        "brightness": 0.8801212093293352
       },
       {
         "id": "cyg-5",
         "x": 4821,
         "y": 611,
-        "brightness": 0.9530152917845363
+        "brightness": 0.91476807641817
       },
       {
         "id": "cyg-6",
         "x": 5173,
         "y": 745,
-        "brightness": 0.8951966850246924
+        "brightness": 0.8042421492525123
       },
       {
         "id": "cyg-7",
         "x": 4985,
         "y": 915,
-        "brightness": 0.984801640067042
+        "brightness": 0.9151574627928606
       },
       {
         "id": "cyg-8",
         "x": 4878,
         "y": 1034,
-        "brightness": 0.8800309698663626
+        "brightness": 0.8375707609196276
       }
     ],
     "connections": [
@@ -1237,31 +1237,31 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "del-0",
         "x": 5138,
         "y": 1312,
-        "brightness": 0.8183849509477358
+        "brightness": 0.9361454075306727
       },
       {
         "id": "del-1",
         "x": 5156,
         "y": 1257,
-        "brightness": 0.8535407140280773
+        "brightness": 0.9098326102997096
       },
       {
         "id": "del-2",
         "x": 5165,
         "y": 1235,
-        "brightness": 0.8801594828115744
+        "brightness": 0.8659823174611023
       },
       {
         "id": "del-3",
         "x": 5194,
         "y": 1231,
-        "brightness": 0.9406688780322897
+        "brightness": 0.8457081302296321
       },
       {
         "id": "del-4",
         "x": 5181,
         "y": 1249,
-        "brightness": 0.9696132613217481
+        "brightness": 0.9834438954710023
       }
     ],
     "connections": [
@@ -1294,7 +1294,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Dragon - Winds around the north celestial pole.",
     "centerX": 4162,
     "centerY": 449,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "northern",
     "stars": [
@@ -1302,91 +1302,91 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "dra-0",
         "x": 4473,
         "y": 552,
-        "brightness": 0.8354452810447842
+        "brightness": 0.8530690202323634
       },
       {
         "id": "dra-1",
         "x": 4486,
         "y": 642,
-        "brightness": 0.8680418908642087
+        "brightness": 0.8278624676460612
       },
       {
         "id": "dra-2",
         "x": 4377,
         "y": 628,
-        "brightness": 0.8244617872472028
+        "brightness": 0.8282567617583466
       },
       {
         "id": "dra-3",
         "x": 4384,
         "y": 580,
-        "brightness": 0.9065940787566771
+        "brightness": 0.9404068091339883
       },
       {
         "id": "dra-4",
         "x": 4802,
         "y": 372,
-        "brightness": 0.8767594482598341
+        "brightness": 0.8501332968059653
       },
       {
         "id": "dra-5",
         "x": 4586,
         "y": 311,
-        "brightness": 0.9729497212314895
+        "brightness": 0.99199812602053
       },
       {
         "id": "dra-6",
         "x": 4287,
         "y": 405,
-        "brightness": 0.9195841811208907
+        "brightness": 0.9164767560118019
       },
       {
         "id": "dra-7",
         "x": 4100,
         "y": 475,
-        "brightness": 0.8117647503240507
+        "brightness": 0.9459068985786422
       },
       {
         "id": "dra-8",
         "x": 4008,
         "y": 524,
-        "brightness": 0.8041795706577638
+        "brightness": 0.8697978590005823
       },
       {
         "id": "dra-9",
         "x": 3854,
         "y": 517,
-        "brightness": 0.8153628842071781
+        "brightness": 0.9296703889691427
       },
       {
         "id": "dra-10",
         "x": 3518,
         "y": 427,
-        "brightness": 0.8186246171450934
+        "brightness": 0.9429007242798456
       },
       {
         "id": "dra-11",
         "x": 3140,
         "y": 337,
-        "brightness": 0.8400738472485985
+        "brightness": 0.8504378623782249
       },
       {
         "id": "dra-12",
         "x": 2881,
         "y": 344,
-        "brightness": 0.8345030742455349
+        "brightness": 0.8475444781375565
       },
       {
         "id": "dra-13",
         "x": 4588,
         "y": 288,
-        "brightness": 0.9906487648553292
+        "brightness": 0.8948589199596239
       },
       {
         "id": "dra-14",
         "x": 4951,
         "y": 329,
-        "brightness": 0.8209306328556779
+        "brightness": 0.9795143266804454
       }
     ],
     "connections": [
@@ -1467,19 +1467,19 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "equ-0",
         "x": 5316,
         "y": 1413,
-        "brightness": 0.8887809033677116
+        "brightness": 0.9130655338904121
       },
       {
         "id": "equ-1",
         "x": 5310,
         "y": 1333,
-        "brightness": 0.9427686342658105
+        "brightness": 0.8253650562399213
       },
       {
         "id": "equ-2",
         "x": 5293,
         "y": 1331,
-        "brightness": 0.8426054573059637
+        "brightness": 0.8545874576503771
       }
     ],
     "connections": [
@@ -1500,7 +1500,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Twins - A zodiac constellation with bright Castor and Pollux.",
     "centerX": 1762,
     "centerY": 1117,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "northern",
     "stars": [
@@ -1508,73 +1508,73 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "gem-0",
         "x": 1562,
         "y": 1125,
-        "brightness": 0.9015161315157146
+        "brightness": 0.8731378090713079
       },
       {
         "id": "gem-1",
         "x": 1596,
         "y": 1125,
-        "brightness": 0.8509226008147057
+        "brightness": 0.8188195164307889
       },
       {
         "id": "gem-2",
         "x": 1683,
         "y": 1081,
-        "brightness": 0.8462972718106642
+        "brightness": 0.892887828068343
       },
       {
         "id": "gem-3",
         "x": 1796,
         "y": 996,
-        "brightness": 0.8022071218007479
+        "brightness": 0.9318731312819357
       },
       {
         "id": "gem-4",
         "x": 1894,
         "y": 969,
-        "brightness": 0.8782224467271476
+        "brightness": 0.8620803547871854
       },
       {
         "id": "gem-5",
         "x": 1939,
         "y": 1033,
-        "brightness": 0.9825626052489028
+        "brightness": 0.9217475821922515
       },
       {
         "id": "gem-6",
         "x": 1900,
         "y": 1052,
-        "brightness": 0.8358597808775882
+        "brightness": 0.9048462081300397
       },
       {
         "id": "gem-7",
         "x": 1834,
         "y": 1134,
-        "brightness": 0.8799731336573707
+        "brightness": 0.8448152394284574
       },
       {
         "id": "gem-8",
         "x": 1767,
         "y": 1157,
-        "brightness": 0.8963084718309775
+        "brightness": 0.9249663107123217
       },
       {
         "id": "gem-9",
         "x": 1657,
         "y": 1227,
-        "brightness": 0.9360134575054037
+        "brightness": 0.8241604407263114
       },
       {
         "id": "gem-10",
         "x": 1689,
         "y": 1285,
-        "brightness": 0.8283031695296466
+        "brightness": 0.8937934109947541
       },
       {
         "id": "gem-11",
         "x": 1825,
         "y": 1224,
-        "brightness": 0.8708276843809268
+        "brightness": 0.9719436755463645
       }
     ],
     "connections": [
@@ -1631,7 +1631,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Hero - The fifth-largest constellation, containing M13.",
     "centerX": 4252,
     "centerY": 957,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "northern",
     "stars": [
@@ -1639,103 +1639,103 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "her-0",
         "x": 4091,
         "y": 1181,
-        "brightness": 0.835739757154921
+        "brightness": 0.8336681803340728
       },
       {
         "id": "her-1",
         "x": 4126,
         "y": 1142,
-        "brightness": 0.8220064286103959
+        "brightness": 0.9905931026625099
       },
       {
         "id": "her-2",
         "x": 4172,
         "y": 973,
-        "brightness": 0.9878581152548397
+        "brightness": 0.9774348978523468
       },
       {
         "id": "her-3",
         "x": 4179,
         "y": 851,
-        "brightness": 0.8625845800216584
+        "brightness": 0.8063578707137373
       },
       {
         "id": "her-4",
         "x": 4142,
         "y": 793,
-        "brightness": 0.988072271437609
+        "brightness": 0.9376955063075261
       },
       {
         "id": "her-5",
         "x": 4082,
         "y": 728,
-        "brightness": 0.8043710133118082
+        "brightness": 0.8796327782759754
       },
       {
         "id": "her-6",
         "x": 4037,
         "y": 751,
-        "brightness": 0.9360937348352039
+        "brightness": 0.9480543822760054
       },
       {
         "id": "her-7",
         "x": 3969,
         "y": 792,
-        "brightness": 0.8572228516484598
+        "brightness": 0.8076852027780272
       },
       {
         "id": "her-8",
         "x": 4251,
         "y": 985,
-        "brightness": 0.965434557293828
+        "brightness": 0.8935499822178771
       },
       {
         "id": "her-9",
         "x": 4313,
         "y": 887,
-        "brightness": 0.930461429533469
+        "brightness": 0.9688758393456116
       },
       {
         "id": "her-10",
         "x": 4484,
         "y": 879,
-        "brightness": 0.9517119484209577
+        "brightness": 0.9331503960582512
       },
       {
         "id": "her-11",
         "x": 4349,
         "y": 881,
-        "brightness": 0.8303994549436866
+        "brightness": 0.9825155627366403
       },
       {
         "id": "her-12",
         "x": 4313,
         "y": 1086,
-        "brightness": 0.8066642409699141
+        "brightness": 0.9053921598414088
       },
       {
         "id": "her-13",
         "x": 4444,
         "y": 1038,
-        "brightness": 0.8744509268025171
+        "brightness": 0.9625141017955248
       },
       {
         "id": "her-14",
         "x": 4491,
         "y": 1013,
-        "brightness": 0.8868753023504581
+        "brightness": 0.9671697234175849
       },
       {
         "id": "her-15",
         "x": 4531,
         "y": 1021,
-        "brightness": 0.996457309974454
+        "brightness": 0.8933801311485775
       },
       {
         "id": "her-16",
         "x": 4311,
         "y": 1260,
-        "brightness": 0.8222903499012435
+        "brightness": 0.8418476289061325
       }
     ],
     "connections": [
@@ -1816,7 +1816,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Lizard - A small constellation between Cygnus and Andromeda.",
     "centerX": 5607,
     "centerY": 739,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "northern",
     "stars": [
@@ -1824,55 +1824,55 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "lac-0",
         "x": 5598,
         "y": 630,
-        "brightness": 0.904166494797728
+        "brightness": 0.9866387147393891
       },
       {
         "id": "lac-1",
         "x": 5630,
         "y": 662,
-        "brightness": 0.8772740178616514
+        "brightness": 0.9194395701872539
       },
       {
         "id": "lac-2",
         "x": 5623,
         "y": 705,
-        "brightness": 0.8812150185759493
+        "brightness": 0.8632731936012608
       },
       {
         "id": "lac-3",
         "x": 5588,
         "y": 724,
-        "brightness": 0.9483472551710233
+        "brightness": 0.8924274474071835
       },
       {
         "id": "lac-4",
         "x": 5627,
         "y": 781,
-        "brightness": 0.9433194067935251
+        "brightness": 0.990688923772208
       },
       {
         "id": "lac-5",
         "x": 5669,
         "y": 762,
-        "brightness": 0.9617711275133896
+        "brightness": 0.8697075598056397
       },
       {
         "id": "lac-6",
         "x": 5602,
         "y": 675,
-        "brightness": 0.9988989610512884
+        "brightness": 0.8601120962293878
       },
       {
         "id": "lac-7",
         "x": 5558,
         "y": 838,
-        "brightness": 0.994799931049724
+        "brightness": 0.9149344783850013
       },
       {
         "id": "lac-8",
         "x": 5567,
         "y": 871,
-        "brightness": 0.9926332507072996
+        "brightness": 0.8624895561936823
       }
     ],
     "connections": [
@@ -1925,7 +1925,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Lion - A zodiac constellation with bright Regulus.",
     "centerX": 2634,
     "centerY": 1181,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "northern",
     "stars": [
@@ -1933,55 +1933,55 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "leo-0",
         "x": 2535,
         "y": 1301,
-        "brightness": 0.8579041912446274
+        "brightness": 0.8372953274853248
       },
       {
         "id": "leo-1",
         "x": 2531,
         "y": 1221,
-        "brightness": 0.9747574631928437
+        "brightness": 0.959698525738523
       },
       {
         "id": "leo-2",
         "x": 2583,
         "y": 1169,
-        "brightness": 0.8780944774486711
+        "brightness": 0.8137418405151075
       },
       {
         "id": "leo-3",
         "x": 2809,
         "y": 1158,
-        "brightness": 0.9740682371438532
+        "brightness": 0.8849663638414663
       },
       {
         "id": "leo-4",
         "x": 2954,
         "y": 1257,
-        "brightness": 0.9535410822037659
+        "brightness": 0.9283967012669652
       },
       {
         "id": "leo-5",
         "x": 2809,
         "y": 1243,
-        "brightness": 0.9100141183407646
+        "brightness": 0.8425058138123721
       },
       {
         "id": "leo-6",
         "x": 2570,
         "y": 1110,
-        "brightness": 0.9058986831474432
+        "brightness": 0.8957122640670176
       },
       {
         "id": "leo-7",
         "x": 2470,
         "y": 1067,
-        "brightness": 0.9415415360807475
+        "brightness": 0.8437723672795533
       },
       {
         "id": "leo-8",
         "x": 2441,
         "y": 1104,
-        "brightness": 0.8243572244429688
+        "brightness": 0.8197247739982235
       }
     ],
     "connections": [
@@ -2030,7 +2030,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Little Lion - A small constellation between Leo and Ursa Major.",
     "centerX": 2574,
     "centerY": 912,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "northern",
     "stars": [
@@ -2038,31 +2038,31 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "lmi-0",
         "x": 2531,
         "y": 913,
-        "brightness": 0.9964650966539043
+        "brightness": 0.9838635549469351
       },
       {
         "id": "lmi-1",
         "x": 2608,
         "y": 937,
-        "brightness": 0.9870738925934268
+        "brightness": 0.8970551286856308
       },
       {
         "id": "lmi-2",
         "x": 2722,
         "y": 930,
-        "brightness": 0.8718031925522015
+        "brightness": 0.9956846627532747
       },
       {
         "id": "lmi-3",
         "x": 2616,
         "y": 888,
-        "brightness": 0.8908064389249398
+        "brightness": 0.9167718040378642
       },
       {
         "id": "lmi-4",
         "x": 2393,
         "y": 893,
-        "brightness": 0.9652632930494018
+        "brightness": 0.9994680521862896
       }
     ],
     "connections": [
@@ -2095,7 +2095,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Lynx - A faint constellation requiring keen eyes to see.",
     "centerX": 2028,
     "centerY": 731,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "northern",
     "stars": [
@@ -2103,43 +2103,43 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "lyn-0",
         "x": 1582,
         "y": 516,
-        "brightness": 0.8572326877490983
+        "brightness": 0.9057993681096588
       },
       {
         "id": "lyn-1",
         "x": 1739,
         "y": 526,
-        "brightness": 0.9108131943328117
+        "brightness": 0.8124724363035511
       },
       {
         "id": "lyn-2",
         "x": 1861,
         "y": 680,
-        "brightness": 0.8477799648956903
+        "brightness": 0.8027246957724159
       },
       {
         "id": "lyn-3",
         "x": 2095,
         "y": 780,
-        "brightness": 0.989954586614996
+        "brightness": 0.9611467051294886
       },
       {
         "id": "lyn-4",
         "x": 2253,
         "y": 804,
-        "brightness": 0.9451684055457039
+        "brightness": 0.9604053936538686
       },
       {
         "id": "lyn-5",
         "x": 2329,
         "y": 887,
-        "brightness": 0.8744110653815443
+        "brightness": 0.85496835999031
       },
       {
         "id": "lyn-6",
         "x": 2338,
         "y": 927,
-        "brightness": 0.930963580153533
+        "brightness": 0.976886470072234
       }
     ],
     "connections": [
@@ -2184,37 +2184,37 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "lyr-0",
         "x": 4687,
         "y": 873,
-        "brightness": 0.8914341961121148
+        "brightness": 0.8657249266784263
       },
       {
         "id": "lyr-1",
         "x": 4685,
         "y": 840,
-        "brightness": 0.8800465069908381
+        "brightness": 0.8240995705573718
       },
       {
         "id": "lyr-2",
         "x": 4654,
         "y": 854,
-        "brightness": 0.8157278652477328
+        "brightness": 0.8816444679821455
       },
       {
         "id": "lyr-3",
         "x": 4727,
         "y": 885,
-        "brightness": 0.8040912029685912
+        "brightness": 0.9066351406667227
       },
       {
         "id": "lyr-4",
         "x": 4746,
         "y": 955,
-        "brightness": 0.879823455247216
+        "brightness": 0.918400789051652
       },
       {
         "id": "lyr-5",
         "x": 4709,
         "y": 944,
-        "brightness": 0.8281266095400542
+        "brightness": 0.8433719473723889
       }
     ],
     "connections": [
@@ -2255,7 +2255,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Hunter - The most recognizable constellation in the sky.",
     "centerX": 1359,
     "centerY": 1385,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "northern",
     "stars": [
@@ -2263,139 +2263,139 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "ori-0",
         "x": 1532,
         "y": 1254,
-        "brightness": 0.8476878011372753
+        "brightness": 0.8190097921868393
       },
       {
         "id": "ori-1",
         "x": 1477,
         "y": 1162,
-        "brightness": 0.9813250719172188
+        "brightness": 0.8082902467838909
       },
       {
         "id": "ori-2",
         "x": 1516,
         "y": 1164,
-        "brightness": 0.8658323112081221
+        "brightness": 0.8463199590601805
       },
       {
         "id": "ori-3",
         "x": 1550,
         "y": 1263,
-        "brightness": 0.9329385045472385
+        "brightness": 0.9469616443234431
       },
       {
         "id": "ori-4",
         "x": 1510,
         "y": 1339,
-        "brightness": 0.816498468670692
+        "brightness": 0.9293620420120016
       },
       {
         "id": "ori-5",
         "x": 1480,
         "y": 1377,
-        "brightness": 0.8924856191885149
+        "brightness": 0.9081549019531274
       },
       {
         "id": "ori-6",
         "x": 1355,
         "y": 1394,
-        "brightness": 0.83354677478139
+        "brightness": 0.8312259233241243
       },
       {
         "id": "ori-7",
         "x": 1229,
         "y": 1331,
-        "brightness": 0.922053551340803
+        "brightness": 0.8687395085759108
       },
       {
         "id": "ori-8",
         "x": 1244,
         "y": 1471,
-        "brightness": 0.9055651323276449
+        "brightness": 0.9712834660154568
       },
       {
         "id": "ori-9",
         "x": 1226,
         "y": 1459,
-        "brightness": 0.9927897799961302
+        "brightness": 0.8944158960987303
       },
       {
         "id": "ori-10",
         "x": 1213,
         "y": 1407,
-        "brightness": 0.852355434299958
+        "brightness": 0.9849971514546353
       },
       {
         "id": "ori-11",
         "x": 1208,
         "y": 1384,
-        "brightness": 0.9700567124357091
+        "brightness": 0.8888524196363673
       },
       {
         "id": "ori-12",
         "x": 1211,
         "y": 1352,
-        "brightness": 0.91563564847454
+        "brightness": 0.9616030599932817
       },
       {
         "id": "ori-13",
         "x": 1235,
         "y": 1275,
-        "brightness": 0.9239151328247941
+        "brightness": 0.9567936386309085
       },
       {
         "id": "ori-14",
         "x": 1269,
         "y": 1243,
-        "brightness": 0.9878001890809627
+        "brightness": 0.9047260143031495
       },
       {
         "id": "ori-15",
         "x": 1290,
         "y": 1240,
-        "brightness": 0.9090984990090727
+        "brightness": 0.9338540788769183
       },
       {
         "id": "ori-16",
         "x": 1311,
         "y": 1637,
-        "brightness": 0.9795030602885885
+        "brightness": 0.9994613007493421
       },
       {
         "id": "ori-17",
         "x": 1352,
         "y": 1540,
-        "brightness": 0.8116185639512029
+        "brightness": 0.867864484627598
       },
       {
         "id": "ori-18",
         "x": 1383,
         "y": 1505,
-        "brightness": 0.987144198893357
+        "brightness": 0.9552047489900672
       },
       {
         "id": "ori-19",
         "x": 1396,
         "y": 1334,
-        "brightness": 0.986590424646165
+        "brightness": 0.9411068626789837
       },
       {
         "id": "ori-20",
         "x": 1420,
         "y": 1532,
-        "brightness": 0.8564511299221765
+        "brightness": 0.9897597775597828
       },
       {
         "id": "ori-21",
         "x": 1449,
         "y": 1661,
-        "brightness": 0.9342618291385623
+        "brightness": 0.9414744092526427
       },
       {
         "id": "ori-22",
         "x": 1401,
         "y": 1520,
-        "brightness": 0.8608641595759556
+        "brightness": 0.9385910971906042
       }
     ],
     "connections": [
@@ -2504,7 +2504,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Winged Horse - Famous for its Great Square asterism.",
     "centerX": 500,
     "centerY": 1156,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "northern",
     "stars": [
@@ -2512,85 +2512,85 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "peg-0",
         "x": 359,
         "y": 947,
-        "brightness": 0.8001575843971293
+        "brightness": 0.9512863019794019
       },
       {
         "id": "peg-1",
         "x": 496,
         "y": 996,
-        "brightness": 0.9274579428884562
+        "brightness": 0.8203952191346918
       },
       {
         "id": "peg-2",
         "x": 583,
         "y": 1032,
-        "brightness": 0.8395608891779488
+        "brightness": 0.9423790167169741
       },
       {
         "id": "peg-3",
         "x": 852,
         "y": 1015,
-        "brightness": 0.9816754275391157
+        "brightness": 0.9615310326753458
       },
       {
         "id": "peg-4",
         "x": 872,
         "y": 1247,
-        "brightness": 0.8731639208551046
+        "brightness": 0.9525243768859766
       },
       {
         "id": "peg-5",
         "x": 587,
         "y": 1247,
-        "brightness": 0.9492406808551149
+        "brightness": 0.8640816782079563
       },
       {
         "id": "peg-6",
         "x": 512,
         "y": 1297,
-        "brightness": 0.9248641375909868
+        "brightness": 0.925584183339625
       },
       {
         "id": "peg-7",
         "x": 490,
         "y": 1319,
-        "brightness": 0.9557391806318042
+        "brightness": 0.8338005914141329
       },
       {
         "id": "peg-8",
         "x": 359,
         "y": 1397,
-        "brightness": 0.8316969107657728
+        "brightness": 0.8974782935248129
       },
       {
         "id": "peg-9",
         "x": 251,
         "y": 1335,
-        "brightness": 0.9132697924375068
+        "brightness": 0.8419697494457384
       },
       {
         "id": "peg-10",
         "x": 525,
         "y": 1090,
-        "brightness": 0.8692524441373131
+        "brightness": 0.9377205625388371
       },
       {
         "id": "peg-11",
         "x": 511,
         "y": 1107,
-        "brightness": 0.8353363711862654
+        "brightness": 0.8214081681083583
       },
       {
         "id": "peg-12",
         "x": 346,
         "y": 1078,
-        "brightness": 0.9830291641047793
+        "brightness": 0.8711436268943377
       },
       {
         "id": "peg-13",
         "x": 253,
         "y": 1073,
-        "brightness": 0.9006228941162852
+        "brightness": 0.8571023480791472
       }
     ],
     "connections": [
@@ -2659,7 +2659,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Hero - Contains the famous variable star Algol.",
     "centerX": 843,
     "centerY": 753,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "northern",
     "stars": [
@@ -2667,139 +2667,139 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "per-0",
         "x": 935,
         "y": 962,
-        "brightness": 0.8273274411636617
+        "brightness": 0.8177064088726769
       },
       {
         "id": "per-1",
         "x": 976,
         "y": 969,
-        "brightness": 0.9651155471376142
+        "brightness": 0.9217985274295508
       },
       {
         "id": "per-2",
         "x": 996,
         "y": 903,
-        "brightness": 0.9220367999545303
+        "brightness": 0.971624630444081
       },
       {
         "id": "per-3",
         "x": 991,
         "y": 833,
-        "brightness": 0.956863233347457
+        "brightness": 0.9521443291515155
       },
       {
         "id": "per-4",
         "x": 938,
         "y": 790,
-        "brightness": 0.9139779966836381
+        "brightness": 0.9469595698222485
       },
       {
         "id": "per-5",
         "x": 929,
         "y": 704,
-        "brightness": 0.9310273228740037
+        "brightness": 0.8359443799637083
       },
       {
         "id": "per-6",
         "x": 902,
         "y": 697,
-        "brightness": 0.9559136803572925
+        "brightness": 0.8362520950768972
       },
       {
         "id": "per-7",
         "x": 851,
         "y": 669,
-        "brightness": 0.8758297120469749
+        "brightness": 0.882074893632741
       },
       {
         "id": "per-8",
         "x": 770,
         "y": 608,
-        "brightness": 0.923809601533437
+        "brightness": 0.862305786724057
       },
       {
         "id": "per-9",
         "x": 711,
         "y": 568,
-        "brightness": 0.8696618569934961
+        "brightness": 0.8351318137972153
       },
       {
         "id": "per-10",
         "x": 726,
         "y": 621,
-        "brightness": 0.9853702443596348
+        "brightness": 0.8410942266586818
       },
       {
         "id": "per-11",
         "x": 788,
         "y": 673,
-        "brightness": 0.9260861857465414
+        "brightness": 0.8229400121960393
       },
       {
         "id": "per-12",
         "x": 790,
         "y": 752,
-        "brightness": 0.8682310665070241
+        "brightness": 0.8879115121171035
       },
       {
         "id": "per-13",
         "x": 784,
         "y": 817,
-        "brightness": 0.9287327865694749
+        "brightness": 0.9626190673050061
       },
       {
         "id": "per-14",
         "x": 797,
         "y": 840,
-        "brightness": 0.8057298113993726
+        "brightness": 0.88857479540999
       },
       {
         "id": "per-15",
         "x": 772,
         "y": 853,
-        "brightness": 0.807087827590827
+        "brightness": 0.8905491542017279
       },
       {
         "id": "per-16",
         "x": 745,
         "y": 839,
-        "brightness": 0.8706314601959002
+        "brightness": 0.9689720325509563
       },
       {
         "id": "per-17",
         "x": 749,
         "y": 816,
-        "brightness": 0.8278490614083914
+        "brightness": 0.9009170673369435
       },
       {
         "id": "per-18",
         "x": 1027,
         "y": 661,
-        "brightness": 0.818564275253601
+        "brightness": 0.8760014915639893
       },
       {
         "id": "per-19",
         "x": 1062,
         "y": 693,
-        "brightness": 0.9483278850983281
+        "brightness": 0.8445664181146214
       },
       {
         "id": "per-20",
         "x": 1036,
         "y": 705,
-        "brightness": 0.8037875324683131
+        "brightness": 0.9017599809728545
       },
       {
         "id": "per-21",
         "x": 684,
         "y": 680,
-        "brightness": 0.9643516758503317
+        "brightness": 0.8239944793096184
       },
       {
         "id": "per-22",
         "x": 432,
         "y": 655,
-        "brightness": 0.9359577905720619
+        "brightness": 0.8703866907079557
       }
     ],
     "connections": [
@@ -2904,7 +2904,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Fishes - A zodiac constellation with the spring equinox point.",
     "centerX": 500,
     "centerY": 1344,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "northern",
     "stars": [
@@ -2912,133 +2912,133 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "psc-0",
         "x": 646,
         "y": 1090,
-        "brightness": 0.977174604773925
+        "brightness": 0.979621778419276
       },
       {
         "id": "psc-1",
         "x": 638,
         "y": 999,
-        "brightness": 0.9261213788453015
+        "brightness": 0.9011860476865388
       },
       {
         "id": "psc-2",
         "x": 670,
         "y": 1046,
-        "brightness": 0.8554777356115429
+        "brightness": 0.8174493035205311
       },
       {
         "id": "psc-3",
         "x": 637,
         "y": 1149,
-        "brightness": 0.9022822330575863
+        "brightness": 0.9807158936219171
       },
       {
         "id": "psc-4",
         "x": 720,
         "y": 1244,
-        "brightness": 0.8747833728573118
+        "brightness": 0.8226258545431578
       },
       {
         "id": "psc-5",
         "x": 778,
         "y": 1347,
-        "brightness": 0.8591459001269041
+        "brightness": 0.8837390062655652
       },
       {
         "id": "psc-6",
         "x": 848,
         "y": 1454,
-        "brightness": 0.9618670379690195
+        "brightness": 0.8409330489368906
       },
       {
         "id": "psc-7",
         "x": 812,
         "y": 1447,
-        "brightness": 0.9299615533751071
+        "brightness": 0.947255261706073
       },
       {
         "id": "psc-8",
         "x": 762,
         "y": 1409,
-        "brightness": 0.8837874184013627
+        "brightness": 0.8020394118059705
       },
       {
         "id": "psc-9",
         "x": 715,
         "y": 1398,
-        "brightness": 0.8249813168583962
+        "brightness": 0.8001254308928543
       },
       {
         "id": "psc-10",
         "x": 646,
         "y": 1374,
-        "brightness": 0.8158071810784268
+        "brightness": 0.914109821809714
       },
       {
         "id": "psc-11",
         "x": 601,
         "y": 1368,
-        "brightness": 0.9006817394974167
+        "brightness": 0.8808541259567144
       },
       {
         "id": "psc-12",
         "x": 542,
         "y": 1374,
-        "brightness": 0.8020924352775628
+        "brightness": 0.8916974687896614
       },
       {
         "id": "psc-13",
         "x": 336,
         "y": 1386,
-        "brightness": 0.821909693385094
+        "brightness": 0.8842324378826061
       },
       {
         "id": "psc-14",
         "x": 255,
         "y": 1406,
-        "brightness": 0.9730782293993607
+        "brightness": 0.914672142351603
       },
       {
         "id": "psc-15",
         "x": 206,
         "y": 1394,
-        "brightness": 0.9938443453043788
+        "brightness": 0.8969106288502613
       },
       {
         "id": "psc-16",
         "x": 174,
         "y": 1410,
-        "brightness": 0.962360082051308
+        "brightness": 0.8319340359915459
       },
       {
         "id": "psc-17",
         "x": 161,
         "y": 1445,
-        "brightness": 0.916496983246057
+        "brightness": 0.946891574880117
       },
       {
         "id": "psc-18",
         "x": 201,
         "y": 1479,
-        "brightness": 0.8430778437364215
+        "brightness": 0.9684045251501698
       },
       {
         "id": "psc-19",
         "x": 264,
         "y": 1470,
-        "brightness": 0.957802112383749
+        "brightness": 0.950821940529123
       },
       {
         "id": "psc-20",
         "x": 282,
         "y": 1442,
-        "brightness": 0.9754671705192259
+        "brightness": 0.954554652998622
       },
       {
         "id": "psc-21",
         "x": 105,
         "y": 1436,
-        "brightness": 0.8669026758644539
+        "brightness": 0.9665730223303495
       }
     ],
     "connections": [
@@ -3151,25 +3151,25 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "sge-0",
         "x": 4917,
         "y": 1200,
-        "brightness": 0.8545225068670351
+        "brightness": 0.9675847197376205
       },
       {
         "id": "sge-1",
         "x": 4947,
         "y": 1191,
-        "brightness": 0.8681529752193572
+        "brightness": 0.9266856058873657
       },
       {
         "id": "sge-2",
         "x": 4995,
         "y": 1175,
-        "brightness": 0.9462467048770213
+        "brightness": 0.8709959518653347
       },
       {
         "id": "sge-3",
         "x": 4921,
         "y": 1209,
-        "brightness": 0.8979127286706357
+        "brightness": 0.8314645285958644
       }
     ],
     "connections": [
@@ -3194,7 +3194,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Serpent - The only constellation split into two parts.",
     "centerX": 3957,
     "centerY": 1320,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "northern",
     "stars": [
@@ -3202,49 +3202,49 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "ser-0",
         "x": 3942,
         "y": 1243,
-        "brightness": 0.851412527455044
+        "brightness": 0.9561781805646057
       },
       {
         "id": "ser-1",
         "x": 3923,
         "y": 1172,
-        "brightness": 0.9287396776143357
+        "brightness": 0.8418230855611165
       },
       {
         "id": "ser-2",
         "x": 3953,
         "y": 1198,
-        "brightness": 0.924670561507671
+        "brightness": 0.808168264997065
       },
       {
         "id": "ser-3",
         "x": 3985,
         "y": 1239,
-        "brightness": 0.9350933837419813
+        "brightness": 0.9951619143888487
       },
       {
         "id": "ser-4",
         "x": 3895,
         "y": 1324,
-        "brightness": 0.9428150683871888
+        "brightness": 0.9639291175175903
       },
       {
         "id": "ser-5",
         "x": 3934,
         "y": 1393,
-        "brightness": 0.9938994992248606
+        "brightness": 0.8237486399239474
       },
       {
         "id": "ser-6",
         "x": 3962,
         "y": 1425,
-        "brightness": 0.8622532493378543
+        "brightness": 0.8984403142680137
       },
       {
         "id": "ser-7",
         "x": 4060,
         "y": 1562,
-        "brightness": 0.9023233736208709
+        "brightness": 0.8441818189216254
       }
     ],
     "connections": [
@@ -3289,7 +3289,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Bull - A zodiac constellation with the Pleiades and Hyades.",
     "centerX": 1081,
     "centerY": 1261,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "northern",
     "stars": [
@@ -3297,73 +3297,73 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "tau-0",
         "x": 1407,
         "y": 1148,
-        "brightness": 0.8782935530953401
+        "brightness": 0.9983748633155559
       },
       {
         "id": "tau-1",
         "x": 1150,
         "y": 1225,
-        "brightness": 0.9962841871013518
+        "brightness": 0.9136162532963088
       },
       {
         "id": "tau-2",
         "x": 1119,
         "y": 1235,
-        "brightness": 0.9936396864520022
+        "brightness": 0.8738674627237919
       },
       {
         "id": "tau-3",
         "x": 1082,
         "y": 1240,
-        "brightness": 0.932595897231878
+        "brightness": 0.8856503565813987
       },
       {
         "id": "tau-4",
         "x": 1096,
         "y": 1208,
-        "brightness": 0.9206442746374408
+        "brightness": 0.8098162852538985
       },
       {
         "id": "tau-5",
         "x": 1119,
         "y": 1180,
-        "brightness": 0.8179672439634008
+        "brightness": 0.9982756489693851
       },
       {
         "id": "tau-6",
         "x": 1360,
         "y": 1023,
-        "brightness": 0.8215948168792332
+        "brightness": 0.96561292047098
       },
       {
         "id": "tau-7",
         "x": 1003,
         "y": 1292,
-        "brightness": 0.8712737759154039
+        "brightness": 0.8731540867353452
       },
       {
         "id": "tau-8",
         "x": 863,
         "y": 1338,
-        "brightness": 0.8957834562596216
+        "brightness": 0.9872251475285112
       },
       {
         "id": "tau-9",
         "x": 1013,
         "y": 1400,
-        "brightness": 0.9827289236463769
+        "brightness": 0.9719887669856933
       },
       {
         "id": "tau-10",
         "x": 853,
         "y": 1350,
-        "brightness": 0.9711412904859028
+        "brightness": 0.9091378911258677
       },
       {
         "id": "tau-11",
         "x": 904,
         "y": 1493,
-        "brightness": 0.8918051660715197
+        "brightness": 0.9130305255344345
       }
     ],
     "connections": [
@@ -3428,19 +3428,19 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "tri-0",
         "x": 471,
         "y": 1007,
-        "brightness": 0.9721215823303099
+        "brightness": 0.8239786965545567
       },
       {
         "id": "tri-1",
         "x": 540,
         "y": 917,
-        "brightness": 0.8854259323831744
+        "brightness": 0.9579921856412706
       },
       {
         "id": "tri-2",
         "x": 572,
         "y": 936,
-        "brightness": 0.9000936932786118
+        "brightness": 0.8119075922451346
       }
     ],
     "connections": [
@@ -3465,7 +3465,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Great Bear - Contains the famous Big Dipper asterism.",
     "centerX": 2723,
     "centerY": 655,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "northern",
     "stars": [
@@ -3473,121 +3473,121 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "uma-0",
         "x": 3064,
         "y": 549,
-        "brightness": 0.839894205916438
+        "brightness": 0.9012740644222528
       },
       {
         "id": "uma-1",
         "x": 2766,
         "y": 471,
-        "brightness": 0.8384204542375838
+        "brightness": 0.9971353869720949
       },
       {
         "id": "uma-2",
         "x": 2758,
         "y": 560,
-        "brightness": 0.969845053264572
+        "brightness": 0.8721352692743882
       },
       {
         "id": "uma-3",
         "x": 2974,
         "y": 605,
-        "brightness": 0.8776145298833976
+        "brightness": 0.8334423284855509
       },
       {
         "id": "uma-4",
         "x": 3225,
         "y": 567,
-        "brightness": 0.9293062366632067
+        "brightness": 0.8581460474739677
       },
       {
         "id": "uma-5",
         "x": 3350,
         "y": 585,
-        "brightness": 0.8601819138725633
+        "brightness": 0.8437586872769262
       },
       {
         "id": "uma-6",
         "x": 3448,
         "y": 678,
-        "brightness": 0.8495997223041538
+        "brightness": 0.9851813304246615
       },
       {
         "id": "uma-7",
         "x": 2942,
         "y": 704,
-        "brightness": 0.8049573451603251
+        "brightness": 0.8677903002075078
       },
       {
         "id": "uma-8",
         "x": 2827,
         "y": 948,
-        "brightness": 0.9197525911843929
+        "brightness": 0.879604347894828
       },
       {
         "id": "uma-9",
         "x": 2826,
         "y": 974,
-        "brightness": 0.9399906100968792
+        "brightness": 0.9721235356207489
       },
       {
         "id": "uma-10",
         "x": 2790,
         "y": 758,
-        "brightness": 0.9665274638526409
+        "brightness": 0.9599379216811542
       },
       {
         "id": "uma-11",
         "x": 2593,
         "y": 808,
-        "brightness": 0.8927736896103966
+        "brightness": 0.8290756002384033
       },
       {
         "id": "uma-12",
         "x": 2571,
         "y": 785,
-        "brightness": 0.9106150213297378
+        "brightness": 0.9513076700115524
       },
       {
         "id": "uma-13",
         "x": 2381,
         "y": 449,
-        "brightness": 0.8009050826274899
+        "brightness": 0.9386386413389317
       },
       {
         "id": "uma-14",
         "x": 2126,
         "y": 488,
-        "brightness": 0.8368409757712081
+        "brightness": 0.8302510671871691
       },
       {
         "id": "uma-15",
         "x": 2462,
         "y": 516,
-        "brightness": 0.8017716192337596
+        "brightness": 0.9191950431314894
       },
       {
         "id": "uma-16",
         "x": 2467,
         "y": 599,
-        "brightness": 0.8688082271228654
+        "brightness": 0.9436822694236459
       },
       {
         "id": "uma-17",
         "x": 2387,
         "y": 639,
-        "brightness": 0.8860500014579883
+        "brightness": 0.8929474634778812
       },
       {
         "id": "uma-18",
         "x": 2247,
         "y": 699,
-        "brightness": 0.9615911931321637
+        "brightness": 0.8007389382474612
       },
       {
         "id": "uma-19",
         "x": 2265,
         "y": 714,
-        "brightness": 0.8054516133417305
+        "brightness": 0.9435021251440379
       }
     ],
     "connections": [
@@ -3684,7 +3684,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Little Bear - Contains Polaris, the North Star.",
     "centerX": 500,
     "centerY": 173,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "northern",
     "stars": [
@@ -3692,43 +3692,43 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "umi-0",
         "x": 39,
         "y": 203,
-        "brightness": 0.8700437158838565
+        "brightness": 0.954558568595913
       },
       {
         "id": "umi-1",
         "x": 178,
         "y": 237,
-        "brightness": 0.9185741556322526
+        "brightness": 0.813300677156819
       },
       {
         "id": "umi-2",
         "x": -59,
         "y": 303,
-        "brightness": 0.9739297175697327
+        "brightness": 0.9029685462818716
       },
       {
         "id": "umi-3",
         "x": -184,
         "y": 264,
-        "brightness": 0.9914390192385647
+        "brightness": 0.876202295727184
       },
       {
         "id": "umi-4",
         "x": 297,
         "y": 133,
-        "brightness": 0.887199354415265
+        "brightness": 0.9286595916250131
       },
       {
         "id": "umi-5",
         "x": 489,
         "y": 57,
-        "brightness": 0.8079378508103702
+        "brightness": 0.8649889220861763
       },
       {
         "id": "umi-6",
         "x": 2738,
         "y": 12,
-        "brightness": 0.9186084268897466
+        "brightness": 0.9655687682050518
       }
     ],
     "connections": [
@@ -3769,7 +3769,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Fox - A faint northern constellation.",
     "centerX": 4946,
     "centerY": 1081,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "northern",
     "stars": [
@@ -3777,31 +3777,31 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "vul-0",
         "x": 4818,
         "y": 1143,
-        "brightness": 0.9500192324583515
+        "brightness": 0.9921973524480293
       },
       {
         "id": "vul-1",
         "x": 4870,
         "y": 1089,
-        "brightness": 0.9777576394207783
+        "brightness": 0.883807058084962
       },
       {
         "id": "vul-2",
         "x": 4973,
         "y": 1099,
-        "brightness": 0.9916700149855493
+        "brightness": 0.8483432163810697
       },
       {
         "id": "vul-3",
         "x": 5005,
         "y": 1037,
-        "brightness": 0.9700593562561547
+        "brightness": 0.8059550505684235
       },
       {
         "id": "vul-4",
         "x": 5066,
         "y": 1036,
-        "brightness": 0.8494629047133417
+        "brightness": 0.8747194014175865
       }
     ],
     "connections": [
@@ -3830,7 +3830,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Air Pump - A faint southern constellation representing a vacuum pump.",
     "centerX": 2574,
     "centerY": 2079,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "southern",
     "stars": [
@@ -3838,19 +3838,19 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "ant-0",
         "x": 2372,
         "y": 2099,
-        "brightness": 0.9696624304385865
+        "brightness": 0.9253572139962923
       },
       {
         "id": "ant-1",
         "x": 2613,
         "y": 2018,
-        "brightness": 0.9973767924299723
+        "brightness": 0.8034613860244291
       },
       {
         "id": "ant-2",
         "x": 2736,
         "y": 2119,
-        "brightness": 0.9075466905961787
+        "brightness": 0.944193765254691
       }
     ],
     "connections": [
@@ -3871,7 +3871,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Bird of Paradise - A southern constellation near the celestial pole.",
     "centerX": 4026,
     "centerY": 2809,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "southern",
     "stars": [
@@ -3879,25 +3879,25 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "aps-0",
         "x": 3699,
         "y": 2817,
-        "brightness": 0.8519312008665662
+        "brightness": 0.9752272996478573
       },
       {
         "id": "aps-1",
         "x": 4085,
         "y": 2812,
-        "brightness": 0.9648218982039378
+        "brightness": 0.9911156332013658
       },
       {
         "id": "aps-2",
         "x": 4179,
         "y": 2792,
-        "brightness": 0.8886893146526819
+        "brightness": 0.8321425584689711
       },
       {
         "id": "aps-3",
         "x": 4139,
         "y": 2815,
-        "brightness": 0.8656296657957698
+        "brightness": 0.9545377356684699
       }
     ],
     "connections": [
@@ -3922,7 +3922,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Water Bearer - A zodiac constellation associated with water.",
     "centerX": 5599,
     "centerY": 1636,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "southern",
     "stars": [
@@ -3930,91 +3930,91 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "aqr-0",
         "x": 5199,
         "y": 1658,
-        "brightness": 0.8763775993949401
+        "brightness": 0.8288441528982873
       },
       {
         "id": "aqr-1",
         "x": 5219,
         "y": 1650,
-        "brightness": 0.8350241603698707
+        "brightness": 0.9585099381289761
       },
       {
         "id": "aqr-2",
         "x": 5381,
         "y": 1593,
-        "brightness": 0.9330223024221095
+        "brightness": 0.8594895241545829
       },
       {
         "id": "aqr-3",
         "x": 5524,
         "y": 1505,
-        "brightness": 0.8516553693280363
+        "brightness": 0.8844199651346416
       },
       {
         "id": "aqr-4",
         "x": 5590,
         "y": 1523,
-        "brightness": 0.9326652148659821
+        "brightness": 0.9210160409382225
       },
       {
         "id": "aqr-5",
         "x": 5620,
         "y": 1500,
-        "brightness": 0.9259104289731681
+        "brightness": 0.9074080451236667
       },
       {
         "id": "aqr-6",
         "x": 5647,
         "y": 1502,
-        "brightness": 0.9369397123945453
+        "brightness": 0.9568961921916205
       },
       {
         "id": "aqr-7",
         "x": 5719,
         "y": 1626,
-        "brightness": 0.9930255415031224
+        "brightness": 0.8507328999374116
       },
       {
         "id": "aqr-8",
         "x": 5825,
         "y": 1653,
-        "brightness": 0.8887251171349064
+        "brightness": 0.8104100658077446
       },
       {
         "id": "aqr-9",
         "x": 5789,
         "y": 1853,
-        "brightness": 0.9802252834451628
+        "brightness": 0.8000732184747031
       },
       {
         "id": "aqr-10",
         "x": 5527,
         "y": 1731,
-        "brightness": 0.8195521102217128
+        "brightness": 0.9503375331956597
       },
       {
         "id": "aqr-11",
         "x": 5570,
         "y": 1630,
-        "brightness": 0.9711905747137586
+        "brightness": 0.9508564431506716
       },
       {
         "id": "aqr-12",
         "x": 5605,
         "y": 1477,
-        "brightness": 0.9887168717503749
+        "brightness": 0.9337129604914727
       },
       {
         "id": "aqr-13",
         "x": 5846,
         "y": 1835,
-        "brightness": 0.9978403249106452
+        "brightness": 0.8236541440414087
       },
       {
         "id": "aqr-14",
         "x": 5924,
         "y": 1797,
-        "brightness": 0.8568857060800755
+        "brightness": 0.8814025416697965
       }
     ],
     "connections": [
@@ -4083,7 +4083,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Altar - A southern constellation representing a ceremonial altar.",
     "centerX": 4310,
     "centerY": 2430,
-    "radius": 148,
+    "radius": 100,
     "discovered": false,
     "observatory": "southern",
     "stars": [
@@ -4091,43 +4091,43 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "ara-0",
         "x": 4356,
         "y": 2440,
-        "brightness": 0.9508220317296097
+        "brightness": 0.864963437553131
       },
       {
         "id": "ara-1",
         "x": 4380,
         "y": 2511,
-        "brightness": 0.8870175804096794
+        "brightness": 0.9513750345291863
       },
       {
         "id": "ara-2",
         "x": 4207,
         "y": 2484,
-        "brightness": 0.9186026265219602
+        "brightness": 0.8002411685663776
       },
       {
         "id": "ara-3",
         "x": 4244,
         "y": 2433,
-        "brightness": 0.8720516560382229
+        "brightness": 0.874861294257537
       },
       {
         "id": "ara-4",
         "x": 4248,
         "y": 2386,
-        "brightness": 0.9974202187291471
+        "brightness": 0.9946176258413932
       },
       {
         "id": "ara-5",
         "x": 4383,
         "y": 2331,
-        "brightness": 0.8177528101010488
+        "brightness": 0.9804754087611739
       },
       {
         "id": "ara-6",
         "x": 4355,
         "y": 2425,
-        "brightness": 0.9110303510014419
+        "brightness": 0.9540281266464412
       }
     ],
     "connections": [
@@ -4164,7 +4164,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Chisel - One of the faintest constellations in the sky.",
     "centerX": 1185,
     "centerY": 2164,
-    "radius": 133,
+    "radius": 100,
     "discovered": false,
     "observatory": "southern",
     "stars": [
@@ -4172,25 +4172,25 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "cae-0",
         "x": 1128,
         "y": 2249,
-        "brightness": 0.8381024529633055
+        "brightness": 0.9893211546953526
       },
       {
         "id": "cae-1",
         "x": 1169,
         "y": 2198,
-        "brightness": 0.8841100125362357
+        "brightness": 0.8984688554426982
       },
       {
         "id": "cae-2",
         "x": 1175,
         "y": 2119,
-        "brightness": 0.9307840168822912
+        "brightness": 0.8552890711512924
       },
       {
         "id": "cae-3",
         "x": 1268,
         "y": 2091,
-        "brightness": 0.9080058327249326
+        "brightness": 0.9506765061512147
       }
     ],
     "connections": [
@@ -4215,7 +4215,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Great Dog - Contains Sirius, the brightest star in the night sky.",
     "centerX": 1727,
     "centerY": 1873,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "southern",
     "stars": [
@@ -4223,67 +4223,67 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "cma-0",
         "x": 1595,
         "y": 1799,
-        "brightness": 0.9908518897836514
+        "brightness": 0.9573739544930232
       },
       {
         "id": "cma-1",
         "x": 1688,
         "y": 1779,
-        "brightness": 0.8825136137526995
+        "brightness": 0.8666261861003817
       },
       {
         "id": "cma-2",
         "x": 1763,
         "y": 1897,
-        "brightness": 0.8022051556076868
+        "brightness": 0.912508413366161
       },
       {
         "id": "cma-3",
         "x": 1785,
         "y": 1940,
-        "brightness": 0.8863171089878626
+        "brightness": 0.8144253461831595
       },
       {
         "id": "cma-4",
         "x": 1757,
         "y": 1966,
-        "brightness": 0.902458940697824
+        "brightness": 0.8369241504502378
       },
       {
         "id": "cma-5",
         "x": 1744,
         "y": 1983,
-        "brightness": 0.8033491571544584
+        "brightness": 0.9925570767773596
       },
       {
         "id": "cma-6",
         "x": 1585,
         "y": 2001,
-        "brightness": 0.8108071881199652
+        "brightness": 0.9763199498074712
       },
       {
         "id": "cma-7",
         "x": 1850,
         "y": 1988,
-        "brightness": 0.9785764476339808
+        "brightness": 0.8494626342794505
       },
       {
         "id": "cma-8",
         "x": 1734,
         "y": 1784,
-        "brightness": 0.8278659625839999
+        "brightness": 0.8598429487229083
       },
       {
         "id": "cma-9",
         "x": 1766,
         "y": 1761,
-        "brightness": 0.8629802789388527
+        "brightness": 0.8866984237724592
       },
       {
         "id": "cma-10",
         "x": 1726,
         "y": 1701,
-        "brightness": 0.9467957099837736
+        "brightness": 0.8934069779356609
       }
     ],
     "connections": [
@@ -4340,7 +4340,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Sea Goat - An ancient zodiac constellation.",
     "centerX": 5253,
     "centerY": 1811,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "southern",
     "stars": [
@@ -4348,61 +4348,61 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "cap-0",
         "x": 5074,
         "y": 1708,
-        "brightness": 0.9545818931679987
+        "brightness": 0.8032670554143921
       },
       {
         "id": "cap-1",
         "x": 5088,
         "y": 1746,
-        "brightness": 0.9459694491577046
+        "brightness": 0.8373795918961644
       },
       {
         "id": "cap-2",
         "x": 5120,
         "y": 1797,
-        "brightness": 0.9629565324343935
+        "brightness": 0.8831230807331123
       },
       {
         "id": "cap-3",
         "x": 5192,
         "y": 1921,
-        "brightness": 0.9805607121409722
+        "brightness": 0.9769465348729122
       },
       {
         "id": "cap-4",
         "x": 5216,
         "y": 1949,
-        "brightness": 0.9774028955018923
+        "brightness": 0.84320642281869
       },
       {
         "id": "cap-5",
         "x": 5361,
         "y": 1874,
-        "brightness": 0.9114481479330009
+        "brightness": 0.9721219140759328
       },
       {
         "id": "cap-6",
         "x": 5446,
         "y": 1769,
-        "brightness": 0.9822113872910654
+        "brightness": 0.9098000739012766
       },
       {
         "id": "cap-7",
         "x": 5417,
         "y": 1778,
-        "brightness": 0.8957105653764292
+        "brightness": 0.9114021348518556
       },
       {
         "id": "cap-8",
         "x": 5343,
         "y": 1781,
-        "brightness": 0.8148866155539742
+        "brightness": 0.9171753728548668
       },
       {
         "id": "cap-9",
         "x": 5275,
         "y": 1787,
-        "brightness": 0.829920411190201
+        "brightness": 0.8709989840896188
       }
     ],
     "connections": [
@@ -4455,7 +4455,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Keel - Part of the ancient ship Argo Navis, contains Canopus.",
     "centerX": 2383,
     "centerY": 2480,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "southern",
     "stars": [
@@ -4463,103 +4463,103 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "car-0",
         "x": 1657,
         "y": 2220,
-        "brightness": 0.9967705347074123
+        "brightness": 0.8333249072254922
       },
       {
         "id": "car-1",
         "x": 1600,
         "y": 2378,
-        "brightness": 0.833025863724433
+        "brightness": 0.9035531526411872
       },
       {
         "id": "car-2",
         "x": 2305,
         "y": 2662,
-        "brightness": 0.8870658502010933
+        "brightness": 0.8878427531281387
       },
       {
         "id": "car-3",
         "x": 2557,
         "y": 2667,
-        "brightness": 0.8301074607233985
+        "brightness": 0.9845509152538237
       },
       {
         "id": "car-4",
         "x": 2679,
         "y": 2573,
-        "brightness": 0.921831034539817
+        "brightness": 0.8753049266441852
       },
       {
         "id": "car-5",
         "x": 2633,
         "y": 2528,
-        "brightness": 0.9768983791609984
+        "brightness": 0.9458346516610143
       },
       {
         "id": "car-6",
         "x": 2571,
         "y": 2522,
-        "brightness": 0.8229726389948216
+        "brightness": 0.9817410875197006
       },
       {
         "id": "car-7",
         "x": 2321,
         "y": 2488,
-        "brightness": 0.8425701417613318
+        "brightness": 0.8828625005061062
       },
       {
         "id": "car-8",
         "x": 2094,
         "y": 2492,
-        "brightness": 0.9818882291060176
+        "brightness": 0.8426941156414757
       },
       {
         "id": "car-9",
         "x": 1987,
         "y": 2383,
-        "brightness": 0.9582612149875934
+        "brightness": 0.8884189883901196
       },
       {
         "id": "car-10",
         "x": 2040,
         "y": 2289,
-        "brightness": 0.9371241473667196
+        "brightness": 0.845137296190273
       },
       {
         "id": "car-11",
         "x": 2186,
         "y": 2412,
-        "brightness": 0.8606420934562053
+        "brightness": 0.8993141884109621
       },
       {
         "id": "car-12",
         "x": 2777,
         "y": 2540,
-        "brightness": 0.8318689924525198
+        "brightness": 0.986316319531223
       },
       {
         "id": "car-13",
         "x": 2786,
         "y": 2532,
-        "brightness": 0.8417762235219579
+        "brightness": 0.8814853783670774
       },
       {
         "id": "car-14",
         "x": 2803,
         "y": 2505,
-        "brightness": 0.8579101871208837
+        "brightness": 0.9389894405964221
       },
       {
         "id": "car-15",
         "x": 2786,
         "y": 2483,
-        "brightness": 0.8404592427036883
+        "brightness": 0.8593489659862914
       },
       {
         "id": "car-16",
         "x": 2723,
         "y": 2481,
-        "brightness": 0.8634562958483059
+        "brightness": 0.9976600130572627
       }
     ],
     "connections": [
@@ -4644,7 +4644,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Centaur - Contains Alpha Centauri, the closest star system to Earth.",
     "centerX": 3334,
     "centerY": 2312,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "southern",
     "stars": [
@@ -4652,97 +4652,97 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "cen-0",
         "x": 2838,
         "y": 2408,
-        "brightness": 0.8840718203789539
+        "brightness": 0.9398388740011943
       },
       {
         "id": "cen-1",
         "x": 3035,
         "y": 2345,
-        "brightness": 0.9441384782398563
+        "brightness": 0.9873935315777441
       },
       {
         "id": "cen-2",
         "x": 3117,
         "y": 2337,
-        "brightness": 0.9181701120506374
+        "brightness": 0.8653548866717199
       },
       {
         "id": "cen-3",
         "x": 3173,
         "y": 2316,
-        "brightness": 0.9377580854852157
+        "brightness": 0.9135795734475941
       },
       {
         "id": "cen-4",
         "x": 3416,
         "y": 2391,
-        "brightness": 0.9726251489334814
+        "brightness": 0.9741808867552613
       },
       {
         "id": "cen-5",
         "x": 3481,
         "y": 2288,
-        "brightness": 0.8145467300695715
+        "brightness": 0.9432647947893708
       },
       {
         "id": "cen-6",
         "x": 3457,
         "y": 2208,
-        "brightness": 0.934489088265622
+        "brightness": 0.8902205254575191
       },
       {
         "id": "cen-7",
         "x": 3456,
         "y": 2195,
-        "brightness": 0.8898621314948433
+        "brightness": 0.9803747906633486
       },
       {
         "id": "cen-8",
         "x": 3528,
         "y": 2106,
-        "brightness": 0.990506077415636
+        "brightness": 0.9636547087681735
       },
       {
         "id": "cen-9",
         "x": 3648,
         "y": 2203,
-        "brightness": 0.8778349951343365
+        "brightness": 0.9956252788835893
       },
       {
         "id": "cen-10",
         "x": 3747,
         "y": 2202,
-        "brightness": 0.8805846732566238
+        "brightness": 0.8634389029633832
       },
       {
         "id": "cen-11",
         "x": 3336,
         "y": 2112,
-        "brightness": 0.9934979453256291
+        "brightness": 0.9528219493157677
       },
       {
         "id": "cen-12",
         "x": 3665,
         "y": 2514,
-        "brightness": 0.864641225251532
+        "brightness": 0.9972534131658856
       },
       {
         "id": "cen-13",
         "x": 3516,
         "y": 2506,
-        "brightness": 0.8670946297834344
+        "brightness": 0.8166486721609094
       },
       {
         "id": "cen-14",
         "x": 3049,
         "y": 2373,
-        "brightness": 0.8551156802378455
+        "brightness": 0.9859787015282659
       },
       {
         "id": "cen-15",
         "x": 2882,
         "y": 2491,
-        "brightness": 0.9284653921128926
+        "brightness": 0.8998358100285164
       }
     ],
     "connections": [
@@ -4815,7 +4815,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Sea Monster - A large constellation containing the variable star Mira.",
     "centerX": 513,
     "centerY": 1540,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "southern",
     "stars": [
@@ -4823,85 +4823,85 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "cet-0",
         "x": 680,
         "y": 1446,
-        "brightness": 0.9626673610077072
+        "brightness": 0.9189753160454349
       },
       {
         "id": "cet-1",
         "x": 649,
         "y": 1407,
-        "brightness": 0.8433543135227349
+        "brightness": 0.9455290125041416
       },
       {
         "id": "cet-2",
         "x": 617,
         "y": 1359,
-        "brightness": 0.9064905747624782
+        "brightness": 0.9151033623375305
       },
       {
         "id": "cet-3",
         "x": 687,
         "y": 1331,
-        "brightness": 0.8866387436208885
+        "brightness": 0.9789933919756322
       },
       {
         "id": "cet-4",
         "x": 749,
         "y": 1352,
-        "brightness": 0.9032688370170555
+        "brightness": 0.9196513775104819
       },
       {
         "id": "cet-5",
         "x": 759,
         "y": 1432,
-        "brightness": 0.8683017106741622
+        "brightness": 0.9407847172977999
       },
       {
         "id": "cet-6",
         "x": 665,
         "y": 1495,
-        "brightness": 0.9304252144299376
+        "brightness": 0.9241562342826235
       },
       {
         "id": "cet-7",
         "x": 581,
         "y": 1550,
-        "brightness": 0.8614856624190995
+        "brightness": 0.9767260441138971
       },
       {
         "id": "cet-8",
         "x": 464,
         "y": 1672,
-        "brightness": 0.8359464331827312
+        "brightness": 0.8198619655289905
       },
       {
         "id": "cet-9",
         "x": 434,
         "y": 1766,
-        "brightness": 0.9779913248985195
+        "brightness": 0.919330747911998
       },
       {
         "id": "cet-10",
         "x": 182,
         "y": 1800,
-        "brightness": 0.9700849787715395
+        "brightness": 0.957593341686425
       },
       {
         "id": "cet-11",
         "x": 81,
         "y": 1647,
-        "brightness": 0.893100863351024
+        "brightness": 0.822146176810466
       },
       {
         "id": "cet-12",
         "x": 286,
         "y": 1670,
-        "brightness": 0.9080858053797933
+        "brightness": 0.8478076254092487
       },
       {
         "id": "cet-13",
         "x": 350,
         "y": 1636,
-        "brightness": 0.8611078852937687
+        "brightness": 0.9665636695508646
       }
     ],
     "connections": [
@@ -4974,7 +4974,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Chameleon - A small far-southern constellation.",
     "centerX": 2698,
     "centerY": 2812,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "southern",
     "stars": [
@@ -4982,31 +4982,31 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "cha-0",
         "x": 2077,
         "y": 2782,
-        "brightness": 0.8046689420873755
+        "brightness": 0.9977691641130451
       },
       {
         "id": "cha-1",
         "x": 2648,
         "y": 2810,
-        "brightness": 0.8515430336072742
+        "brightness": 0.9137601965274733
       },
       {
         "id": "cha-2",
         "x": 2689,
         "y": 2841,
-        "brightness": 0.8712376840819233
+        "brightness": 0.8996429846423158
       },
       {
         "id": "cha-3",
         "x": 3076,
         "y": 2822,
-        "brightness": 0.9349487747463485
+        "brightness": 0.9371142157188935
       },
       {
         "id": "cha-4",
         "x": 2998,
         "y": 2804,
-        "brightness": 0.9501864080649508
+        "brightness": 0.9434575922778392
       }
     ],
     "connections": [
@@ -5039,7 +5039,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Compass - A small southern constellation near Centaurus.",
     "centerX": 3782,
     "centerY": 2517,
-    "radius": 149,
+    "radius": 100,
     "discovered": false,
     "observatory": "southern",
     "stars": [
@@ -5047,19 +5047,19 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "cir-0",
         "x": 3823,
         "y": 2480,
-        "brightness": 0.8877712375126945
+        "brightness": 0.812531767510023
       },
       {
         "id": "cir-1",
         "x": 3677,
         "y": 2583,
-        "brightness": 0.843040976029797
+        "brightness": 0.9937236528279779
       },
       {
         "id": "cir-2",
         "x": 3847,
         "y": 2489,
-        "brightness": 0.8511933490704288
+        "brightness": 0.8661201959427447
       }
     ],
     "connections": [
@@ -5080,7 +5080,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Dove - Represents the dove that followed Noah's Ark.",
     "centerX": 1469,
     "centerY": 2105,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "southern",
     "stars": [
@@ -5088,31 +5088,31 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "col-0",
         "x": 1592,
         "y": 2057,
-        "brightness": 0.9833893078608362
+        "brightness": 0.9110169372408603
       },
       {
         "id": "col-1",
         "x": 1462,
         "y": 2096,
-        "brightness": 0.8947692803235483
+        "brightness": 0.8681657400529997
       },
       {
         "id": "col-2",
         "x": 1415,
         "y": 2068,
-        "brightness": 0.8074929973239711
+        "brightness": 0.8761002413720655
       },
       {
         "id": "col-3",
         "x": 1380,
         "y": 2091,
-        "brightness": 0.9242556758237475
+        "brightness": 0.9266630313138924
       },
       {
         "id": "col-4",
         "x": 1496,
         "y": 2214,
-        "brightness": 0.8858926326928936
+        "brightness": 0.9947911834866604
       }
     ],
     "connections": [
@@ -5141,7 +5141,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Southern Crown - A small arc-shaped southern constellation.",
     "centerX": 4750,
     "centerY": 2166,
-    "radius": 140,
+    "radius": 100,
     "discovered": false,
     "observatory": "southern",
     "stars": [
@@ -5149,49 +5149,49 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "cra-0",
         "x": 4745,
         "y": 2118,
-        "brightness": 0.9965881880402994
+        "brightness": 0.8220300911640578
       },
       {
         "id": "cra-1",
         "x": 4777,
         "y": 2118,
-        "brightness": 0.8950024026484646
+        "brightness": 0.8997098746852523
       },
       {
         "id": "cra-2",
         "x": 4789,
         "y": 2132,
-        "brightness": 0.9784766002779846
+        "brightness": 0.9300369401682731
       },
       {
         "id": "cra-3",
         "x": 4792,
         "y": 2156,
-        "brightness": 0.9676629058667305
+        "brightness": 0.9754436702536863
       },
       {
         "id": "cra-4",
         "x": 4785,
         "y": 2175,
-        "brightness": 0.8322541859864042
+        "brightness": 0.9864695204102135
       },
       {
         "id": "cra-5",
         "x": 4763,
         "y": 2202,
-        "brightness": 0.8584114474404333
+        "brightness": 0.9111400364350406
       },
       {
         "id": "cra-6",
         "x": 4707,
         "y": 2224,
-        "brightness": 0.9500696228971653
+        "brightness": 0.9088184106246704
       },
       {
         "id": "cra-7",
         "x": 4640,
         "y": 2205,
-        "brightness": 0.9833337734468117
+        "brightness": 0.869879873761246
       }
     ],
     "connections": [
@@ -5232,7 +5232,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Crow - A small constellation known since ancient times.",
     "centerX": 3082,
     "centerY": 1849,
-    "radius": 102,
+    "radius": 100,
     "discovered": false,
     "observatory": "southern",
     "stars": [
@@ -5240,31 +5240,31 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "crv-0",
         "x": 3035,
         "y": 1912,
-        "brightness": 0.8074468762646201
+        "brightness": 0.9685902460805871
       },
       {
         "id": "crv-1",
         "x": 3042,
         "y": 1877,
-        "brightness": 0.9579748805200317
+        "brightness": 0.9285130248809832
       },
       {
         "id": "crv-2",
         "x": 3066,
         "y": 1792,
-        "brightness": 0.9739838906887006
+        "brightness": 0.8725622026696791
       },
       {
         "id": "crv-3",
         "x": 3124,
         "y": 1775,
-        "brightness": 0.9627902666584954
+        "brightness": 0.887637190157451
       },
       {
         "id": "crv-4",
         "x": 3143,
         "y": 1890,
-        "brightness": 0.8712034745170293
+        "brightness": 0.9681695249592218
       }
     ],
     "connections": [
@@ -5297,7 +5297,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Cup - Represents a chalice in Greek mythology.",
     "centerX": 2862,
     "centerY": 1775,
-    "radius": 147,
+    "radius": 100,
     "discovered": false,
     "observatory": "southern",
     "stars": [
@@ -5305,55 +5305,55 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "crt-0",
         "x": 2903,
         "y": 1663,
-        "brightness": 0.8997984333950185
+        "brightness": 0.9146036843135172
       },
       {
         "id": "crt-1",
         "x": 2853,
         "y": 1681,
-        "brightness": 0.8650082616107677
+        "brightness": 0.8788630057533302
       },
       {
         "id": "crt-2",
         "x": 2831,
         "y": 1746,
-        "brightness": 0.9330696090610506
+        "brightness": 0.9565059805138099
       },
       {
         "id": "crt-3",
         "x": 2749,
         "y": 1805,
-        "brightness": 0.9478987790533316
+        "brightness": 0.9293414065561152
       },
       {
         "id": "crt-4",
         "x": 2799,
         "y": 1880,
-        "brightness": 0.8278993236727108
+        "brightness": 0.8542588114286224
       },
       {
         "id": "crt-5",
         "x": 2847,
         "y": 1813,
-        "brightness": 0.9220830623330745
+        "brightness": 0.9361817242319908
       },
       {
         "id": "crt-6",
         "x": 2854,
         "y": 1795,
-        "brightness": 0.9697341501625031
+        "brightness": 0.8810224226665444
       },
       {
         "id": "crt-7",
         "x": 2937,
         "y": 1806,
-        "brightness": 0.9627614162136855
+        "brightness": 0.8542447157654522
       },
       {
         "id": "crt-8",
         "x": 2983,
         "y": 1786,
-        "brightness": 0.816511475845863
+        "brightness": 0.8165599740782741
       }
     ],
     "connections": [
@@ -5410,25 +5410,25 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "cru-0",
         "x": 3199,
         "y": 2495,
-        "brightness": 0.9830504926606398
+        "brightness": 0.9046284823476181
       },
       {
         "id": "cru-1",
         "x": 3063,
         "y": 2479,
-        "brightness": 0.8703998409785033
+        "brightness": 0.8180862528447221
       },
       {
         "id": "cru-2",
         "x": 3111,
         "y": 2552,
-        "brightness": 0.8759208746801417
+        "brightness": 0.9988465254358116
       },
       {
         "id": "cru-3",
         "x": 3130,
         "y": 2452,
-        "brightness": 0.9743745196996365
+        "brightness": 0.866036432822525
       }
     ],
     "connections": [
@@ -5449,7 +5449,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Swordfish - Contains the Large Magellanic Cloud.",
     "centerX": 1297,
     "centerY": 2487,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "southern",
     "stars": [
@@ -5457,37 +5457,37 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "dor-0",
         "x": 1067,
         "y": 2358,
-        "brightness": 0.9774981782563686
+        "brightness": 0.8564397740506738
       },
       {
         "id": "dor-1",
         "x": 1142,
         "y": 2417,
-        "brightness": 0.9700418028866338
+        "brightness": 0.9112706428315719
       },
       {
         "id": "dor-2",
         "x": 1390,
         "y": 2541,
-        "brightness": 0.8532399945616237
+        "brightness": 0.803949574162576
       },
       {
         "id": "dor-3",
         "x": 1437,
         "y": 2596,
-        "brightness": 0.8306231700122805
+        "brightness": 0.8011645120683917
       },
       {
         "id": "dor-4",
         "x": 1475,
         "y": 2551,
-        "brightness": 0.8338228983094138
+        "brightness": 0.8875686456929206
       },
       {
         "id": "dor-5",
         "x": 1273,
         "y": 2458,
-        "brightness": 0.8347024353950295
+        "brightness": 0.8770112523029574
       }
     ],
     "connections": [
@@ -5528,7 +5528,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The River - A long winding constellation representing a river.",
     "centerX": 869,
     "centerY": 1933,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "southern",
     "stars": [
@@ -5536,163 +5536,163 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "eri-0",
         "x": 1283,
         "y": 1585,
-        "brightness": 0.8999574956365951
+        "brightness": 0.839823866103895
       },
       {
         "id": "eri-1",
         "x": 1190,
         "y": 1554,
-        "brightness": 0.828873063958363
+        "brightness": 0.9120198080881364
       },
       {
         "id": "eri-2",
         "x": 1151,
         "y": 1556,
-        "brightness": 0.8763409881571559
+        "brightness": 0.8701273497680507
       },
       {
         "id": "eri-3",
         "x": 1049,
         "y": 1614,
-        "brightness": 0.8313780116852111
+        "brightness": 0.9203352618553083
       },
       {
         "id": "eri-4",
         "x": 992,
         "y": 1725,
-        "brightness": 0.9798590933167667
+        "brightness": 0.826471540645966
       },
       {
         "id": "eri-5",
         "x": 942,
         "y": 1702,
-        "brightness": 0.8829621810724555
+        "brightness": 0.9761518882644556
       },
       {
         "id": "eri-6",
         "x": 930,
         "y": 1663,
-        "brightness": 0.8726967190528038
+        "brightness": 0.8328629965147908
       },
       {
         "id": "eri-7",
         "x": 887,
         "y": 1658,
-        "brightness": 0.9674315223911589
+        "brightness": 0.9457947043686658
       },
       {
         "id": "eri-8",
         "x": 735,
         "y": 1648,
-        "brightness": 0.9717770870425416
+        "brightness": 0.8292890645286285
       },
       {
         "id": "eri-9",
         "x": 684,
         "y": 1731,
-        "brightness": 0.9480027117120113
+        "brightness": 0.8711388277467529
       },
       {
         "id": "eri-10",
         "x": 688,
         "y": 1810,
-        "brightness": 0.9850477828089137
+        "brightness": 0.8970093458184373
       },
       {
         "id": "eri-11",
         "x": 760,
         "y": 1894,
-        "brightness": 0.9434727263132255
+        "brightness": 0.9885294558113558
       },
       {
         "id": "eri-12",
         "x": 831,
         "y": 1863,
-        "brightness": 0.8551865208505786
+        "brightness": 0.9144462363752116
       },
       {
         "id": "eri-13",
         "x": 891,
         "y": 1861,
-        "brightness": 0.8278776583694142
+        "brightness": 0.994444939166702
       },
       {
         "id": "eri-14",
         "x": 945,
         "y": 1887,
-        "brightness": 0.8880169751687146
+        "brightness": 0.8726797027460558
       },
       {
         "id": "eri-15",
         "x": 1148,
         "y": 2009,
-        "brightness": 0.8062570285991962
+        "brightness": 0.8553435105374412
       },
       {
         "id": "eri-16",
         "x": 1100,
         "y": 2067,
-        "brightness": 0.8207663845351422
+        "brightness": 0.9595931124595927
       },
       {
         "id": "eri-17",
         "x": 1075,
         "y": 2063,
-        "brightness": 0.8292718391995986
+        "brightness": 0.9186184362802686
       },
       {
         "id": "eri-18",
         "x": 956,
         "y": 2103,
-        "brightness": 0.918755661723499
+        "brightness": 0.9231507732016367
       },
       {
         "id": "eri-19",
         "x": 905,
         "y": 2171,
-        "brightness": 0.9018660197174754
+        "brightness": 0.9297919502841583
       },
       {
         "id": "eri-20",
         "x": 833,
         "y": 2218,
-        "brightness": 0.9029972668485987
+        "brightness": 0.8909689892740859
       },
       {
         "id": "eri-21",
         "x": 743,
         "y": 2172,
-        "brightness": 0.9316044530471024
+        "brightness": 0.9517982612103462
       },
       {
         "id": "eri-22",
         "x": 669,
         "y": 2164,
-        "brightness": 0.9238830152975572
+        "brightness": 0.925208428473906
       },
       {
         "id": "eri-23",
         "x": 612,
         "y": 2295,
-        "brightness": 0.8096592220958188
+        "brightness": 0.8013382413289359
       },
       {
         "id": "eri-24",
         "x": 569,
         "y": 2359,
-        "brightness": 0.9808479229833622
+        "brightness": 0.9009595433093919
       },
       {
         "id": "eri-25",
         "x": 483,
         "y": 2360,
-        "brightness": 0.8917733747165717
+        "brightness": 0.8821670688853632
       },
       {
         "id": "eri-26",
         "x": 407,
         "y": 2454,
-        "brightness": 0.9440874779946716
+        "brightness": 0.9499298053436365
       }
     ],
     "connections": [
@@ -5809,7 +5809,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Furnace - Contains the Fornax Cluster of galaxies.",
     "centerX": 675,
     "centerY": 2004,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "southern",
     "stars": [
@@ -5817,19 +5817,19 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "for-0",
         "x": 800,
         "y": 1983,
-        "brightness": 0.9112613312480454
+        "brightness": 0.9988833129493078
       },
       {
         "id": "for-1",
         "x": 705,
         "y": 2040,
-        "brightness": 0.978586567650428
+        "brightness": 0.815960096518117
       },
       {
         "id": "for-2",
         "x": 519,
         "y": 1988,
-        "brightness": 0.9725138263645987
+        "brightness": 0.8686268317885211
       }
     ],
     "connections": [
@@ -5850,7 +5850,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Crane - A graceful bird constellation in the southern sky.",
     "centerX": 5609,
     "centerY": 2247,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "southern",
     "stars": [
@@ -5858,55 +5858,55 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "gru-0",
         "x": 5754,
         "y": 2379,
-        "brightness": 0.818611465346757
+        "brightness": 0.8839591031961624
       },
       {
         "id": "gru-1",
         "x": 5702,
         "y": 2355,
-        "brightness": 0.8641087427125049
+        "brightness": 0.8171959195458325
       },
       {
         "id": "gru-2",
         "x": 5678,
         "y": 2281,
-        "brightness": 0.8414278960974615
+        "brightness": 0.9283226891925849
       },
       {
         "id": "gru-3",
         "x": 5624,
         "y": 2229,
-        "brightness": 0.893924885878594
+        "brightness": 0.8640848890987164
       },
       {
         "id": "gru-4",
         "x": 5534,
         "y": 2283,
-        "brightness": 0.8196223811736606
+        "brightness": 0.8878084374725105
       },
       {
         "id": "gru-5",
         "x": 5622,
         "y": 2225,
-        "brightness": 0.8734524747694673
+        "brightness": 0.8110104557733625
       },
       {
         "id": "gru-6",
         "x": 5565,
         "y": 2189,
-        "brightness": 0.8664755863836499
+        "brightness": 0.9621055727992767
       },
       {
         "id": "gru-7",
         "x": 5525,
         "y": 2159,
-        "brightness": 0.9621425530340402
+        "brightness": 0.949403021078689
       },
       {
         "id": "gru-8",
         "x": 5475,
         "y": 2123,
-        "brightness": 0.885129461068918
+        "brightness": 0.9930156709953777
       }
     ],
     "connections": [
@@ -5951,7 +5951,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Pendulum Clock - A faint southern constellation.",
     "centerX": 762,
     "centerY": 2400,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "southern",
     "stars": [
@@ -5959,37 +5959,37 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "hor-0",
         "x": 1058,
         "y": 2205,
-        "brightness": 0.93748175520041
+        "brightness": 0.926093307759688
       },
       {
         "id": "hor-1",
         "x": 677,
         "y": 2347,
-        "brightness": 0.9471764120858729
+        "brightness": 0.909072741821679
       },
       {
         "id": "hor-2",
         "x": 656,
         "y": 2376,
-        "brightness": 0.8585765528882058
+        "brightness": 0.9224796671556812
       },
       {
         "id": "hor-3",
         "x": 669,
         "y": 2409,
-        "brightness": 0.837128398032091
+        "brightness": 0.802697185669479
       },
       {
         "id": "hor-4",
         "x": 765,
         "y": 2496,
-        "brightness": 0.8996598868688467
+        "brightness": 0.9892941243508131
       },
       {
         "id": "hor-5",
         "x": 745,
         "y": 2568,
-        "brightness": 0.8856732697618086
+        "brightness": 0.854501014484167
       }
     ],
     "connections": [
@@ -6022,7 +6022,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Water Snake - The largest of all 88 constellations.",
     "centerX": 2609,
     "centerY": 1667,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "southern",
     "stars": [
@@ -6030,109 +6030,109 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "hya-0",
         "x": 2195,
         "y": 1393,
-        "brightness": 0.8528006490507336
+        "brightness": 0.9605657137218336
       },
       {
         "id": "hya-1",
         "x": 2202,
         "y": 1403,
-        "brightness": 0.9377011539940806
+        "brightness": 0.8170613272460393
       },
       {
         "id": "hya-2",
         "x": 2180,
         "y": 1443,
-        "brightness": 0.8319376191015234
+        "brightness": 0.8078884255543571
       },
       {
         "id": "hya-3",
         "x": 2161,
         "y": 1444,
-        "brightness": 0.8949312782636357
+        "brightness": 0.8804064031264223
       },
       {
         "id": "hya-4",
         "x": 2157,
         "y": 1405,
-        "brightness": 0.9824518245909032
+        "brightness": 0.9694234456605563
       },
       {
         "id": "hya-5",
         "x": 2231,
         "y": 1401,
-        "brightness": 0.9359783489765938
+        "brightness": 0.8626728980298446
       },
       {
         "id": "hya-6",
         "x": 2310,
         "y": 1461,
-        "brightness": 0.8670120091284358
+        "brightness": 0.894837033066361
       },
       {
         "id": "hya-7",
         "x": 2416,
         "y": 1519,
-        "brightness": 0.96566417416674
+        "brightness": 0.8681917355722938
       },
       {
         "id": "hya-8",
         "x": 2365,
         "y": 1644,
-        "brightness": 0.991098412768653
+        "brightness": 0.844868227952415
       },
       {
         "id": "hya-9",
         "x": 2464,
         "y": 1747,
-        "brightness": 0.9916150023463224
+        "brightness": 0.9508222272486974
       },
       {
         "id": "hya-10",
         "x": 2544,
         "y": 1706,
-        "brightness": 0.9201946014594482
+        "brightness": 0.9190640594315943
       },
       {
         "id": "hya-11",
         "x": 2609,
         "y": 1781,
-        "brightness": 0.8411409293303552
+        "brightness": 0.8155731390547251
       },
       {
         "id": "hya-12",
         "x": 2707,
         "y": 1770,
-        "brightness": 0.9257228476550347
+        "brightness": 0.8189772708031031
       },
       {
         "id": "hya-13",
         "x": 2888,
         "y": 2031,
-        "brightness": 0.9559275601802468
+        "brightness": 0.8388630903629092
       },
       {
         "id": "hya-14",
         "x": 2970,
         "y": 2065,
-        "brightness": 0.9165357055707206
+        "brightness": 0.9335793281629103
       },
       {
         "id": "hya-15",
         "x": 3329,
         "y": 1886,
-        "brightness": 0.838885470737278
+        "brightness": 0.9642704431165293
       },
       {
         "id": "hya-16",
         "x": 3527,
         "y": 1945,
-        "brightness": 0.8698227937200752
+        "brightness": 0.8519598270988028
       },
       {
         "id": "hya-17",
         "x": 3710,
         "y": 1966,
-        "brightness": 0.9722719984569979
+        "brightness": 0.914883688047296
       }
     ],
     "connections": [
@@ -6217,7 +6217,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Lesser Water Snake - A southern constellation near the pole.",
     "centerX": 547,
     "centerY": 2660,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "southern",
     "stars": [
@@ -6225,37 +6225,37 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "hyi-0",
         "x": 107,
         "y": 2788,
-        "brightness": 0.9553619120198691
+        "brightness": 0.9845217556674761
       },
       {
         "id": "hyi-1",
         "x": 947,
         "y": 2737,
-        "brightness": 0.900982789826916
+        "brightness": 0.9551069492739371
       },
       {
         "id": "hyi-2",
         "x": 665,
         "y": 2638,
-        "brightness": 0.9670951194637927
+        "brightness": 0.8136283648809786
       },
       {
         "id": "hyi-3",
         "x": 591,
         "y": 2644,
-        "brightness": 0.8461936378340499
+        "brightness": 0.882043442839945
       },
       {
         "id": "hyi-4",
         "x": 479,
         "y": 2627,
-        "brightness": 0.8831072981283533
+        "brightness": 0.8145789182448998
       },
       {
         "id": "hyi-5",
         "x": 495,
         "y": 2526,
-        "brightness": 0.894326601117219
+        "brightness": 0.956414263248927
       }
     ],
     "connections": [
@@ -6288,7 +6288,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Indian - A southern constellation with no bright stars.",
     "centerX": 5278,
     "centerY": 2387,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "southern",
     "stars": [
@@ -6296,31 +6296,31 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "ind-0",
         "x": 5157,
         "y": 2288,
-        "brightness": 0.9705193164263071
+        "brightness": 0.8712049089222134
       },
       {
         "id": "ind-1",
         "x": 5183,
         "y": 2365,
-        "brightness": 0.9959866359116806
+        "brightness": 0.9046724284716814
       },
       {
         "id": "ind-2",
         "x": 5228,
         "y": 2474,
-        "brightness": 0.874150361381727
+        "brightness": 0.90245124617556
       },
       {
         "id": "ind-3",
         "x": 5491,
         "y": 2417,
-        "brightness": 0.9912868909272209
+        "brightness": 0.8393092066112451
       },
       {
         "id": "ind-4",
         "x": 5333,
         "y": 2391,
-        "brightness": 0.8511761904901519
+        "brightness": 0.8927911608437487
       }
     ],
     "connections": [
@@ -6353,7 +6353,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Hare - Sits at Orion's feet in the winter sky.",
     "centerX": 1393,
     "centerY": 1789,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "southern",
     "stars": [
@@ -6361,67 +6361,67 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "lep-0",
         "x": 1526,
         "y": 1749,
-        "brightness": 0.9648650613706022
+        "brightness": 0.9732117946554366
       },
       {
         "id": "lep-1",
         "x": 1485,
         "y": 1736,
-        "brightness": 0.8539183212529146
+        "brightness": 0.8529049216035692
       },
       {
         "id": "lep-2",
         "x": 1446,
         "y": 1747,
-        "brightness": 0.9230578003223536
+        "brightness": 0.931288153044999
       },
       {
         "id": "lep-3",
         "x": 1386,
         "y": 1797,
-        "brightness": 0.8163507187570761
+        "brightness": 0.831301668875325
       },
       {
         "id": "lep-4",
         "x": 1304,
         "y": 1770,
-        "brightness": 0.8904577112585018
+        "brightness": 0.8490048939012282
       },
       {
         "id": "lep-5",
         "x": 1273,
         "y": 1873,
-        "brightness": 0.9602739639224318
+        "brightness": 0.8318949608588088
       },
       {
         "id": "lep-6",
         "x": 1368,
         "y": 1846,
-        "brightness": 0.975710882046533
+        "brightness": 0.9317472309000349
       },
       {
         "id": "lep-7",
         "x": 1435,
         "y": 1874,
-        "brightness": 0.9097802716360034
+        "brightness": 0.9420082143129992
       },
       {
         "id": "lep-8",
         "x": 1464,
         "y": 1848,
-        "brightness": 0.9986154609761728
+        "brightness": 0.9327221531065328
       },
       {
         "id": "lep-9",
         "x": 1305,
         "y": 1716,
-        "brightness": 0.8174531115702398
+        "brightness": 0.8490323582400767
       },
       {
         "id": "lep-10",
         "x": 1332,
         "y": 1720,
-        "brightness": 0.8918099754193141
+        "brightness": 0.9996364823638646
       }
     ],
     "connections": [
@@ -6474,7 +6474,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Scales - The only zodiac constellation representing an object.",
     "centerX": 3836,
     "centerY": 1843,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "southern",
     "stars": [
@@ -6482,37 +6482,37 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "lib-0",
         "x": 3767,
         "y": 1921,
-        "brightness": 0.9657747703196226
+        "brightness": 0.8156808197563342
       },
       {
         "id": "lib-1",
         "x": 3712,
         "y": 1767,
-        "brightness": 0.8232760831837628
+        "brightness": 0.9972486894973986
       },
       {
         "id": "lib-2",
         "x": 3821,
         "y": 1656,
-        "brightness": 0.83370411132283
+        "brightness": 0.9326343486872168
       },
       {
         "id": "lib-3",
         "x": 3898,
         "y": 1746,
-        "brightness": 0.9520233614433953
+        "brightness": 0.8776069617480589
       },
       {
         "id": "lib-4",
         "x": 3904,
         "y": 1969,
-        "brightness": 0.8403810846280056
+        "brightness": 0.8855743832319358
       },
       {
         "id": "lib-5",
         "x": 3911,
         "y": 1996,
-        "brightness": 0.9035828104843852
+        "brightness": 0.9651454796594752
       }
     ],
     "connections": [
@@ -6549,7 +6549,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Wolf - An ancient constellation near Centaurus.",
     "centerX": 3865,
     "centerY": 2190,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "southern",
     "stars": [
@@ -6557,73 +6557,73 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "lup-0",
         "x": 3962,
         "y": 2060,
-        "brightness": 0.8254898557702566
+        "brightness": 0.81039171548295
       },
       {
         "id": "lup-1",
         "x": 3916,
         "y": 2074,
-        "brightness": 0.913248252846925
+        "brightness": 0.8566142522213056
       },
       {
         "id": "lup-2",
         "x": 3841,
         "y": 2104,
-        "brightness": 0.987998779759425
+        "brightness": 0.9233528397847904
       },
       {
         "id": "lup-3",
         "x": 3839,
         "y": 2177,
-        "brightness": 0.9453521616340195
+        "brightness": 0.8850081326040118
       },
       {
         "id": "lup-4",
         "x": 3744,
         "y": 2219,
-        "brightness": 0.9835516696134349
+        "brightness": 0.8976395157475155
       },
       {
         "id": "lup-5",
         "x": 3675,
         "y": 2290,
-        "brightness": 0.9446279422364325
+        "brightness": 0.8636752380514048
       },
       {
         "id": "lup-6",
         "x": 3801,
         "y": 2368,
-        "brightness": 0.8242360566319659
+        "brightness": 0.8201945921760003
       },
       {
         "id": "lup-7",
         "x": 3827,
         "y": 2298,
-        "brightness": 0.8637872099824689
+        "brightness": 0.9438552661213977
       },
       {
         "id": "lup-8",
         "x": 3845,
         "y": 2245,
-        "brightness": 0.8127368793906261
+        "brightness": 0.9129704933444416
       },
       {
         "id": "lup-9",
         "x": 3896,
         "y": 2186,
-        "brightness": 0.8498079919350365
+        "brightness": 0.9330492705671155
       },
       {
         "id": "lup-10",
         "x": 4001,
         "y": 2140,
-        "brightness": 0.9958120554216057
+        "brightness": 0.8367479078873221
       },
       {
         "id": "lup-11",
         "x": 4027,
         "y": 2113,
-        "brightness": 0.8266389986326179
+        "brightness": 0.9486327615124444
       }
     ],
     "connections": [
@@ -6684,7 +6684,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Table Mountain - The faintest named constellation.",
     "centerX": 1354,
     "centerY": 2739,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "southern",
     "stars": [
@@ -6692,25 +6692,25 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "men-0",
         "x": 1543,
         "y": 2746,
-        "brightness": 0.9316304822991539
+        "brightness": 0.9186456686778146
       },
       {
         "id": "men-1",
         "x": 1383,
         "y": 2772,
-        "brightness": 0.8018090881251864
+        "brightness": 0.9667650912509852
       },
       {
         "id": "men-2",
         "x": 1230,
         "y": 2749,
-        "brightness": 0.8443362576339475
+        "brightness": 0.8295608071626718
       },
       {
         "id": "men-3",
         "x": 1261,
         "y": 2689,
-        "brightness": 0.9828177213893292
+        "brightness": 0.8899043971320548
       }
     ],
     "connections": [
@@ -6735,7 +6735,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Microscope - A faint southern constellation.",
     "centerX": 5265,
     "centerY": 2110,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "southern",
     "stars": [
@@ -6743,31 +6743,31 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "mic-0",
         "x": 5208,
         "y": 2063,
-        "brightness": 0.8218021415719413
+        "brightness": 0.833793259362746
       },
       {
         "id": "mic-1",
         "x": 5202,
         "y": 2233,
-        "brightness": 0.9337009781388015
+        "brightness": 0.8950030790594059
       },
       {
         "id": "mic-2",
         "x": 5337,
         "y": 2180,
-        "brightness": 0.9062417402517507
+        "brightness": 0.8158341315795694
       },
       {
         "id": "mic-3",
         "x": 5325,
         "y": 2036,
-        "brightness": 0.8761910084977244
+        "brightness": 0.9067177440438985
       },
       {
         "id": "mic-4",
         "x": 5255,
         "y": 2038,
-        "brightness": 0.927943217053987
+        "brightness": 0.8188637475175621
       }
     ],
     "connections": [
@@ -6800,7 +6800,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Unicorn - Located on the celestial equator.",
     "centerX": 1727,
     "centerY": 1504,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "southern",
     "stars": [
@@ -6808,55 +6808,55 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "mon-0",
         "x": 1922,
         "y": 1659,
-        "brightness": 0.9487816542932731
+        "brightness": 0.8932089749709502
       },
       {
         "id": "mon-1",
         "x": 2036,
         "y": 1550,
-        "brightness": 0.913486472758187
+        "brightness": 0.8567814133975882
       },
       {
         "id": "mon-2",
         "x": 1799,
         "y": 1508,
-        "brightness": 0.8599512567201231
+        "brightness": 0.8653480767641849
       },
       {
         "id": "mon-3",
         "x": 1620,
         "y": 1617,
-        "brightness": 0.9094251946020971
+        "brightness": 0.8401377118336345
       },
       {
         "id": "mon-4",
         "x": 1562,
         "y": 1605,
-        "brightness": 0.828718429693746
+        "brightness": 0.9741582915279012
       },
       {
         "id": "mon-5",
         "x": 1699,
         "y": 1460,
-        "brightness": 0.9683699179169496
+        "brightness": 0.8199286318231286
       },
       {
         "id": "mon-6",
         "x": 1599,
         "y": 1423,
-        "brightness": 0.8897060081263504
+        "brightness": 0.8582837185835908
       },
       {
         "id": "mon-7",
         "x": 1637,
         "y": 1378,
-        "brightness": 0.8870722067146983
+        "brightness": 0.8877542348071656
       },
       {
         "id": "mon-8",
         "x": 1671,
         "y": 1335,
-        "brightness": 0.8840319301652105
+        "brightness": 0.896345414570221
       }
     ],
     "connections": [
@@ -6901,7 +6901,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Fly - A small constellation near the Southern Cross.",
     "centerX": 3126,
     "centerY": 2654,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "southern",
     "stars": [
@@ -6909,37 +6909,37 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "mus-0",
         "x": 2940,
         "y": 2612,
-        "brightness": 0.9806138739677963
+        "brightness": 0.9445141874396407
       },
       {
         "id": "mus-1",
         "x": 3073,
         "y": 2633,
-        "brightness": 0.9905266108512865
+        "brightness": 0.9290660980094279
       },
       {
         "id": "mus-2",
         "x": 3155,
         "y": 2652,
-        "brightness": 0.8431507368229936
+        "brightness": 0.8025602148798979
       },
       {
         "id": "mus-3",
         "x": 3193,
         "y": 2635,
-        "brightness": 0.9179774576109955
+        "brightness": 0.8247399279827724
       },
       {
         "id": "mus-4",
         "x": 3259,
         "y": 2692,
-        "brightness": 0.8530631448528101
+        "brightness": 0.8838389942050615
       },
       {
         "id": "mus-5",
         "x": 3135,
         "y": 2702,
-        "brightness": 0.8039309444240516
+        "brightness": 0.8273644110053532
       }
     ],
     "connections": [
@@ -6984,25 +6984,25 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "nor-0",
         "x": 4027,
         "y": 2253,
-        "brightness": 0.8221628417406613
+        "brightness": 0.8252566970857229
       },
       {
         "id": "nor-1",
         "x": 4113,
         "y": 2293,
-        "brightness": 0.9699284742280647
+        "brightness": 0.9316216926980962
       },
       {
         "id": "nor-2",
         "x": 4083,
         "y": 2336,
-        "brightness": 0.9054728472830638
+        "brightness": 0.8628513264610534
       },
       {
         "id": "nor-3",
         "x": 4013,
         "y": 2320,
-        "brightness": 0.9098607893735796
+        "brightness": 0.9213703793112028
       }
     ],
     "connections": [
@@ -7031,7 +7031,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Octant - Contains the south celestial pole.",
     "centerX": 4909,
     "centerY": 2847,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "southern",
     "stars": [
@@ -7039,19 +7039,19 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "oct-0",
         "x": 3612,
         "y": 2894,
-        "brightness": 0.9914758199914236
+        "brightness": 0.9350312745197058
       },
       {
         "id": "oct-1",
         "x": 5692,
         "y": 2856,
-        "brightness": 0.9703394302404516
+        "brightness": 0.8778490438219133
       },
       {
         "id": "oct-2",
         "x": 5423,
         "y": 2790,
-        "brightness": 0.9836402038710461
+        "brightness": 0.9775216555865608
       }
     ],
     "connections": [
@@ -7076,7 +7076,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Serpent Bearer - A large constellation on the celestial equator.",
     "centerX": 4243,
     "centerY": 1653,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "southern",
     "stars": [
@@ -7084,97 +7084,97 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "oph-0",
         "x": 4496,
         "y": 1663,
-        "brightness": 0.9319113521812903
+        "brightness": 0.9671291794683464
       },
       {
         "id": "oph-1",
         "x": 4450,
         "y": 1455,
-        "brightness": 0.8225893210652169
+        "brightness": 0.9217284635399602
       },
       {
         "id": "oph-2",
         "x": 4431,
         "y": 1424,
-        "brightness": 0.9644751073108165
+        "brightness": 0.9827041659461171
       },
       {
         "id": "oph-3",
         "x": 4396,
         "y": 1291,
-        "brightness": 0.9836592993648519
+        "brightness": 0.871769118739118
       },
       {
         "id": "oph-4",
         "x": 4240,
         "y": 1344,
-        "brightness": 0.8173002318447229
+        "brightness": 0.829821729474607
       },
       {
         "id": "oph-5",
         "x": 4129,
         "y": 1467,
-        "brightness": 0.9486416116823118
+        "brightness": 0.9869292570058333
       },
       {
         "id": "oph-6",
         "x": 4060,
         "y": 1562,
-        "brightness": 0.9944947349889427
+        "brightness": 0.8533462936446887
       },
       {
         "id": "oph-7",
         "x": 4076,
         "y": 1578,
-        "brightness": 0.8827448027348513
+        "brightness": 0.8266170568843461
       },
       {
         "id": "oph-8",
         "x": 4155,
         "y": 1676,
-        "brightness": 0.9752393170044464
+        "brightness": 0.9259191029975391
       },
       {
         "id": "oph-9",
         "x": 4293,
         "y": 1762,
-        "brightness": 0.957238686891353
+        "brightness": 0.9381232142117459
       },
       {
         "id": "oph-10",
         "x": 4130,
         "y": 1777,
-        "brightness": 0.8683366704618155
+        "brightness": 0.9883616273740159
       },
       {
         "id": "oph-11",
         "x": 4113,
         "y": 1808,
-        "brightness": 0.9192516036285383
+        "brightness": 0.8444453885268008
       },
       {
         "id": "oph-12",
         "x": 4100,
         "y": 1834,
-        "brightness": 0.9980916165737291
+        "brightness": 0.8098871997994287
       },
       {
         "id": "oph-13",
         "x": 4107,
         "y": 1891,
-        "brightness": 0.9590672136364216
+        "brightness": 0.9059700214914457
       },
       {
         "id": "oph-14",
         "x": 4342,
         "y": 1917,
-        "brightness": 0.9873656652639325
+        "brightness": 0.9519528958336078
       },
       {
         "id": "oph-15",
         "x": 4364,
         "y": 1998,
-        "brightness": 0.9292560771369854
+        "brightness": 0.8130458649881193
       }
     ],
     "connections": [
@@ -7255,7 +7255,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Peacock - A southern constellation with a bright alpha star.",
     "centerX": 4866,
     "centerY": 2585,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "southern",
     "stars": [
@@ -7263,61 +7263,61 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "pav-0",
         "x": 5107,
         "y": 2446,
-        "brightness": 0.9753669795907854
+        "brightness": 0.9642181323257732
       },
       {
         "id": "pav-1",
         "x": 5187,
         "y": 2603,
-        "brightness": 0.8873715022986687
+        "brightness": 0.968116350903836
       },
       {
         "id": "pav-2",
         "x": 5036,
         "y": 2603,
-        "brightness": 0.8643006172895807
+        "brightness": 0.8927101017911191
       },
       {
         "id": "pav-3",
         "x": 4718,
         "y": 2536,
-        "brightness": 0.8719641615480447
+        "brightness": 0.84402453543268
       },
       {
         "id": "pav-4",
         "x": 4597,
         "y": 2525,
-        "brightness": 0.9433446011700094
+        "brightness": 0.8536347754894367
       },
       {
         "id": "pav-5",
         "x": 4536,
         "y": 2561,
-        "brightness": 0.8871198610872785
+        "brightness": 0.8422159370233212
       },
       {
         "id": "pav-6",
         "x": 4441,
         "y": 2579,
-        "brightness": 0.9856193962411124
+        "brightness": 0.8811591620537502
       },
       {
         "id": "pav-7",
         "x": 4679,
         "y": 2690,
-        "brightness": 0.8349668493412223
+        "brightness": 0.985757977106963
       },
       {
         "id": "pav-8",
         "x": 5002,
         "y": 2715,
-        "brightness": 0.8980306569096916
+        "brightness": 0.9348410267140552
       },
       {
         "id": "pav-9",
         "x": 5360,
         "y": 2589,
-        "brightness": 0.9403923115338177
+        "brightness": 0.9962988411749134
       }
     ],
     "connections": [
@@ -7370,7 +7370,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Phoenix - A southern constellation representing the mythical bird.",
     "centerX": 500,
     "centerY": 2285,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "southern",
     "stars": [
@@ -7378,37 +7378,37 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "phe-0",
         "x": 367,
         "y": 2205,
-        "brightness": 0.9224021886884161
+        "brightness": 0.8104208138456888
       },
       {
         "id": "phe-1",
         "x": 532,
         "y": 2279,
-        "brightness": 0.8020494538289669
+        "brightness": 0.9850294548951606
       },
       {
         "id": "phe-2",
         "x": 625,
         "y": 2222,
-        "brightness": 0.9840234133368211
+        "brightness": 0.8961246244582167
       },
       {
         "id": "phe-3",
         "x": 637,
         "y": 2318,
-        "brightness": 0.9760923429071722
+        "brightness": 0.9322848776897305
       },
       {
         "id": "phe-4",
         "x": 542,
         "y": 2421,
-        "brightness": 0.8154161162807024
+        "brightness": 0.9798523668409929
       },
       {
         "id": "phe-5",
         "x": 296,
         "y": 2262,
-        "brightness": 0.9787107573357654
+        "brightness": 0.8273223083321033
       }
     ],
     "connections": [
@@ -7449,7 +7449,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Painter's Easel - A faint southern constellation.",
     "centerX": 1535,
     "centerY": 2440,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "southern",
     "stars": [
@@ -7457,19 +7457,19 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "pic-0",
         "x": 1701,
         "y": 2532,
-        "brightness": 0.8189193406588986
+        "brightness": 0.8495260305594275
       },
       {
         "id": "pic-1",
         "x": 1458,
         "y": 2436,
-        "brightness": 0.9802134844275864
+        "brightness": 0.8566960786217251
       },
       {
         "id": "pic-2",
         "x": 1447,
         "y": 2351,
-        "brightness": 0.8312767782508262
+        "brightness": 0.951672068159382
       }
     ],
     "connections": [
@@ -7490,7 +7490,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Southern Fish - Contains bright Fomalhaut.",
     "centerX": 5614,
     "centerY": 2024,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "southern",
     "stars": [
@@ -7498,49 +7498,49 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "psa-0",
         "x": 5669,
         "y": 1951,
-        "brightness": 0.8506947739633143
+        "brightness": 0.9800917527477184
       },
       {
         "id": "psa-1",
         "x": 5740,
         "y": 1994,
-        "brightness": 0.8035631964047906
+        "brightness": 0.9211471867180112
       },
       {
         "id": "psa-2",
         "x": 5733,
         "y": 2042,
-        "brightness": 0.9013716654151325
+        "brightness": 0.809269459743057
       },
       {
         "id": "psa-3",
         "x": 5719,
         "y": 2048,
-        "brightness": 0.9232105025771133
+        "brightness": 0.9947276781190738
       },
       {
         "id": "psa-4",
         "x": 5631,
         "y": 2039,
-        "brightness": 0.9852492616138855
+        "brightness": 0.8838470149101185
       },
       {
         "id": "psa-5",
         "x": 5535,
         "y": 2050,
-        "brightness": 0.8564986632046794
+        "brightness": 0.8971623919837665
       },
       {
         "id": "psa-6",
         "x": 5437,
         "y": 2050,
-        "brightness": 0.9927855609217612
+        "brightness": 0.9989567324397626
       },
       {
         "id": "psa-7",
         "x": 5449,
         "y": 2015,
-        "brightness": 0.9594111486609871
+        "brightness": 0.8101184628488599
       }
     ],
     "connections": [
@@ -7589,7 +7589,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Stern - Part of the ancient ship Argo Navis.",
     "centerX": 1927,
     "centerY": 2030,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "southern",
     "stars": [
@@ -7597,67 +7597,67 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "pup-0",
         "x": 1657,
         "y": 2220,
-        "brightness": 0.8905835669058726
+        "brightness": 0.9477862086011151
       },
       {
         "id": "pup-1",
         "x": 1821,
         "y": 2118,
-        "brightness": 0.9005606327602971
+        "brightness": 0.8881934964252677
       },
       {
         "id": "pup-2",
         "x": 1897,
         "y": 1973,
-        "brightness": 0.8010821821315175
+        "brightness": 0.931677905536187
       },
       {
         "id": "pup-3",
         "x": 1912,
         "y": 1947,
-        "brightness": 0.8338056162037056
+        "brightness": 0.8425017664591395
       },
       {
         "id": "pup-4",
         "x": 1955,
         "y": 1914,
-        "brightness": 0.8201156418623178
+        "brightness": 0.842644188353774
       },
       {
         "id": "pup-5",
         "x": 1987,
         "y": 1881,
-        "brightness": 0.8939252850073267
+        "brightness": 0.9542412958046571
       },
       {
         "id": "pup-6",
         "x": 2031,
         "y": 1905,
-        "brightness": 0.8457825800479336
+        "brightness": 0.934895900486632
       },
       {
         "id": "pup-7",
         "x": 2015,
         "y": 2167,
-        "brightness": 0.9559426161347038
+        "brightness": 0.9111934064672764
       },
       {
         "id": "pup-8",
         "x": 2040,
         "y": 2289,
-        "brightness": 0.991553724740705
+        "brightness": 0.8197041067487838
       },
       {
         "id": "pup-9",
         "x": 1950,
         "y": 1932,
-        "brightness": 0.8073992648331381
+        "brightness": 0.8011685907443327
       },
       {
         "id": "pup-10",
         "x": 1933,
         "y": 1983,
-        "brightness": 0.9140931896911789
+        "brightness": 0.9584060979062956
       }
     ],
     "connections": [
@@ -7714,7 +7714,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Compass - Represents a ship's compass.",
     "centerX": 2144,
     "centerY": 2068,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "southern",
     "stars": [
@@ -7722,25 +7722,25 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "pyx-0",
         "x": 2015,
         "y": 2167,
-        "brightness": 0.9521360351233542
+        "brightness": 0.810602246896479
       },
       {
         "id": "pyx-1",
         "x": 2167,
         "y": 2088,
-        "brightness": 0.8929303055882819
+        "brightness": 0.8234421236643403
       },
       {
         "id": "pyx-2",
         "x": 2182,
         "y": 2053,
-        "brightness": 0.8055540336267271
+        "brightness": 0.8675734401926074
       },
       {
         "id": "pyx-3",
         "x": 2211,
         "y": 1962,
-        "brightness": 0.9287137676541117
+        "brightness": 0.8925002227573986
       }
     ],
     "connections": [
@@ -7765,7 +7765,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Reticle - A small southern constellation.",
     "centerX": 1015,
     "centerY": 2533,
-    "radius": 112,
+    "radius": 100,
     "discovered": false,
     "observatory": "southern",
     "stars": [
@@ -7773,25 +7773,25 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "ret-0",
         "x": 1060,
         "y": 2541,
-        "brightness": 0.8830162981750777
+        "brightness": 0.9499721849299498
       },
       {
         "id": "ret-1",
         "x": 1069,
         "y": 2488,
-        "brightness": 0.9434577709987672
+        "brightness": 0.9489318210012094
       },
       {
         "id": "ret-2",
         "x": 995,
         "y": 2523,
-        "brightness": 0.8640189553746005
+        "brightness": 0.9301180042490723
       },
       {
         "id": "ret-3",
         "x": 934,
         "y": 2580,
-        "brightness": 0.9963683145013478
+        "brightness": 0.9420644679202255
       }
     ],
     "connections": [
@@ -7820,7 +7820,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Archer - Points toward the galactic center.",
     "centerX": 4767,
     "centerY": 1961,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "southern",
     "stars": [
@@ -7828,151 +7828,151 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "sgr-0",
         "x": 4573,
         "y": 2113,
-        "brightness": 0.9965919888813775
+        "brightness": 0.8037262383286354
       },
       {
         "id": "sgr-1",
         "x": 4601,
         "y": 2073,
-        "brightness": 0.9685175056926265
+        "brightness": 0.9768872046296955
       },
       {
         "id": "sgr-2",
         "x": 4587,
         "y": 1997,
-        "brightness": 0.9287708923974588
+        "brightness": 0.9243915664522078
       },
       {
         "id": "sgr-3",
         "x": 4617,
         "y": 1924,
-        "brightness": 0.96289816224152
+        "brightness": 0.8002802805047818
       },
       {
         "id": "sgr-4",
         "x": 4557,
         "y": 1851,
-        "brightness": 0.8908535578208545
+        "brightness": 0.9641633399470912
       },
       {
         "id": "sgr-5",
         "x": 4844,
         "y": 2241,
-        "brightness": 0.9939982258302632
+        "brightness": 0.999579810982875
       },
       {
         "id": "sgr-6",
         "x": 4850,
         "y": 2177,
-        "brightness": 0.924350771217477
+        "brightness": 0.9476943154173314
       },
       {
         "id": "sgr-7",
         "x": 4761,
         "y": 1998,
-        "brightness": 0.9075711729034661
+        "brightness": 0.9478934115396018
       },
       {
         "id": "sgr-8",
         "x": 4690,
         "y": 1950,
-        "brightness": 0.8591198848471093
+        "brightness": 0.9148532408979587
       },
       {
         "id": "sgr-9",
         "x": 4980,
         "y": 2198,
-        "brightness": 0.8522419696106688
+        "brightness": 0.9381972294240991
       },
       {
         "id": "sgr-10",
         "x": 4999,
         "y": 2088,
-        "brightness": 0.9557168195049928
+        "brightness": 0.9064658204044316
       },
       {
         "id": "sgr-11",
         "x": 4983,
         "y": 1938,
-        "brightness": 0.8319412751281595
+        "brightness": 0.9335894562296996
       },
       {
         "id": "sgr-12",
         "x": 4903,
         "y": 1915,
-        "brightness": 0.8016484038829956
+        "brightness": 0.9536651403788063
       },
       {
         "id": "sgr-13",
         "x": 4855,
         "y": 1908,
-        "brightness": 0.9233140802490148
+        "brightness": 0.8621682320218503
       },
       {
         "id": "sgr-14",
         "x": 4815,
         "y": 1921,
-        "brightness": 0.945428670537138
+        "brightness": 0.8240402546843997
       },
       {
         "id": "sgr-15",
         "x": 4730,
         "y": 1938,
-        "brightness": 0.95606268299336
+        "brightness": 0.9553725841630275
       },
       {
         "id": "sgr-16",
         "x": 4524,
         "y": 2007,
-        "brightness": 0.8989321196564366
+        "brightness": 0.88043593246294
       },
       {
         "id": "sgr-17",
         "x": 4779,
         "y": 1961,
-        "brightness": 0.9696744584663107
+        "brightness": 0.866018202610251
       },
       {
         "id": "sgr-18",
         "x": 4770,
         "y": 1862,
-        "brightness": 0.9457373483256241
+        "brightness": 0.8838360618306604
       },
       {
         "id": "sgr-19",
         "x": 4791,
         "y": 1850,
-        "brightness": 0.8547553312257178
+        "brightness": 0.8323098510921536
       },
       {
         "id": "sgr-20",
         "x": 4823,
         "y": 1816,
-        "brightness": 0.9523758245044731
+        "brightness": 0.9022981294506178
       },
       {
         "id": "sgr-21",
         "x": 4840,
         "y": 1797,
-        "brightness": 0.9132322639636608
+        "brightness": 0.9189415448921482
       },
       {
         "id": "sgr-22",
         "x": 4841,
         "y": 1766,
-        "brightness": 0.8009446506596526
+        "brightness": 0.8521113217452638
       },
       {
         "id": "sgr-23",
         "x": 4741,
         "y": 1852,
-        "brightness": 0.9446209889388535
+        "brightness": 0.9250549191463155
       },
       {
         "id": "sgr-24",
         "x": 4726,
         "y": 1879,
-        "brightness": 0.8472309472118774
+        "brightness": 0.8952616739779147
       }
     ],
     "connections": [
@@ -8101,7 +8101,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Scorpion - A striking zodiac constellation with red Antares.",
     "centerX": 4215,
     "centerY": 2055,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "southern",
     "stars": [
@@ -8109,85 +8109,85 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "sco-0",
         "x": 3995,
         "y": 1935,
-        "brightness": 0.8992387651824413
+        "brightness": 0.8043191576518293
       },
       {
         "id": "sco-1",
         "x": 4001,
         "y": 1877,
-        "brightness": 0.9536656092736513
+        "brightness": 0.9888321444039445
       },
       {
         "id": "sco-2",
         "x": 4023,
         "y": 1830,
-        "brightness": 0.9524775898505738
+        "brightness": 0.9048547691052806
       },
       {
         "id": "sco-3",
         "x": 4088,
         "y": 1927,
-        "brightness": 0.8198698009347591
+        "brightness": 0.8938051731441528
       },
       {
         "id": "sco-4",
         "x": 4123,
         "y": 1941,
-        "brightness": 0.8995373062169871
+        "brightness": 0.836106071358606
       },
       {
         "id": "sco-5",
         "x": 4150,
         "y": 1970,
-        "brightness": 0.9287121250116268
+        "brightness": 0.8368589691629402
       },
       {
         "id": "sco-6",
         "x": 4209,
         "y": 2072,
-        "brightness": 0.9617173459774356
+        "brightness": 0.8839485731525686
       },
       {
         "id": "sco-7",
         "x": 4216,
         "y": 2134,
-        "brightness": 0.9376698027916643
+        "brightness": 0.8702746302840232
       },
       {
         "id": "sco-8",
         "x": 4227,
         "y": 2206,
-        "brightness": 0.8132600967119256
+        "brightness": 0.8030808387458042
       },
       {
         "id": "sco-9",
         "x": 4301,
         "y": 2221,
-        "brightness": 0.8608631425143536
+        "brightness": 0.8077260165284583
       },
       {
         "id": "sco-10",
         "x": 4405,
         "y": 2217,
-        "brightness": 0.9680846247124147
+        "brightness": 0.9525075808079737
       },
       {
         "id": "sco-11",
         "x": 4448,
         "y": 2169,
-        "brightness": 0.9386163074944509
+        "brightness": 0.9710316217245658
       },
       {
         "id": "sco-12",
         "x": 4427,
         "y": 2151,
-        "brightness": 0.9590260608769506
+        "brightness": 0.9050421647801893
       },
       {
         "id": "sco-13",
         "x": 4390,
         "y": 2118,
-        "brightness": 0.8677468101197299
+        "brightness": 0.8710355027746921
       }
     ],
     "connections": [
@@ -8252,7 +8252,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Sculptor - Contains the south galactic pole.",
     "centerX": 500,
     "centerY": 2033,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "southern",
     "stars": [
@@ -8260,25 +8260,25 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "scl-0",
         "x": 766,
         "y": 1989,
-        "brightness": 0.9178809023873911
+        "brightness": 0.8224976612860904
       },
       {
         "id": "scl-1",
         "x": 476,
         "y": 1969,
-        "brightness": 0.8177351169679876
+        "brightness": 0.9371010114360376
       },
       {
         "id": "scl-2",
         "x": 350,
         "y": 2042,
-        "brightness": 0.8180106983908761
+        "brightness": 0.9217810121214889
       },
       {
         "id": "scl-3",
         "x": 409,
         "y": 2130,
-        "brightness": 0.8565591434088556
+        "brightness": 0.8065816516822019
       }
     ],
     "connections": [
@@ -8303,7 +8303,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Shield - A small but distinctive constellation.",
     "centerX": 4661,
     "centerY": 1653,
-    "radius": 118,
+    "radius": 100,
     "discovered": false,
     "observatory": "southern",
     "stars": [
@@ -8311,25 +8311,25 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "sct-0",
         "x": 4647,
         "y": 1637,
-        "brightness": 0.9717892295926047
+        "brightness": 0.8563524337959231
       },
       {
         "id": "sct-1",
         "x": 4697,
         "y": 1579,
-        "brightness": 0.8001481303557485
+        "brightness": 0.9587907587272371
       },
       {
         "id": "sct-2",
         "x": 4676,
         "y": 1651,
-        "brightness": 0.9207560725671272
+        "brightness": 0.8977226436936429
       },
       {
         "id": "sct-3",
         "x": 4622,
         "y": 1743,
-        "brightness": 0.8244287844247253
+        "brightness": 0.9047516604580224
       }
     ],
     "connections": [
@@ -8358,7 +8358,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Serpent - The only constellation split into two parts.",
     "centerX": 4505,
     "centerY": 1633,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "southern",
     "stars": [
@@ -8366,37 +8366,37 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "ser-2-0",
         "x": 4293,
         "y": 1762,
-        "brightness": 0.9893543598789672
+        "brightness": 0.9933156433538562
       },
       {
         "id": "ser-2-1",
         "x": 4407,
         "y": 1757,
-        "brightness": 0.9028683404612098
+        "brightness": 0.9540589258304744
       },
       {
         "id": "ser-2-2",
         "x": 4496,
         "y": 1663,
-        "brightness": 0.9252714337353221
+        "brightness": 0.9482610119038462
       },
       {
         "id": "ser-2-3",
         "x": 4513,
         "y": 1636,
-        "brightness": 0.8057590778064031
+        "brightness": 0.8000435102563122
       },
       {
         "id": "ser-2-4",
         "x": 4589,
         "y": 1548,
-        "brightness": 0.932696899817889
+        "brightness": 0.9415470942403499
       },
       {
         "id": "ser-2-5",
         "x": 4734,
         "y": 1430,
-        "brightness": 0.9288354596547963
+        "brightness": 0.8332111577798114
       }
     ],
     "connections": [
@@ -8429,7 +8429,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Sextant - A faint equatorial constellation.",
     "centerX": 2563,
     "centerY": 1550,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "southern",
     "stars": [
@@ -8437,25 +8437,25 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "sex-0",
         "x": 2533,
         "y": 1506,
-        "brightness": 0.8696434095032828
+        "brightness": 0.897279757165327
       },
       {
         "id": "sex-1",
         "x": 2469,
         "y": 1635,
-        "brightness": 0.9598167133449097
+        "brightness": 0.8739885257635915
       },
       {
         "id": "sex-2",
         "x": 2623,
         "y": 1546,
-        "brightness": 0.9530212488099917
+        "brightness": 0.8248830325426914
       },
       {
         "id": "sex-3",
         "x": 2626,
         "y": 1511,
-        "brightness": 0.8733943942872845
+        "brightness": 0.911424674784787
       }
     ],
     "connections": [
@@ -8488,19 +8488,19 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "tel-0",
         "x": 4547,
         "y": 2266,
-        "brightness": 0.824094958671773
+        "brightness": 0.8869806835951977
       },
       {
         "id": "tel-1",
         "x": 4612,
         "y": 2266,
-        "brightness": 0.9823655498639008
+        "brightness": 0.8687458165546645
       },
       {
         "id": "tel-2",
         "x": 4620,
         "y": 2318,
-        "brightness": 0.9386765054221184
+        "brightness": 0.9141816560666556
       }
     ],
     "connections": [
@@ -8521,7 +8521,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Southern Triangle - A distinctive southern constellation.",
     "centerX": 4004,
     "centerY": 2617,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "southern",
     "stars": [
@@ -8529,19 +8529,19 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "tra-0",
         "x": 4203,
         "y": 2650,
-        "brightness": 0.9560565264794245
+        "brightness": 0.9901526107034612
       },
       {
         "id": "tra-1",
         "x": 3980,
         "y": 2557,
-        "brightness": 0.9447046101381086
+        "brightness": 0.9292409695802774
       },
       {
         "id": "tra-2",
         "x": 3829,
         "y": 2645,
-        "brightness": 0.8156806512851553
+        "brightness": 0.8433844640264683
       }
     ],
     "connections": [
@@ -8566,7 +8566,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Toucan - Contains the Small Magellanic Cloud.",
     "centerX": 500,
     "centerY": 2547,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "southern",
     "stars": [
@@ -8574,37 +8574,37 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "tuc-0",
         "x": 205,
         "y": 2504,
-        "brightness": 0.9763381459899035
+        "brightness": 0.8216819429905811
       },
       {
         "id": "tuc-1",
         "x": 451,
         "y": 2471,
-        "brightness": 0.8216656009981244
+        "brightness": 0.8908780709402914
       },
       {
         "id": "tuc-2",
         "x": 759,
         "y": 2549,
-        "brightness": 0.8631660222113585
+        "brightness": 0.953203210646011
       },
       {
         "id": "tuc-3",
         "x": 712,
         "y": 2581,
-        "brightness": 0.874873779552752
+        "brightness": 0.9754407658195385
       },
       {
         "id": "tuc-4",
         "x": 628,
         "y": 2593,
-        "brightness": 0.8132624300619667
+        "brightness": 0.9055157575030206
       },
       {
         "id": "tuc-5",
         "x": 242,
         "y": 2583,
-        "brightness": 0.9267877728851415
+        "brightness": 0.8808850320790619
       }
     ],
     "connections": [
@@ -8641,7 +8641,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Sails - Part of the ancient ship Argo Navis.",
     "centerX": 2372,
     "centerY": 2306,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "southern",
     "stars": [
@@ -8649,49 +8649,49 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "vel-0",
         "x": 2186,
         "y": 2412,
-        "brightness": 0.9917936366513072
+        "brightness": 0.8403650634857014
       },
       {
         "id": "vel-1",
         "x": 2342,
         "y": 2417,
-        "brightness": 0.9954189380606774
+        "brightness": 0.9820991238417598
       },
       {
         "id": "vel-2",
         "x": 2487,
         "y": 2409,
-        "brightness": 0.9836073457350205
+        "brightness": 0.8451597578880723
       },
       {
         "id": "vel-3",
         "x": 2695,
         "y": 2324,
-        "brightness": 0.9206902251445163
+        "brightness": 0.8310472411492729
       },
       {
         "id": "vel-4",
         "x": 2561,
         "y": 2202,
-        "brightness": 0.987867190302552
+        "brightness": 0.8972052468613341
       },
       {
         "id": "vel-5",
         "x": 2378,
         "y": 2174,
-        "brightness": 0.8994150268909541
+        "brightness": 0.9976289736857188
       },
       {
         "id": "vel-6",
         "x": 2283,
         "y": 2224,
-        "brightness": 0.902567737788434
+        "brightness": 0.8066790923021787
       },
       {
         "id": "vel-7",
         "x": 2040,
         "y": 2289,
-        "brightness": 0.869401011315828
+        "brightness": 0.9982030235583019
       }
     ],
     "connections": [
@@ -8732,7 +8732,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Maiden - The second-largest constellation with bright Spica.",
     "centerX": 3318,
     "centerY": 1506,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "southern",
     "stars": [
@@ -8740,79 +8740,79 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "vir-0",
         "x": 2941,
         "y": 1391,
-        "brightness": 0.8256496812043952
+        "brightness": 0.868216169412897
       },
       {
         "id": "vir-1",
         "x": 2961,
         "y": 1471,
-        "brightness": 0.8146735121073598
+        "brightness": 0.9491294486084959
       },
       {
         "id": "vir-2",
         "x": 3083,
         "y": 1511,
-        "brightness": 0.8896046017291155
+        "brightness": 0.9584485634436196
       },
       {
         "id": "vir-3",
         "x": 3174,
         "y": 1524,
-        "brightness": 0.8408390385493713
+        "brightness": 0.807003560979231
       },
       {
         "id": "vir-4",
         "x": 3291,
         "y": 1592,
-        "brightness": 0.8728930554075838
+        "brightness": 0.8483958825484169
       },
       {
         "id": "vir-5",
         "x": 3355,
         "y": 1686,
-        "brightness": 0.8660975354000578
+        "brightness": 0.9690896377601784
       },
       {
         "id": "vir-6",
         "x": 3567,
         "y": 1600,
-        "brightness": 0.9874658409843003
+        "brightness": 0.8330145766426841
       },
       {
         "id": "vir-7",
         "x": 3679,
         "y": 1594,
-        "brightness": 0.9748201579829933
+        "brightness": 0.8403876042444053
       },
       {
         "id": "vir-8",
         "x": 3259,
         "y": 1317,
-        "brightness": 0.9459625013859393
+        "brightness": 0.835427023729293
       },
       {
         "id": "vir-9",
         "x": 3232,
         "y": 1443,
-        "brightness": 0.9896133820984965
+        "brightness": 0.9546159155406545
       },
       {
         "id": "vir-10",
         "x": 3395,
         "y": 1510,
-        "brightness": 0.8295945968937203
+        "brightness": 0.9272567479096532
       },
       {
         "id": "vir-11",
         "x": 3507,
         "y": 1474,
-        "brightness": 0.805753652731771
+        "brightness": 0.8792825369489303
       },
       {
         "id": "vir-12",
         "x": 3693,
         "y": 1468,
-        "brightness": 0.9851416067475092
+        "brightness": 0.9083809994277369
       }
     ],
     "connections": [
@@ -8873,7 +8873,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "description": "The Flying Fish - A small southern constellation.",
     "centerX": 2001,
     "centerY": 2632,
-    "radius": 150,
+    "radius": 100,
     "discovered": false,
     "observatory": "southern",
     "stars": [
@@ -8881,31 +8881,31 @@ export const CONSTELLATIONS: ConstellationData[] = [
         "id": "vol-0",
         "x": 2260,
         "y": 2607,
-        "brightness": 0.9156532393715171
+        "brightness": 0.9502779927126754
       },
       {
         "id": "vol-1",
         "x": 2107,
         "y": 2602,
-        "brightness": 0.9922728350787879
+        "brightness": 0.861686676048769
       },
       {
         "id": "vol-2",
         "x": 2033,
         "y": 2644,
-        "brightness": 0.9660911870783221
+        "brightness": 0.9334641454332882
       },
       {
         "id": "vol-3",
         "x": 1820,
         "y": 2633,
-        "brightness": 0.8621655763258324
+        "brightness": 0.9296038226296242
       },
       {
         "id": "vol-4",
         "x": 1786,
         "y": 2675,
-        "brightness": 0.9602740660809175
+        "brightness": 0.801938091913921
       }
     ],
     "connections": [
