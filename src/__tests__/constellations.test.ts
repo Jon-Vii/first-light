@@ -21,11 +21,11 @@ import {
 describe('Constellation Data', () => {
   describe('constants', () => {
     test('SKY_WIDTH is defined', () => {
-      expect(SKY_WIDTH).toBe(4000);
+      expect(SKY_WIDTH).toBe(6000);
     });
 
     test('SKY_HEIGHT is defined', () => {
-      expect(SKY_HEIGHT).toBe(2000);
+      expect(SKY_HEIGHT).toBe(3000);
     });
   });
 

@@ -186,6 +186,18 @@ export class Game {
   };
 
   /**
+   * Calculate horizontal delta between two X positions, accounting for wrap-around.
+   * Returns the shortest distance, which may go through the wrap boundary.
+   */
+  private getWrappedDeltaX(x1: number, x2: number): number {
+    let dx = x1 - x2;
+    // If the distance is more than half the sky, wrap through the boundary
+    if (dx > SKY_WIDTH / 2) dx -= SKY_WIDTH;
+    if (dx < -SKY_WIDTH / 2) dx += SKY_WIDTH;
+    return dx;
+  }
+
+  /**
    * Update game state
    */
   private update(deltaTime: number): void {
@@ -200,9 +212,12 @@ export class Game {
     this.state.viewX += viewSpeedX * deltaTime;
     this.state.viewY += viewSpeedY * deltaTime;
 
-    // Clamp view to sky bounds
+    // Wrap X horizontally (infinite horizontal scrolling like a celestial sphere)
+    if (this.state.viewX < 0) this.state.viewX += SKY_WIDTH;
+    if (this.state.viewX >= SKY_WIDTH) this.state.viewX -= SKY_WIDTH;
+
+    // Clamp Y to sky bounds (poles are natural limits)
     const margin = 400;
-    this.state.viewX = Math.max(margin, Math.min(SKY_WIDTH - margin, this.state.viewX));
     this.state.viewY = Math.max(margin, Math.min(SKY_HEIGHT - margin, this.state.viewY));
 
     // Check for constellation discovery
@@ -215,7 +230,10 @@ export class Game {
 
     for (const constellation of this.constellations) {
       const data = constellation.getData();
-      const distance = Math.hypot(skyX - data.centerX, skyY - data.centerY);
+      // Calculate distance accounting for horizontal wrap-around
+      const dx = this.getWrappedDeltaX(skyX, data.centerX);
+      const dy = skyY - data.centerY;
+      const distance = Math.hypot(dx, dy);
       const isInView = distance < data.radius + telescopeRadius * 0.5;
 
       // Cancel animation if moved out of view
@@ -248,7 +266,9 @@ export class Game {
       if (constellation.isDiscovered()) continue;
 
       const data = constellation.getData();
-      const distance = Math.hypot(skyX - data.centerX, skyY - data.centerY);
+      const dx = this.getWrappedDeltaX(skyX, data.centerX);
+      const dy = skyY - data.centerY;
+      const distance = Math.hypot(dx, dy);
 
       if (distance < data.radius + telescopeRadius * 0.3) {
         // Player is hovering over this constellation
