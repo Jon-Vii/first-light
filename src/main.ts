@@ -3,6 +3,7 @@
  */
 
 import { Game } from './game/Game';
+import { ObservatorySwitcher } from './ui/ObservatorySwitcher';
 
 
 // Wait for DOM to be ready
@@ -20,9 +21,13 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initialize the game (but don't start yet)
   const game = new Game(canvas, telescopeOverlay);
 
+  // Initialize observatory switcher UI
+  new ObservatorySwitcher(game);
+
   // Start game when button is clicked (this also unlocks audio)
   startButton?.addEventListener('click', () => {
     startScreen.classList.add('hidden');
     game.start();
   });
 });
+

@@ -89,223 +89,615 @@ body {
   background-repeat: no-repeat;
   background-position: center;
 
-  /* Drop shadow for extra depth on top of the SVG's internal shadow */
-  filter: drop-shadow(0 0 20px rgba(0, 0, 0, 0.8));
-}
-
-
-
-/* Lens reflection/glint effect */
-#telescope-overlay::after {
-  content: '';
   position: absolute;
-  top: 8%;
-  left: 15%;
-  width: 25%;
-  height: 8%;
-  background: linear-gradient(135deg,
-      rgba(255, 255, 255, 0.1) 0%,
-      transparent 100%);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(85vw, 85vh);
+  height: min(85vw, 85vh);
   border-radius: 50%;
-  transform: rotate(-30deg);
-  filter: blur(2px);
+  box-shadow:
+    0 0 0 2000px rgba(0, 0, 0, 0.95),
+    /* Dark surround */
+    inset 0 0 50px rgba(0, 0, 0, 0.8),
+    /* Inner shadow */
+    0 0 0 2px rgba(255, 217, 61, 0.2);
+  /* Subtle rim */
+  pointer-events: none;
+  z-index: 10;
 }
 
-/* Discoveries Panel - Cosmic Journal Style */
+
+/* ========================================
+   DISCOVERIES PANEL - Antique Wooden Cabinet
+   ======================================== */
+
+/* Wood & Antique Color Palette — Telescope Matched */
+:root {
+  /* Wood Tones - Deep Espresso/Walnut (Dark Academia) */
+  --color-wood-dark: #1a120d;
+  --color-wood-mahogany: #2a1f1a;
+  --color-wood-walnut: #3d2e24;
+  --color-wood-oak: #5c4535;
+  --color-wood-light: #7a5d4a;
+
+  /* Parchment & Paper - Aged/Antique */
+  --color-parchment: #e8dcc8;
+  --color-parchment-dark: #d4c4a8;
+  --color-parchment-burnt: #c4b090;
+  --color-ink: #1a1410;
+
+  /* Brass Hardware — FROM TELESCOPE SVG */
+  --color-brass-highlight: #d4a84b;
+  --color-brass-light: #c9a227;
+  --color-brass: #b8860b;
+  --color-brass-dark: #8b6914;
+  --color-brass-aged: #705812;
+  --color-brass-shadow: #5a4208;
+
+  /* Cork/Leather Backing - Dark Aged Leather */
+  --color-cork: #4a3c2e;
+  --color-cork-dark: #352a20;
+}
+
+/* ========================================
+   DISCOVERIES PANEL - Leather-Bound Journal
+   ======================================== */
+
+/* Leather & Journal Color Palette */
+:root {
+  --color-leather-dark: #2a1810;
+  --color-leather: #3d2418;
+  --color-leather-worn: #4a2c1c;
+  --color-leather-light: #5c3824;
+  --color-leather-highlight: #6d4530;
+  --color-stitching: #8b7355;
+  --color-page-edge: #d4c4a0;
+}
+
+/* Main Panel - Leather-Bound Journal */
 #discoveries-panel {
-  position: fixed;
+  position: absolute;
+  top: 50%;
   right: 0;
-  top: 0;
-  height: 100%;
-  width: 360px;
-  /* Slightly wider for better card layout */
+  width: 340px;
+  height: 65vh;
 
-  /* Deep Space Background */
-  background: linear-gradient(135deg, #0b0c15 0%, #151625 100%);
-  border-left: 2px solid var(--color-brass-dark);
-  box-shadow: -10px 0 50px rgba(0, 0, 0, 0.8), inset 2px 0 20px rgba(0, 0, 0, 0.5);
+  /* Leather texture background */
+  background:
+    /* Leather grain noise */
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='leather'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23leather)' opacity='0.12'/%3E%3C/svg%3E"),
+    /* Leather gradient with wear */
+    linear-gradient(90deg,
+      var(--color-leather-highlight) 0%,
+      var(--color-leather) 8%,
+      var(--color-leather-dark) 100%),
+    /* Base color */
+    var(--color-leather-dark);
 
-  transform: translateX(calc(100% - 60px));
-  transition: transform var(--transition-smooth);
-  z-index: 100;
+  /* Leather binding border - thick with rounded spine */
+  border: 6px solid var(--color-leather-dark);
+  border-left: 10px solid var(--color-leather-worn);
+  border-radius: 4px 0 0 4px;
+
+  /* Deep shadow for weight and presence */
+  box-shadow:
+    /* Outer shadow - lifted off surface */
+    -12px 0 30px rgba(0, 0, 0, 0.6),
+    -4px 0 15px rgba(0, 0, 0, 0.4),
+    /* Top/bottom edge shadow */
+    0 -3px 10px rgba(0, 0, 0, 0.3),
+    0 3px 10px rgba(0, 0, 0, 0.3),
+    /* Inner leather bevel */
+    inset 2px 0 8px rgba(0, 0, 0, 0.5),
+    inset -1px 0 4px rgba(255, 255, 255, 0.05);
+
+  z-index: 20;
   display: flex;
   flex-direction: column;
+  overflow: visible;
+
+  /* Transition */
+  transform: translate(0, -50%);
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-#discoveries-panel:not(.collapsed) {
-  transform: translateX(0);
+/* Collapsed State */
+#discoveries-panel.collapsed {
+  transform: translate(100%, -50%);
 }
 
+/* Brass Corner Brackets - decorative hardware */
+#discoveries-panel::before,
+#discoveries-panel::after {
+  content: '';
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  left: 8px;
+  z-index: 10;
+  pointer-events: none;
+
+  /* L-shaped brass corner bracket */
+  background:
+    linear-gradient(135deg,
+      var(--color-brass-light) 0%,
+      var(--color-brass) 40%,
+      var(--color-brass-dark) 100%);
+
+  /* Clip to L-shape */
+  clip-path: polygon(0% 0%, 40% 0%, 40% 60%, 100% 60%, 100% 100%, 0% 100%);
+
+  box-shadow:
+    1px 1px 3px rgba(0, 0, 0, 0.4),
+    inset 0 1px 1px rgba(255, 255, 255, 0.3);
+}
+
+#discoveries-panel::before {
+  top: 10px;
+  transform: rotate(0deg);
+}
+
+#discoveries-panel::after {
+  bottom: 10px;
+  transform: rotate(-90deg);
+}
+
+/* Leather Strap Toggle with Brass Buckle */
 #discoveries-toggle {
   position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-
-  left: -50px;
-  /* Extrude from panel */
+  left: -48px;
   top: 50%;
   transform: translateY(-50%);
-  width: 50px;
-  height: 80px;
-  background: linear-gradient(to right, var(--color-brass-dark), var(--color-brass-light) 40%, var(--color-brass-dark));
-  border: 1px solid #3e2b17;
-  border-right: none;
-  border-radius: 8px 0 0 8px;
+  width: 48px;
+  height: 120px;
+
+  /* Leather strap texture */
+  background:
+    /* Leather grain */
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 50 50' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.15'/%3E%3C/svg%3E"),
+    /* Leather gradient */
+    linear-gradient(90deg,
+      var(--color-leather-light) 0%,
+      var(--color-leather) 30%,
+      var(--color-leather-dark) 100%);
+
+  border: none;
+  border-radius: 6px 0 0 6px;
   cursor: pointer;
+
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  box-shadow: -5px 0 10px rgba(0, 0, 0, 0.5);
-  transition: width 0.2s;
+  gap: 6px;
+
+  /* Leather depth */
+  box-shadow:
+    -4px 0 12px rgba(0, 0, 0, 0.5),
+    inset 1px 0 3px rgba(255, 255, 255, 0.1),
+    inset -2px 0 4px rgba(0, 0, 0, 0.4);
+
+  transition: all 0.3s ease;
+}
+
+/* Stitching detail on strap */
+#discoveries-toggle::before {
+  content: '';
+  position: absolute;
+  top: 8px;
+  bottom: 8px;
+  left: 6px;
+  width: 2px;
+
+  /* Stitching dashes */
+  background: repeating-linear-gradient(180deg,
+      var(--color-stitching) 0px,
+      var(--color-stitching) 4px,
+      transparent 4px,
+      transparent 8px);
+  opacity: 0.7;
+}
+
+/* Brass buckle clasp */
+#discoveries-toggle::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 24px;
+  height: 32px;
+
+  /* Brass buckle */
+  background:
+    linear-gradient(135deg,
+      var(--color-brass-light) 0%,
+      var(--color-brass) 50%,
+      var(--color-brass-dark) 100%);
+
+  border-radius: 4px;
+  border: 2px solid var(--color-brass-dark);
+
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.4),
+    inset 0 1px 2px rgba(255, 255, 255, 0.3);
 }
 
 #discoveries-toggle:hover {
-  width: 55px;
-  left: -55px;
+  left: -54px;
+  width: 54px;
+
+  background:
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 50 50' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.15'/%3E%3C/svg%3E"),
+    linear-gradient(90deg,
+      var(--color-leather-highlight) 0%,
+      var(--color-leather-light) 30%,
+      var(--color-leather) 100%);
+
+  box-shadow:
+    -6px 0 18px rgba(0, 0, 0, 0.6),
+    0 0 12px rgba(184, 134, 11, 0.2),
+    inset 1px 0 3px rgba(255, 255, 255, 0.15),
+    inset -2px 0 4px rgba(0, 0, 0, 0.4);
 }
 
 .toggle-icon {
-  font-size: 1.5rem;
-  color: var(--color-wood-dark);
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
+  font-size: 1.4rem;
+  color: var(--color-brass);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.3));
+  position: relative;
+  z-index: 5;
+  margin-top: 30px;
 }
 
 .discovery-count {
-  font-family: var(--font-serif);
-  font-size: 0.9rem;
-  font-weight: 700;
-  color: var(--color-wood-dark);
-  margin-top: 4px;
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-brass-light);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  position: relative;
+  z-index: 5;
+  margin-bottom: 20px;
 }
 
+/* Keyboard Hint - Embossed Brass Key */
+.toggle-hint {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+
+  /* Embossed brass key look */
+  color: var(--color-leather-dark);
+  background:
+    linear-gradient(180deg,
+      var(--color-brass-light) 0%,
+      var(--color-brass) 50%,
+      var(--color-brass-dark) 100%);
+
+  padding: 3px 8px;
+  border-radius: 3px;
+
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
+  z-index: 10;
+}
+
+/* Journal Interior - Aged Paper Pages */
 .discoveries-content {
-  padding: 30px;
+  padding: 28px 24px;
   height: 100%;
   overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: var(--color-brass-dark) var(--color-wood-dark);
-}
-
-.discoveries-content h2 {
-  font-family: var(--font-serif);
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  color: var(--color-brass-light);
-  text-align: center;
-  padding-bottom: 15px;
-  border-bottom: 2px double var(--color-brass-dark);
-  margin-bottom: 25px;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-}
-
-/* Discovery Cards - Parchment Slips */
-.discovery-card {
-  background-color: var(--color-parchment);
-  color: var(--color-ink);
-  padding: 10px;
-  margin-bottom: 20px;
+  margin: 12px;
   border-radius: 2px;
+
+  /* Aged paper pages background */
+  background:
+    /* Paper fiber texture */
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='paper'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23paper)' opacity='0.06'/%3E%3C/svg%3E"),
+    /* Aged paper gradient */
+    linear-gradient(180deg,
+      #f5efe0 0%,
+      #ebe3d0 20%,
+      #e8dcc4 50%,
+      #e2d4b8 80%,
+      #dccba8 100%);
+
+  /* Page edge and binding shadow */
   box-shadow:
-    0 2px 5px rgba(0, 0, 0, 0.4),
-    0 0 0 1px rgba(0, 0, 0, 0.1);
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  position: relative;
-  transform-origin: top center;
+    inset 4px 0 8px rgba(0, 0, 0, 0.15),
+    inset 0 3px 6px rgba(0, 0, 0, 0.1),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.08),
+    /* Left edge - page binding */
+    inset 8px 0 4px -4px rgba(139, 105, 20, 0.15);
+
+  /* Custom scrollbar - leather and brass */
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-brass-aged) var(--color-leather-dark);
 }
 
-/* Pin effect */
-.discovery-card::after {
+.discoveries-content::-webkit-scrollbar {
+  width: 10px;
+}
+
+.discoveries-content::-webkit-scrollbar-track {
+  background: var(--color-leather-dark);
+  border-radius: 5px;
+}
+
+.discoveries-content::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg,
+      var(--color-brass-light) 0%,
+      var(--color-brass) 50%,
+      var(--color-brass-dark) 100%);
+  border-radius: 5px;
+  border: 1px solid var(--color-leather-dark);
+}
+
+/* Embossed Brass Nameplate */
+.discoveries-content h2 {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  text-align: center;
+
+  /* Embossed brass plate */
+  color: var(--color-leather-dark);
+  background:
+    linear-gradient(180deg,
+      var(--color-brass-light) 0%,
+      var(--color-brass) 30%,
+      var(--color-brass-dark) 70%,
+      var(--color-brass) 100%);
+
+  padding: 10px 24px;
+  margin: 0 0 24px 0;
+  border-radius: 3px;
+  position: relative;
+
+  /* Embossed depth */
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.25),
+    inset 0 1px 1px rgba(255, 255, 255, 0.35),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.2);
+
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+/* Brass rivets on nameplate */
+.discoveries-content h2::before,
+.discoveries-content h2::after {
   content: '';
   position: absolute;
-  top: -8px;
-  left: 50%;
-  width: 12px;
-  height: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
-  background: radial-gradient(circle at 30% 30%, var(--color-brass-light), var(--color-brass-dark));
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-  transform: translateX(-50%);
+
+  background:
+    radial-gradient(circle at 30% 30%,
+      var(--color-brass-light) 0%,
+      var(--color-brass) 50%,
+      var(--color-brass-dark) 100%);
+
+  box-shadow:
+    inset 0 -1px 2px rgba(0, 0, 0, 0.3),
+    0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
-.discovery-icon {
-  width: 60px;
-  height: 60px;
-  flex-shrink: 0;
-  background: rgba(0, 0, 0, 0.05);
-  /* Faint box for the map */
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  padding: 4px;
+.discoveries-content h2::before {
+  left: 10px;
 }
 
-.discovery-info h3 {
-  font-family: var(--font-serif);
-  font-weight: 700;
-  font-size: 1.3rem;
-  margin: 0 0 4px 0;
-  color: var(--color-wood-dark);
+.discoveries-content h2::after {
+  right: 10px;
 }
 
-.discovery-info p {
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-size: 0.95rem;
-  margin: 0;
-  color: #554433;
-  /* Faded ink */
+/* Discovery Cards - Aged Parchment Style */
+.discovery-card {
+  /* Aged parchment background */
+  background:
+    /* Subtle texture */
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='paper'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23paper)' opacity='0.03'/%3E%3C/svg%3E"),
+    linear-gradient(135deg,
+      var(--color-parchment) 0%,
+      var(--color-parchment-dark) 50%,
+      var(--color-parchment-burnt) 100%);
+
+  /* Aged paper edges */
+  border: 1px solid var(--color-parchment-burnt);
+  border-radius: 2px;
+
+  padding: 14px 16px;
+  margin-bottom: 14px;
+
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  position: relative;
+
+  /* Paper shadow */
+  box-shadow:
+    2px 3px 6px rgba(0, 0, 0, 0.25),
+    -1px -1px 0 rgba(255, 255, 255, 0.5);
+
+  transition: all 0.3s ease;
+
+  /* Slight rotation for natural feel */
+  transform: rotate(-0.3deg);
 }
 
-/* Notifications - Old Letter style */
-#discovery-notification {
+.discovery-card:nth-child(even) {
+  transform: rotate(0.4deg);
+}
+
+.discovery-card:nth-child(3n) {
+  transform: rotate(-0.6deg);
+}
+
+.discovery-card:hover {
+  transform: rotate(0deg) translateY(-2px) scale(1.02);
+  box-shadow:
+    4px 6px 12px rgba(0, 0, 0, 0.35),
+    -1px -1px 0 rgba(255, 255, 255, 0.6);
+}
+
+/* Pin/Tack Effect */
+.discovery-card::before {
+  content: '';
   position: absolute;
-  top: 10%;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: var(--color-parchment);
+  top: 8px;
+  right: 12px;
+  width: 10px;
+  height: 10px;
+
+  /* Brass tack */
+  background: radial-gradient(circle at 30% 30%,
+      var(--color-brass-light) 0%,
+      var(--color-brass) 40%,
+      var(--color-brass-dark) 100%);
+  border-radius: 50%;
+
+  box-shadow:
+    0 2px 3px rgba(0, 0, 0, 0.4),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.3),
+    inset 0 1px 1px rgba(255, 255, 255, 0.5);
+}
+
+/* Constellation Mini-Map - Ink Drawing Style */
+.discovery-icon {
+  width: 52px;
+  height: 52px;
+  flex-shrink: 0;
+
+  /* Aged paper circle background */
+  background:
+    radial-gradient(circle,
+      var(--color-parchment) 0%,
+      var(--color-parchment-dark) 80%,
+      var(--color-parchment-burnt) 100%);
+
+  border: 2px solid var(--color-ink);
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+
+  box-shadow:
+    inset 0 1px 3px rgba(0, 0, 0, 0.2),
+    0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+/* Override SVG colors for ink look */
+.discovery-icon svg {
+  filter: sepia(0.3) saturate(0.8);
+}
+
+.discovery-icon svg line {
+  stroke: var(--color-ink) !important;
+  opacity: 0.7 !important;
+}
+
+.discovery-icon svg circle {
+  fill: var(--color-ink) !important;
+}
+
+/* Constellation Name - Handwritten Style */
+.discovery-info h3 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.15rem;
+  font-style: italic;
+  margin: 0 0 4px 0;
   color: var(--color-ink);
-  padding: 15px 40px;
-  border: 1px solid var(--color-wood-light);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  letter-spacing: 0.02em;
+}
+
+/* Description - Typewriter/Journal Style */
+.discovery-info p {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  margin: 0;
+  color: rgba(45, 31, 20, 0.7);
+  line-height: 1.4;
+  font-style: italic;
+}
+
+/* Discovery Notification - Reverted to Cosmic Style */
+#discovery-notification {
+  position: fixed;
+  /* Fixed centering */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.9);
+
+  /* Deep Space Cosmic Gradient */
+  background: radial-gradient(ellipse at center, rgba(255, 217, 61, 0.15) 0%, rgba(15, 16, 32, 0.95) 70%);
+  border: 2px solid var(--color-star-gold);
+  border-radius: 20px;
+  padding: 40px 60px;
   text-align: center;
-  z-index: 100;
-  opacity: 1;
-  transition: opacity 1s;
+
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  z-index: 200;
+
+  /* Cosmic Glow */
+  box-shadow:
+    0 0 60px var(--color-connection),
+    0 0 120px var(--color-connection);
+
   pointer-events: none;
 }
 
-#discovery-notification::before,
-#discovery-notification::after {
-  /* Fancy borders logic could go here, keeping it simple for now */
+#discovery-notification.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, -50%) scale(1);
 }
 
 #discovery-notification.hidden {
   opacity: 0;
+  visibility: hidden;
+  transform: translate(-50%, -50%) scale(0.9);
 }
 
 .notification-title {
   display: block;
-  font-family: var(--font-serif);
+  font-family: var(--font-ui);
   font-size: 0.9rem;
-  letter-spacing: 2px;
+  color: rgba(255, 255, 255, 0.7);
   text-transform: uppercase;
-  color: var(--color-wood-light);
-  margin-bottom: 5px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
-  padding-bottom: 5px;
+  letter-spacing: 0.2em;
+  margin-bottom: 8px;
+  border-bottom: none;
 }
 
 .constellation-name {
   display: block;
   font-family: var(--font-serif);
-  font-size: 2rem;
-  font-weight: 700;
-  color: var(--color-wood-dark);
+  font-size: 2.5rem;
+  font-weight: 400;
+  color: var(--color-star-gold);
+  text-shadow: 0 0 20px var(--color-star-gold);
 }
 
 /* Start Screen */
@@ -389,6 +781,135 @@ h1 {
   100% {
     transform: scale(1);
   }
+}
+
+/* ========================================
+   OBSERVATORY SWITCHER
+   ======================================== */
+
+#observatory-switcher {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  z-index: 20;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.observatory-buttons {
+  display: flex;
+  gap: 4px;
+
+  /* Leather backing */
+  background:
+    linear-gradient(135deg,
+      var(--color-leather-light) 0%,
+      var(--color-leather) 50%,
+      var(--color-leather-dark) 100%);
+
+  padding: 6px;
+  border-radius: 8px;
+
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.5),
+    inset 0 1px 1px rgba(255, 255, 255, 0.1);
+}
+
+.observatory-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+
+  background:
+    linear-gradient(180deg,
+      var(--color-brass-light) 0%,
+      var(--color-brass) 50%,
+      var(--color-brass-dark) 100%);
+
+  border: none;
+  border-radius: 6px;
+  padding: 10px 14px;
+  cursor: pointer;
+
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.3),
+    inset 0 1px 1px rgba(255, 255, 255, 0.3);
+
+  transition: all 0.2s ease;
+}
+
+.observatory-btn:hover {
+  background:
+    linear-gradient(180deg,
+      #e0b84d 0%,
+      var(--color-brass-light) 50%,
+      var(--color-brass) 100%);
+
+  transform: translateY(-2px);
+  box-shadow:
+    0 4px 8px rgba(0, 0, 0, 0.4),
+    inset 0 1px 2px rgba(255, 255, 255, 0.4);
+}
+
+.observatory-btn.active {
+  background:
+    linear-gradient(180deg,
+      var(--color-brass-aged) 0%,
+      var(--color-brass-dark) 50%,
+      var(--color-brass-shadow) 100%);
+
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.4),
+    0 1px 0 rgba(255, 255, 255, 0.1);
+
+  transform: translateY(1px);
+}
+
+.observatory-icon {
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.observatory-label {
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-leather-dark);
+}
+
+.observatory-btn.active .observatory-label {
+  color: var(--color-parchment);
+}
+
+.observatory-info {
+  /* Brass nameplate */
+  background:
+    linear-gradient(180deg,
+      var(--color-brass-light) 0%,
+      var(--color-brass) 40%,
+      var(--color-brass-dark) 100%);
+
+  padding: 4px 12px;
+  border-radius: 4px;
+
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.observatory-name {
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-leather-dark);
 }
 
 /* Utility Classes */

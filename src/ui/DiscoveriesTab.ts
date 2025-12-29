@@ -2,19 +2,37 @@
  * DiscoveriesTab - Manages the discoveries panel UI
  */
 
-import { type ConstellationData, CONSTELLATIONS } from '../data/constellations';
+import { type ConstellationData, getConstellationsByObservatory, type Observatory } from '../data/constellations';
 
 export class DiscoveriesTab {
   private listElement: HTMLElement | null;
   private countElement: HTMLElement | null;
   private discoveries: ConstellationData[] = [];
   private totalConstellations: number = 0;
+  private currentObservatory: Observatory;
 
-  constructor() {
+  constructor(observatory: Observatory = 'northern') {
     this.listElement = document.getElementById('discoveries-list');
     this.countElement = document.querySelector('.discovery-count');
-    this.totalConstellations = CONSTELLATIONS.length;
+    this.currentObservatory = observatory;
+    this.totalConstellations = getConstellationsByObservatory(observatory).length;
     this.updateCount(); // Init with 0/Total
+  }
+
+  /**
+   * Switch to a different observatory, clearing discoveries for this session
+   */
+  setObservatory(observatory: Observatory): void {
+    this.currentObservatory = observatory;
+    this.totalConstellations = getConstellationsByObservatory(observatory).length;
+    this.discoveries = [];
+
+    // Clear the UI list
+    if (this.listElement) {
+      this.listElement.innerHTML = '';
+    }
+
+    this.updateCount();
   }
 
   /**
@@ -109,10 +127,10 @@ export class DiscoveriesTab {
         svg += `<line 
           x1="${mapX(start.x)}" y1="${mapY(start.y)}" 
           x2="${mapX(end.x)}" y2="${mapY(end.y)}" 
-          stroke="var(--color-brass-dark)" 
-          stroke-width="2" 
+          stroke="var(--color-star-blue)" 
+          stroke-width="1.5" 
           stroke-linecap="round"
-          opacity="0.6" />`;
+          opacity="0.5" />`;
       }
     });
 
@@ -120,9 +138,10 @@ export class DiscoveriesTab {
     data.stars.forEach(star => {
       const cx = mapX(star.x);
       const cy = mapY(star.y);
-      const r = 2 + (star.brightness * 2.5); // Radius based on brightness
+      // Slightly larger stars for readability in the small icon
+      const r = 2.5 + (star.brightness * 1.5);
 
-      svg += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="var(--color-ink)" />`;
+      svg += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="var(--color-star-white)" />`;
     });
 
     svg += `</svg>`;

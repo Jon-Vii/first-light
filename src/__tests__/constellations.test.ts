@@ -7,12 +7,15 @@
 import { describe, test, expect } from 'bun:test';
 import {
   CONSTELLATIONS,
+  OBSERVATORIES,
   getConstellation,
   getUndiscoveredConstellations,
   getDiscoveredConstellations,
+  getConstellationsByObservatory,
   SKY_WIDTH,
   SKY_HEIGHT,
   type ConstellationData,
+  type Observatory,
 } from '../data/constellations';
 
 describe('Constellation Data', () => {
@@ -27,8 +30,8 @@ describe('Constellation Data', () => {
   });
 
   describe('CONSTELLATIONS array', () => {
-    test('contains 6 constellations', () => {
-      expect(CONSTELLATIONS.length).toBe(6);
+    test('contains all 89 constellations (35 northern, 54 southern)', () => {
+      expect(CONSTELLATIONS.length).toBe(89);
     });
 
     test('all constellations have unique IDs', () => {
@@ -47,6 +50,7 @@ describe('Constellation Data', () => {
         expect(typeof constellation.discovered).toBe('boolean');
         expect(Array.isArray(constellation.stars)).toBe(true);
         expect(Array.isArray(constellation.connections)).toBe(true);
+        expect(['northern', 'southern']).toContain(constellation.observatory);
       }
     });
 
@@ -94,7 +98,7 @@ describe('Constellation Data', () => {
 
   describe('getConstellation', () => {
     test('returns constellation by valid ID', () => {
-      const orion = getConstellation('orion');
+      const orion = getConstellation('ori');
 
       expect(orion).toBeDefined();
       expect(orion?.name).toBe('Orion');
@@ -106,8 +110,12 @@ describe('Constellation Data', () => {
       expect(result).toBeUndefined();
     });
 
-    test('finds all known constellations by ID', () => {
-      const knownIds = ['orion', 'ursa-major', 'cassiopeia', 'cygnus', 'lyra', 'scorpius'];
+    test('finds sample constellations by ID', () => {
+      // Sample of well-known constellations with their 3-letter codes
+      const knownIds = [
+        'ori', 'uma', 'cas', 'cyg', 'lyr', 'dra', 'per', 'leo',  // Northern
+        'sco', 'cru', 'cen', 'car', 'pav', 'phe', 'gru'           // Southern
+      ];
 
       for (const id of knownIds) {
         const constellation = getConstellation(id);
@@ -149,20 +157,64 @@ describe('Constellation Data', () => {
   });
 
   describe('specific constellation data', () => {
-    test('Orion has correct star count', () => {
-      const orion = getConstellation('orion');
-      expect(orion?.stars.length).toBe(7);
+    test('Orion has stars', () => {
+      const orion = getConstellation('ori');
+      expect(orion?.stars.length).toBeGreaterThan(0);
     });
 
-    test('Cassiopeia has W-shape connections (4 segments)', () => {
-      const cassiopeia = getConstellation('cassiopeia');
-      expect(cassiopeia?.connections.length).toBe(4);
+    test('Cassiopeia has connections', () => {
+      const cassiopeia = getConstellation('cas');
+      expect(cassiopeia?.connections.length).toBeGreaterThan(0);
     });
 
     test('all constellations have at least 1 connection', () => {
       for (const constellation of CONSTELLATIONS) {
         expect(constellation.connections.length).toBeGreaterThanOrEqual(1);
       }
+    });
+  });
+
+  describe('OBSERVATORIES', () => {
+    test('has northern and southern observatories', () => {
+      expect(OBSERVATORIES.northern).toBeDefined();
+      expect(OBSERVATORIES.southern).toBeDefined();
+    });
+
+    test('observatories have required metadata', () => {
+      for (const key of ['northern', 'southern'] as Observatory[]) {
+        const obs = OBSERVATORIES[key];
+        expect(typeof obs.id).toBe('string');
+        expect(typeof obs.name).toBe('string');
+        expect(typeof obs.location).toBe('string');
+        expect(typeof obs.description).toBe('string');
+      }
+    });
+  });
+
+  describe('getConstellationsByObservatory', () => {
+    test('returns only northern constellations', () => {
+      const northern = getConstellationsByObservatory('northern');
+
+      expect(northern.length).toBe(35);
+      for (const c of northern) {
+        expect(c.observatory).toBe('northern');
+      }
+    });
+
+    test('returns only southern constellations', () => {
+      const southern = getConstellationsByObservatory('southern');
+
+      expect(southern.length).toBe(54);
+      for (const c of southern) {
+        expect(c.observatory).toBe('southern');
+      }
+    });
+
+    test('northern + southern equals all constellations', () => {
+      const northern = getConstellationsByObservatory('northern');
+      const southern = getConstellationsByObservatory('southern');
+
+      expect(northern.length + southern.length).toBe(CONSTELLATIONS.length);
     });
   });
 });

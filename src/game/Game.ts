@@ -7,7 +7,14 @@ import { Telescope } from './Telescope';
 import { Constellation } from './Constellation';
 import { DiscoveriesTab } from '../ui/DiscoveriesTab';
 import { AudioManager } from '../audio/AudioManager';
-import { CONSTELLATIONS, SKY_WIDTH, SKY_HEIGHT, type ConstellationData } from '../data/constellations';
+import {
+  CONSTELLATIONS,
+  SKY_WIDTH,
+  SKY_HEIGHT,
+  getConstellationsByObservatory,
+  type ConstellationData,
+  type Observatory
+} from '../data/constellations';
 
 
 export interface GameState {
@@ -17,6 +24,7 @@ export interface GameState {
   viewX: number;  // Current view center in sky coordinates
   viewY: number;
   discoveredCount: number;
+  currentObservatory: Observatory;
 }
 
 export class Game {
@@ -51,14 +59,15 @@ export class Game {
       mouseY: window.innerHeight / 2,
       viewX: SKY_WIDTH / 2,
       viewY: SKY_HEIGHT / 2,
-      discoveredCount: 0
+      discoveredCount: 0,
+      currentObservatory: 'northern'
     };
 
     // Initialize subsystems
     this.starField = new StarField(SKY_WIDTH, SKY_HEIGHT);
     this.telescope = new Telescope(telescopeOverlay);
-    this.constellations = CONSTELLATIONS.map(data => new Constellation(data));
-    this.discoveriesTab = new DiscoveriesTab();
+    this.constellations = this.loadConstellationsForObservatory(this.state.currentObservatory);
+    this.discoveriesTab = new DiscoveriesTab(this.state.currentObservatory);
     this.audioManager = new AudioManager();
 
     // Set up event listeners
@@ -76,19 +85,67 @@ export class Game {
     // Window resize
     window.addEventListener('resize', () => this.resizeCanvas());
 
-    // Discoveries panel toggle
+    // Discoveries panel toggle (click and keyboard)
     const toggle = document.getElementById('discoveries-toggle');
     const panel = document.getElementById('discoveries-panel');
-    if (toggle && panel) {
-      toggle.addEventListener('click', () => {
+
+    const togglePanel = () => {
+      if (panel) {
         panel.classList.toggle('collapsed');
-      });
+      }
+    };
+
+    if (toggle && panel) {
+      toggle.addEventListener('click', togglePanel);
     }
+
+    // Keyboard shortcut: 'D' to toggle discoveries
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'd' || e.key === 'D') {
+        // Don't trigger if user is typing in an input
+        if (document.activeElement?.tagName !== 'INPUT' &&
+          document.activeElement?.tagName !== 'TEXTAREA') {
+          togglePanel();
+        }
+      }
+    });
   }
 
   private resizeCanvas(): void {
     this.canvas.width = window.innerWidth;
     this.canvas.height = window.innerHeight;
+  }
+
+  /**
+   * Load constellations for a specific observatory
+   */
+  private loadConstellationsForObservatory(observatory: Observatory): Constellation[] {
+    return getConstellationsByObservatory(observatory).map(data => new Constellation(data));
+  }
+
+  /**
+   * Switch to a different observatory
+   */
+  switchObservatory(observatory: Observatory): void {
+    if (observatory === this.state.currentObservatory) return;
+
+    this.state.currentObservatory = observatory;
+    this.state.viewX = SKY_WIDTH / 2;
+    this.state.viewY = SKY_HEIGHT / 2;
+    this.state.discoveredCount = 0;
+
+    // Reload constellations for the new observatory
+    this.constellations = this.loadConstellationsForObservatory(observatory);
+
+    // Update discoveries tab
+    this.discoveriesTab.setObservatory(observatory);
+  }
+
+  /**
+   * Get current observatory
+   */
+  getCurrentObservatory(): Observatory {
+    return this.state.currentObservatory;
   }
 
   /**

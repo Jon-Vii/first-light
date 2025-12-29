@@ -20,6 +20,7 @@ function createTestConstellation(overrides: Partial<ConstellationData> = {}): Co
     centerY: 500,
     radius: 100,
     discovered: false,
+    observatory: 'northern',
     stars: [
       { id: 'star1', x: 450, y: 450, brightness: 1.0 },
       { id: 'star2', x: 550, y: 450, brightness: 0.8 },
