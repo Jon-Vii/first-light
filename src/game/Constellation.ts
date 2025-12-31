@@ -5,10 +5,28 @@
 import type { ConstellationData } from '../data/constellations';
 
 
-export class Constellation {
+import type { CelestialObject } from './CelestialObject';
+
+export class Constellation implements CelestialObject {
+  // CelestialObject implementation
+  get id(): string { return this.data.id; }
+  get name(): string { return this.data.name; }
+  get x(): number { return this.data.centerX; }
+  get y(): number { return this.data.centerY; }
+  get radius(): number { return this.data.radius; }
+  // discoveryProgress is handled by existing getDiscoveryProgress but we need a property access for interface
+  // We can make discoveryProgress public or add a getter. The field is private.
+  // Using a getter to expose the private field.
+
+  containsPoint(x: number, y: number): boolean {
+    const dx = x - this.x;
+    const dy = y - this.y;
+    return (dx * dx + dy * dy) < (this.radius * this.radius);
+  }
+
   private data: ConstellationData;
   private hoverTime: number = 0;
-  private discoveryProgress: number = 0;
+  private _discoveryProgress: number = 0;
   private isAnimating: boolean = false;
   private animationTime: number = 0;
   private revealedConnections: number = 0;
@@ -85,15 +103,19 @@ export class Constellation {
   /**
    * Check if constellation is discovered
    */
-  isDiscovered(): boolean {
+  get isDiscovered(): boolean {
     return this.data.discovered;
   }
 
   /**
    * Get current discovery progress (0-1)
    */
+  get discoveryProgress(): number {
+    return this._discoveryProgress;
+  }
+
   getDiscoveryProgress(): number {
-    return this.discoveryProgress;
+    return this._discoveryProgress;
   }
 
   /**
@@ -104,7 +126,7 @@ export class Constellation {
     if (this.data.discovered || this.isAnimating) return false;
 
     this.hoverTime += deltaTime;
-    this.discoveryProgress = Math.min(1, this.hoverTime / this.hoverTimeRequired);
+    this._discoveryProgress = Math.min(1, this.hoverTime / this.hoverTimeRequired);
 
     if (this.hoverTime >= this.hoverTimeRequired) {
       this.discover();
@@ -120,7 +142,7 @@ export class Constellation {
   resetHoverTime(): void {
     // Immediate reset - discovery requires continuous hover
     this.hoverTime = 0;
-    this.discoveryProgress = 0;
+    this._discoveryProgress = 0;
   }
 
   /**
@@ -151,7 +173,7 @@ export class Constellation {
     this.starActivationTimes.clear();
     this.cosmicFlashTime = 0;
     this.hoverTime = 0;
-    this.discoveryProgress = 0;
+    this._discoveryProgress = 0;
 
     // Clear callbacks
     this.onAnimationComplete = null;
@@ -245,10 +267,18 @@ export class Constellation {
     viewX: number,
     viewY: number,
     canvasWidth: number,
-    canvasHeight: number
+    canvasHeight: number,
+    opacityMultiplier: number = 1.0
   ): void {
-    // Convert constellation center to screen coordinates
-    const centerScreenX = this.data.centerX - viewX + canvasWidth / 2;
+    // Convert constellation center to screen coordinates with wrapping
+    let effectiveViewX = viewX;
+    const dx = this.data.centerX - viewX;
+
+    const skyWidth = 6000; // SKY_WIDTH from constants
+    if (dx < -skyWidth / 2) effectiveViewX -= skyWidth;
+    else if (dx > skyWidth / 2) effectiveViewX += skyWidth;
+
+    const centerScreenX = this.data.centerX - effectiveViewX + canvasWidth / 2;
     const centerScreenY = this.data.centerY - viewY + canvasHeight / 2;
 
     // Skip if too far from view
@@ -257,11 +287,11 @@ export class Constellation {
       return;
     }
 
-    // Render based on state
+    // Render based on state - passing effectiveViewX
     if (this.data.discovered) {
-      this.renderDiscovered(ctx, viewX, viewY, canvasWidth, canvasHeight);
-    } else if (this.discoveryProgress > 0) {
-      this.renderHint(ctx, viewX, viewY, canvasWidth, canvasHeight);
+      this.renderDiscovered(ctx, effectiveViewX, viewY, canvasWidth, canvasHeight, opacityMultiplier);
+    } else if (this._discoveryProgress > 0) {
+      this.renderHint(ctx, effectiveViewX, viewY, canvasWidth, canvasHeight);
     }
   }
 
@@ -275,7 +305,7 @@ export class Constellation {
     canvasWidth: number,
     canvasHeight: number
   ): void {
-    const alpha = this.discoveryProgress * 0.5;
+    const alpha = this._discoveryProgress * 0.5;
 
     // Subtle pulsing stars
     for (const star of this.data.stars) {
@@ -305,7 +335,8 @@ export class Constellation {
     viewX: number,
     viewY: number,
     canvasWidth: number,
-    canvasHeight: number
+    canvasHeight: number,
+    opacityMultiplier: number = 1.0
   ): void {
     const centerScreenX = this.data.centerX - viewX + canvasWidth / 2;
     const centerScreenY = this.data.centerY - viewY + canvasHeight / 2;
@@ -327,7 +358,7 @@ export class Constellation {
       }
     }
 
-    const baseAlpha = this.isAnimating ? 0.8 : 0.6;
+    const baseAlpha = (this.isAnimating ? 0.8 : 0.6) * opacityMultiplier;
     const lineAlpha = baseAlpha + cosmicFlashIntensity * 0.4;
 
     // ========== COSMIC FLASH EFFECT ==========
@@ -473,9 +504,9 @@ export class Constellation {
     // Constellation name (when fully discovered)
     if (!this.isAnimating) {
       ctx.font = '16px "Cormorant Garamond", serif';
-      ctx.fillStyle = 'rgba(255, 220, 180, 0.7)';
+      ctx.fillStyle = `rgba(255, 220, 180, ${0.7 * opacityMultiplier})`;
       ctx.textAlign = 'center';
-      ctx.shadowColor = 'rgba(255, 180, 80, 0.5)';
+      ctx.shadowColor = `rgba(255, 180, 80, ${0.5 * opacityMultiplier})`;
       ctx.shadowBlur = 10;
       ctx.fillText(this.data.name, centerScreenX, centerScreenY + this.data.radius + 35);
       ctx.shadowBlur = 0;

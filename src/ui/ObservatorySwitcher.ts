@@ -1,63 +1,71 @@
 /**
  * ObservatorySwitcher - UI component for switching between observatories
+ *
+ * Works with the brass dial interface in the new UI design
  */
 
 import { OBSERVATORIES, type Observatory } from '../data/constellations';
 import type { Game } from '../game/Game';
 
 export class ObservatorySwitcher {
-  private container: HTMLElement | null;
+  private dialElement: HTMLElement | null;
+  private nameplateElement: HTMLElement | null;
   private game: Game;
   private currentObservatory: Observatory;
 
   constructor(game: Game) {
     this.game = game;
     this.currentObservatory = game.getCurrentObservatory();
-    this.container = document.getElementById('observatory-switcher');
+    this.dialElement = document.getElementById('observatory-dial');
+    this.nameplateElement = document.getElementById('observatory-nameplate');
 
-    this.render();
+    this.updateUI();
     this.setupEventListeners();
   }
 
-  private render(): void {
-    if (!this.container) return;
+  private updateUI(): void {
+    if (!this.dialElement) return;
 
-    const northern = OBSERVATORIES.northern;
-    const southern = OBSERVATORIES.southern;
+    // Update dial sector active states
+    const sectors = this.dialElement.querySelectorAll('.dial-sector');
+    sectors.forEach(sector => {
+      const sectorEl = sector as HTMLElement;
+      const observatory = sectorEl.dataset.observatory as Observatory;
 
-    this.container.innerHTML = `
-      <div class="observatory-buttons">
-        <button 
-          class="observatory-btn ${this.currentObservatory === 'northern' ? 'active' : ''}"
-          data-observatory="northern"
-          title="${northern.name} - ${northern.location}"
-        >
-          <span class="observatory-icon">🏔️</span>
-          <span class="observatory-label">North</span>
-        </button>
-        <button 
-          class="observatory-btn ${this.currentObservatory === 'southern' ? 'active' : ''}"
-          data-observatory="southern"
-          title="${southern.name} - ${southern.location}"
-        >
-          <span class="observatory-icon">🏜️</span>
-          <span class="observatory-label">South</span>
-        </button>
-      </div>
-      <div class="observatory-info">
-        <span class="observatory-name">${OBSERVATORIES[this.currentObservatory].name}</span>
-      </div>
-    `;
+      if (observatory === this.currentObservatory) {
+        sectorEl.classList.add('active');
+      } else {
+        sectorEl.classList.remove('active');
+      }
+    });
+
+    // Update nameplate
+    this.updateNameplate();
+  }
+
+  private updateNameplate(): void {
+    if (!this.nameplateElement) return;
+
+    const obs = OBSERVATORIES[this.currentObservatory];
+    const locationEl = this.nameplateElement.querySelector('.observatory-location');
+    const coordsEl = this.nameplateElement.querySelector('.observatory-coords');
+
+    if (locationEl) {
+      locationEl.textContent = obs.name;
+    }
+    if (coordsEl) {
+      coordsEl.textContent = obs.location;
+    }
   }
 
   private setupEventListeners(): void {
-    if (!this.container) return;
+    if (!this.dialElement) return;
 
-    this.container.addEventListener('click', (e) => {
-      const btn = (e.target as HTMLElement).closest('.observatory-btn') as HTMLElement;
-      if (!btn) return;
+    this.dialElement.addEventListener('click', (e) => {
+      const sector = (e.target as HTMLElement).closest('.dial-sector') as HTMLElement;
+      if (!sector) return;
 
-      const observatory = btn.dataset.observatory as Observatory;
+      const observatory = sector.dataset.observatory as Observatory;
       if (observatory && observatory !== this.currentObservatory) {
         this.switchTo(observatory);
       }
@@ -67,7 +75,6 @@ export class ObservatorySwitcher {
   private switchTo(observatory: Observatory): void {
     this.currentObservatory = observatory;
     this.game.switchObservatory(observatory);
-    this.render();
-    this.setupEventListeners();
+    this.updateUI();
   }
 }

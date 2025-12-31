@@ -95,18 +95,6 @@ export class StarField {
   ): void {
     this.time += 0.016;  // Approximate frame time
 
-    // Draw deep space gradient background
-    const gradient = ctx.createRadialGradient(
-      telescopePos.x, telescopePos.y, 0,
-      telescopePos.x, telescopePos.y, 400
-    );
-    gradient.addColorStop(0, '#0f1020');
-    gradient.addColorStop(0.5, '#0a0a18');
-    gradient.addColorStop(1, '#050510');
-
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-
     // Calculate visible stars
     for (const star of this.stars) {
       // Convert sky coordinates to screen coordinates

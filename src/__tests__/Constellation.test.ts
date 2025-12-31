@@ -43,7 +43,7 @@ describe('Constellation', () => {
 
   describe('initial state', () => {
     test('starts undiscovered', () => {
-      expect(constellation.isDiscovered()).toBe(false);
+      expect(constellation.isDiscovered).toBe(false);
     });
 
     test('starts with zero discovery progress', () => {
@@ -88,7 +88,7 @@ describe('Constellation', () => {
     test('triggers discovery at exactly 2 seconds', () => {
       const result = constellation.addHoverTime(2.0);
       expect(result).toBe(true);
-      expect(constellation.isDiscovered()).toBe(true);
+      expect(constellation.isDiscovered).toBe(true);
     });
   });
 
@@ -107,7 +107,7 @@ describe('Constellation', () => {
       constellation.resetHoverTime();
 
       constellation.addHoverTime(2.0);
-      expect(constellation.isDiscovered()).toBe(true);
+      expect(constellation.isDiscovered).toBe(true);
     });
   });
 
@@ -153,11 +153,11 @@ describe('Constellation', () => {
   describe('cancelDiscovery', () => {
     test('resets discovered state', () => {
       constellation.addHoverTime(2.0);
-      expect(constellation.isDiscovered()).toBe(true);
+      expect(constellation.isDiscovered).toBe(true);
 
       constellation.cancelDiscovery();
 
-      expect(constellation.isDiscovered()).toBe(false);
+      expect(constellation.isDiscovered).toBe(false);
     });
 
     test('stops animation', () => {
@@ -183,7 +183,7 @@ describe('Constellation', () => {
 
       // Should still work normally
       constellation.addHoverTime(2.0);
-      expect(constellation.isDiscovered()).toBe(true);
+      expect(constellation.isDiscovered).toBe(true);
     });
   });
 

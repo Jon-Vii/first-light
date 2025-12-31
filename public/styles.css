@@ -1,58 +1,112 @@
 /* ========================================
-   SEEING STARS - Main Stylesheet
+   SEEING STARS - Victorian Observatory UI
+   A refined antique telescope interface
    ======================================== */
 
-/* CSS Custom Properties */
+/* ========================================
+   DESIGN TOKENS - Unified Theme System
+   ======================================== */
+
 :root {
-  /* Colors - Night Sky Palette */
-  --color-void: #050510;
-  --color-deep-night: #0a0a1a;
-  --color-night: #0f1020;
-  --color-twilight: #1a1a2e;
-  --color-star-white: #f0f0ff;
-  --color-star-blue: #b8c0ff;
-  --color-star-gold: #ffd93d;
-  --color-brass: #b8860b;
-  --color-brass-light: #daa520;
-  --color-brass-dark: #8b6914;
-  --color-text-primary: #c8d0e0;
-  --color-text-muted: #6b7280;
-  --color-accent: #7c3aed;
-  --color-discovery-glow: rgba(255, 217, 61, 0.4);
+  /* === Night Sky === */
+  --sky-void: #030308;
+  --sky-deep: #080812;
+  --sky-night: #0c0c1a;
+  --sky-ambient: #12122a;
 
-  /* Typography */
-  --font-display: 'Cormorant Garamond', Georgia, serif;
-  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  /* === Brass - Warm instrument hardware === */
+  --brass-highlight: #e8c45a;
+  --brass-light: #d4a84b;
+  --brass-mid: #c49a2c;
+  --brass-primary: #b8860b;
+  --brass-dark: #8b6914;
+  --brass-shadow: #5a4208;
+  --brass-patina: #4a3806;
 
-  /* Sizing */
-  --telescope-diameter: min(92vw, 92vh);
-  --telescope-border-width: 24px;
+  /* === Leather - Rich aged leather === */
+  --leather-dark: #1a0f0a;
+  --leather-deep: #2a1810;
+  --leather-mid: #3d2418;
+  --leather-worn: #4a2c1c;
+  --leather-light: #5c3824;
+  --leather-highlight: #6d4530;
 
-  /* Transitions */
-  --transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-bounce: 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  /* === Wood - Deep mahogany === */
+  --wood-ebony: #0d0806;
+  --wood-dark: #1a120d;
+  --wood-mahogany: #2a1f1a;
+  --wood-walnut: #3d2e24;
+
+  /* === Parchment - Aged paper === */
+  --parchment-cream: #f5efe0;
+  --parchment-light: #ebe3d0;
+  --parchment-mid: #e2d4b8;
+  --parchment-dark: #d4c4a8;
+  --parchment-aged: #c4b090;
+  --ink: #1a1410;
+  --ink-faded: #3d2e24;
+
+  /* === Functional === */
+  --star-white: #f0f0ff;
+  --star-blue: #b8c0ff;
+  --star-gold: #ffd93d;
+  --glow-warm: rgba(212, 168, 75, 0.4);
+  --glow-cold: rgba(184, 192, 255, 0.3);
+
+  /* === Typography === */
+  --font-display: 'Cormorant Garamond', 'Palatino Linotype', 'Book Antiqua', serif;
+  --font-body: 'Crimson Pro', 'Georgia', serif;
+
+  /* === Sizing === */
+  --telescope-size: min(85vw, 85vh);
+
+  /* === Shadows === */
+  --shadow-pressed: inset 0 2px 6px rgba(0,0,0,0.6);
+  --shadow-flat: 0 1px 3px rgba(0,0,0,0.4);
+  --shadow-raised: 0 4px 12px rgba(0,0,0,0.5);
+  --shadow-floating: 0 12px 40px rgba(0,0,0,0.7);
+
+  /* === Textures (inline SVG) === */
+  --texture-noise: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E");
+  --texture-leather: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='l'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.5' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23l)' opacity='0.12'/%3E%3C/svg%3E");
+  --texture-paper: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='5' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)' opacity='0.05'/%3E%3C/svg%3E");
+
+  /* === Transitions === */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --transition-fast: 0.15s var(--ease-out-expo);
+  --transition-medium: 0.3s var(--ease-out-expo);
+  --transition-slow: 0.5s var(--ease-out-expo);
 }
 
-/* Reset & Base */
-*,
-*::before,
-*::after {
+
+/* ========================================
+   RESET & BASE
+   ======================================== */
+
+*, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-html,
-body {
+html, body {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background-color: var(--color-void);
-  color: var(--color-text-primary);
+  background: var(--sky-void);
+  color: var(--parchment-light);
   font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Game Container */
+
+/* ========================================
+   GAME CONTAINER
+   ======================================== */
+
 #game-container {
   position: relative;
   width: 100%;
@@ -60,485 +114,958 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: radial-gradient(ellipse at center, var(--color-night) 0%, var(--color-void) 100%);
+  background:
+    radial-gradient(ellipse at 50% 50%, var(--sky-night) 0%, var(--sky-void) 70%);
 }
 
-/* Sky Canvas */
+
+/* ========================================
+   SKY CANVAS
+   ======================================== */
+
 #sky-canvas {
   position: absolute;
-  top: 0;
-  left: 0;
+  inset: 0;
   width: 100%;
   height: 100%;
   cursor: none;
 }
 
-/* Telescope Overlay - Creates the brass rim effect */
-#telescope-overlay {
-  position: fixed;
-  width: var(--telescope-diameter);
-  height: var(--telescope-diameter);
-  pointer-events: none;
-  transform: translate(-50%, -50%);
-  transition: opacity 0.3s ease;
-  z-index: 50;
 
-  /* Use SVG overlay */
+/* ========================================
+   TELESCOPE OVERLAY
+   ======================================== */
+
+#telescope-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: var(--telescope-size);
+  height: var(--telescope-size);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 10;
+
+  /* Brass rim from SVG */
   background-image: url('assets/telescope_overlay_detailed.svg');
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
 
+  /* Deep vignette surround */
+  box-shadow:
+    0 0 0 3000px rgba(0, 0, 0, 0.96),
+    inset 0 0 80px 20px rgba(0, 0, 0, 0.6),
+    0 0 0 3px var(--brass-shadow);
+}
+
+/* Lens glass effect - subtle chromatic tint */
+.lens-glass-effect {
+  position: absolute;
+  inset: 5%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 50% 50%,
+    transparent 0%,
+    transparent 50%,
+    rgba(100, 120, 180, 0.02) 70%,
+    rgba(80, 100, 160, 0.05) 85%,
+    rgba(60, 80, 140, 0.08) 100%
+  );
+  pointer-events: none;
+}
+
+/* Subtle dust motes on lens */
+.lens-dust {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background-image:
+    radial-gradient(circle at 23% 34%, rgba(255,255,255,0.015) 0%, transparent 0.5%),
+    radial-gradient(circle at 67% 23%, rgba(255,255,255,0.01) 0%, transparent 0.4%),
+    radial-gradient(circle at 45% 78%, rgba(255,255,255,0.012) 0%, transparent 0.6%),
+    radial-gradient(circle at 82% 56%, rgba(255,255,255,0.008) 0%, transparent 0.3%),
+    radial-gradient(circle at 12% 67%, rgba(255,255,255,0.01) 0%, transparent 0.5%);
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+
+/* ========================================
+   LENS CASE - Victorian Instrument Box
+   ======================================== */
+
+#lens-case {
+  position: fixed;
+  left: 28px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 25;
+
+  /* Leather case construction */
+  background:
+    var(--texture-leather),
+    linear-gradient(135deg,
+      var(--leather-highlight) 0%,
+      var(--leather-mid) 20%,
+      var(--leather-deep) 80%,
+      var(--leather-dark) 100%);
+
+  padding: 16px 14px 12px;
+  border-radius: 8px;
+
+  /* Leather edge & stitching look */
+  border: 3px solid var(--leather-dark);
+  box-shadow:
+    var(--shadow-floating),
+    inset 0 1px 0 rgba(255,255,255,0.08),
+    inset 0 -2px 8px rgba(0,0,0,0.4);
+}
+
+.case-lid {
+  text-align: center;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--leather-dark);
+}
+
+.engraved-label {
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--brass-light);
+  text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+}
+
+.lens-slots {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.lens-slot {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 10px;
+  background:
+    linear-gradient(180deg,
+      rgba(255,255,255,0.03) 0%,
+      transparent 50%,
+      rgba(0,0,0,0.2) 100%),
+    var(--leather-dark);
+  border: 2px solid var(--leather-worn);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  position: relative;
+}
+
+.lens-slot::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 4px;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+  pointer-events: none;
+}
+
+.lens-slot:hover {
+  border-color: var(--brass-dark);
+  background:
+    linear-gradient(180deg,
+      rgba(255,255,255,0.05) 0%,
+      transparent 50%,
+      rgba(0,0,0,0.15) 100%),
+    var(--leather-worn);
+}
+
+.lens-slot.active {
+  border-color: var(--brass-primary);
+  background:
+    linear-gradient(180deg,
+      rgba(212, 168, 75, 0.1) 0%,
+      transparent 30%,
+      rgba(0,0,0,0.3) 100%),
+    var(--leather-deep);
+  box-shadow:
+    inset 0 2px 6px rgba(0,0,0,0.5),
+    0 0 12px rgba(212, 168, 75, 0.15);
+}
+
+/* Brass bezel holding the lens */
+.lens-bezel {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  padding: 3px;
+  background: linear-gradient(145deg,
+    var(--brass-highlight) 0%,
+    var(--brass-mid) 30%,
+    var(--brass-dark) 70%,
+    var(--brass-shadow) 100%);
+  box-shadow:
+    0 2px 4px rgba(0,0,0,0.4),
+    inset 0 1px 1px rgba(255,255,255,0.3);
+  flex-shrink: 0;
+}
+
+.lens-glass {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  transition: all var(--transition-medium);
+}
+
+.standard-glass {
+  background: radial-gradient(circle at 35% 35%,
+    rgba(200, 220, 255, 0.5) 0%,
+    rgba(140, 170, 220, 0.3) 40%,
+    rgba(80, 110, 160, 0.5) 100%);
+  box-shadow:
+    inset 0 0 8px rgba(0,0,0,0.5),
+    inset 0 2px 4px rgba(255,255,255,0.2);
+}
+
+.wide-glass {
+  background: radial-gradient(circle at 50% 50%,
+    rgba(180, 200, 230, 0.4) 0%,
+    rgba(120, 150, 200, 0.35) 50%,
+    rgba(70, 90, 130, 0.6) 100%);
+  box-shadow:
+    inset 0 0 12px rgba(0,0,0,0.6),
+    inset 0 0 4px rgba(255,255,255,0.15);
+}
+
+.deep-glass {
+  background: radial-gradient(circle at 40% 40%,
+    rgba(160, 140, 200, 0.55) 0%,
+    rgba(100, 80, 140, 0.45) 50%,
+    rgba(50, 40, 80, 0.7) 100%);
+  box-shadow:
+    inset 0 0 10px rgba(0,0,0,0.7),
+    inset 0 0 6px rgba(160, 140, 200, 0.25);
+}
+
+.lens-slot.active .lens-glass {
+  box-shadow:
+    inset 0 0 6px rgba(0,0,0,0.4),
+    0 0 8px rgba(200, 220, 255, 0.3);
+}
+
+.lens-slot.active .deep-glass {
+  box-shadow:
+    inset 0 0 6px rgba(0,0,0,0.5),
+    0 0 10px rgba(160, 140, 200, 0.4);
+}
+
+.lens-plate {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.lens-name {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--parchment-mid);
+  text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+}
+
+.lens-mag {
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  font-weight: 400;
+  color: var(--brass-light);
+  letter-spacing: 0.05em;
+}
+
+/* Engraved Brass Label - Scientific instrument nameplate styling */
+.key-hint {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 18px;
+  height: 16px;
+  padding: 0 5px;
+
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+
+  /* Aged brass plate gradient */
+  background:
+    linear-gradient(135deg,
+      rgba(255,255,255,0.2) 0%,
+      transparent 30%,
+      rgba(0,0,0,0.15) 100%),
+    linear-gradient(180deg,
+      #c4a050 0%,
+      #a68838 50%,
+      #8b6f28 100%);
+
+  /* Engraved text effect */
+  color: #4a3820;
+  text-shadow:
+    0 -0.5px 0 rgba(0,0,0,0.3),
+    0 0.5px 0 rgba(255,255,255,0.15);
+
+  /* Subtle beveled edge */
+  border: 1px solid #8b6f28;
+  border-radius: 2px;
+
+  /* Refined shadow - flatter than typewriter keys */
+  box-shadow:
+    0 1px 2px rgba(0,0,0,0.3),
+    inset 0 0.5px 0 rgba(255,255,255,0.25),
+    inset 0 -0.5px 0 rgba(0,0,0,0.2);
+
+  flex-shrink: 0;
+}
+
+/* Position key hints within lens slots */
+.lens-slot .key-hint {
+  position: absolute;
+  bottom: 6px;
+  right: 6px;
+}
+
+/* Position key hints within dial sectors */
+.dial-sector .key-hint {
+  opacity: 0.7;
+  margin-top: 2px;
+}
+
+.dial-sector.active .key-hint {
+  opacity: 1;
+  /* Slightly brighter brass for active state */
+  background:
+    linear-gradient(135deg,
+      rgba(255,255,255,0.25) 0%,
+      transparent 30%,
+      rgba(0,0,0,0.12) 100%),
+    linear-gradient(180deg,
+      #d4b060 0%,
+      #b89848 50%,
+      #9a7b32 100%);
+  color: #2a2010;
+  border-color: #9a7b32;
+}
+
+/* Journal toggle key hint */
+#discoveries-toggle .key-hint {
+  position: absolute;
+  bottom: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: max-content;
+  padding: 0 6px;
+}
+
+
+/* ========================================
+   OBSERVATORY DIAL - Brass Latitude Selector
+   ======================================== */
+
+#observatory-dial {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 25;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.dial-housing {
+  width: 100px;
+  height: 54px;
+  background:
+    var(--texture-leather),
+    linear-gradient(180deg,
+      var(--leather-light) 0%,
+      var(--leather-mid) 30%,
+      var(--leather-dark) 100%);
+  border-radius: 27px;
+  padding: 6px;
+  box-shadow: var(--shadow-raised);
+  border: 2px solid var(--leather-dark);
+}
+
+.dial-face {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg,
+    var(--brass-highlight) 0%,
+    var(--brass-light) 15%,
+    var(--brass-primary) 50%,
+    var(--brass-dark) 85%,
+    var(--brass-shadow) 100%);
+  border-radius: 21px;
+  position: relative;
+  box-shadow:
+    inset 0 1px 2px rgba(255,255,255,0.4),
+    inset 0 -2px 4px rgba(0,0,0,0.3),
+    0 2px 4px rgba(0,0,0,0.3);
+  display: flex;
+}
+
+.dial-sector {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  z-index: 2;
+  transition: all var(--transition-fast);
+  border-radius: 21px;
+}
+
+.dial-sector:first-child {
+  border-radius: 21px 0 0 21px;
+}
+
+.dial-sector:last-child {
+  border-radius: 0 21px 21px 0;
+}
+
+.dial-sector.active {
+  background: linear-gradient(180deg,
+    rgba(0,0,0,0.15) 0%,
+    rgba(0,0,0,0.25) 100%);
+  box-shadow: inset 0 2px 6px rgba(0,0,0,0.4);
+}
+
+.dial-sector:not(.active):hover {
+  background: rgba(255,255,255,0.1);
+}
+
+.sector-icon {
+  font-size: 0.7rem;
+  color: var(--leather-dark);
+  opacity: 0.6;
+  transition: opacity var(--transition-fast);
+}
+
+.dial-sector.active .sector-icon {
+  opacity: 1;
+  color: var(--parchment-cream);
+  text-shadow: 0 0 6px rgba(255,255,255,0.5);
+}
+
+.sector-label {
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--leather-dark);
+  text-shadow: 0 1px 0 rgba(255,255,255,0.3);
+  position: relative;
+  z-index: 1;
+}
+
+.dial-sector.active .sector-label {
+  color: var(--parchment-cream);
+  text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+}
+
+/* Center divider line */
+.dial-face::before {
+  content: '';
+  position: absolute;
+  top: 6px;
+  bottom: 6px;
+  left: 50%;
+  width: 2px;
+  background: linear-gradient(180deg,
+    var(--brass-shadow) 0%,
+    var(--brass-dark) 50%,
+    var(--brass-shadow) 100%);
+  transform: translateX(-50%);
+  z-index: 1;
+}
+
+/* Brass center rivet */
+.dial-center {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: min(85vw, 85vh);
-  height: min(85vw, 85vh);
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%,
+    var(--brass-highlight) 0%,
+    var(--brass-primary) 50%,
+    var(--brass-dark) 100%);
   box-shadow:
-    0 0 0 2000px rgba(0, 0, 0, 0.95),
-    /* Dark surround */
-    inset 0 0 50px rgba(0, 0, 0, 0.8),
-    /* Inner shadow */
-    0 0 0 2px rgba(255, 217, 61, 0.2);
-  /* Subtle rim */
+    0 2px 3px rgba(0,0,0,0.5),
+    inset 0 1px 1px rgba(255,255,255,0.4);
+  z-index: 5;
   pointer-events: none;
-  z-index: 10;
 }
 
-
-/* ========================================
-   DISCOVERIES PANEL - Antique Wooden Cabinet
-   ======================================== */
-
-/* Wood & Antique Color Palette — Telescope Matched */
-:root {
-  /* Wood Tones - Deep Espresso/Walnut (Dark Academia) */
-  --color-wood-dark: #1a120d;
-  --color-wood-mahogany: #2a1f1a;
-  --color-wood-walnut: #3d2e24;
-  --color-wood-oak: #5c4535;
-  --color-wood-light: #7a5d4a;
-
-  /* Parchment & Paper - Aged/Antique */
-  --color-parchment: #e8dcc8;
-  --color-parchment-dark: #d4c4a8;
-  --color-parchment-burnt: #c4b090;
-  --color-ink: #1a1410;
-
-  /* Brass Hardware — FROM TELESCOPE SVG */
-  --color-brass-highlight: #d4a84b;
-  --color-brass-light: #c9a227;
-  --color-brass: #b8860b;
-  --color-brass-dark: #8b6914;
-  --color-brass-aged: #705812;
-  --color-brass-shadow: #5a4208;
-
-  /* Cork/Leather Backing - Dark Aged Leather */
-  --color-cork: #4a3c2e;
-  --color-cork-dark: #352a20;
-}
-
-/* ========================================
-   DISCOVERIES PANEL - Leather-Bound Journal
-   ======================================== */
-
-/* Leather & Journal Color Palette */
-:root {
-  --color-leather-dark: #2a1810;
-  --color-leather: #3d2418;
-  --color-leather-worn: #4a2c1c;
-  --color-leather-light: #5c3824;
-  --color-leather-highlight: #6d4530;
-  --color-stitching: #8b7355;
-  --color-page-edge: #d4c4a0;
-}
-
-/* Main Panel - Leather-Bound Journal */
-#discoveries-panel {
-  position: absolute;
-  top: 50%;
-  right: 0;
-  width: 340px;
-  height: 65vh;
-
-  /* Leather texture background */
-  background:
-    /* Leather grain noise */
-    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='leather'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23leather)' opacity='0.12'/%3E%3C/svg%3E"),
-    /* Leather gradient with wear */
-    linear-gradient(90deg,
-      var(--color-leather-highlight) 0%,
-      var(--color-leather) 8%,
-      var(--color-leather-dark) 100%),
-    /* Base color */
-    var(--color-leather-dark);
-
-  /* Leather binding border - thick with rounded spine */
-  border: 6px solid var(--color-leather-dark);
-  border-left: 10px solid var(--color-leather-worn);
-  border-radius: 4px 0 0 4px;
-
-  /* Deep shadow for weight and presence */
+.observatory-nameplate {
+  background: linear-gradient(180deg,
+    var(--brass-light) 0%,
+    var(--brass-primary) 40%,
+    var(--brass-dark) 100%);
+  padding: 6px 16px;
+  border-radius: 4px;
   box-shadow:
-    /* Outer shadow - lifted off surface */
-    -12px 0 30px rgba(0, 0, 0, 0.6),
-    -4px 0 15px rgba(0, 0, 0, 0.4),
-    /* Top/bottom edge shadow */
-    0 -3px 10px rgba(0, 0, 0, 0.3),
-    0 3px 10px rgba(0, 0, 0, 0.3),
-    /* Inner leather bevel */
-    inset 2px 0 8px rgba(0, 0, 0, 0.5),
-    inset -1px 0 4px rgba(255, 255, 255, 0.05);
+    0 2px 6px rgba(0,0,0,0.4),
+    inset 0 1px 0 rgba(255,255,255,0.3);
+}
 
-  z-index: 20;
+.nameplate-text {
   display: flex;
   flex-direction: column;
-  overflow: visible;
-
-  /* Transition */
-  transform: translate(0, -50%);
-  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  align-items: center;
+  gap: 1px;
 }
 
-/* Collapsed State */
+.observatory-location {
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--leather-dark);
+  text-shadow: 0 1px 0 rgba(255,255,255,0.3);
+}
+
+.observatory-coords {
+  font-family: var(--font-display);
+  font-size: 0.6rem;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  color: var(--leather-worn);
+}
+
+
+/* ========================================
+   DISCOVERIES JOURNAL PANEL
+   ======================================== */
+
+#discoveries-panel {
+  position: fixed;
+  top: 50%;
+  right: 0;
+  width: 300px;
+  height: 70vh;
+  max-height: 600px;
+  transform: translateY(-50%);
+  z-index: 25;
+
+  display: flex;
+  transition: transform var(--transition-slow);
+}
+
 #discoveries-panel.collapsed {
-  transform: translate(100%, -50%);
+  transform: translate(calc(100% - 52px), -50%);
 }
 
-/* Brass Corner Brackets - decorative hardware */
-#discoveries-panel::before,
-#discoveries-panel::after {
-  content: '';
-  position: absolute;
-  width: 28px;
-  height: 28px;
-  left: 8px;
-  z-index: 10;
-  pointer-events: none;
-
-  /* L-shaped brass corner bracket */
-  background:
-    linear-gradient(135deg,
-      var(--color-brass-light) 0%,
-      var(--color-brass) 40%,
-      var(--color-brass-dark) 100%);
-
-  /* Clip to L-shape */
-  clip-path: polygon(0% 0%, 40% 0%, 40% 60%, 100% 60%, 100% 100%, 0% 100%);
-
-  box-shadow:
-    1px 1px 3px rgba(0, 0, 0, 0.4),
-    inset 0 1px 1px rgba(255, 255, 255, 0.3);
-}
-
-#discoveries-panel::before {
-  top: 10px;
-  transform: rotate(0deg);
-}
-
-#discoveries-panel::after {
-  bottom: 10px;
-  transform: rotate(-90deg);
-}
-
-/* Leather Strap Toggle with Brass Buckle */
+/* Toggle Button - Leather strap with brass clasp */
 #discoveries-toggle {
   position: absolute;
-  left: -48px;
+  left: 0;
   top: 50%;
-  transform: translateY(-50%);
-  width: 48px;
-  height: 120px;
+  transform: translate(-100%, -50%);
+  width: 52px;
+  height: 140px;
 
-  /* Leather strap texture */
   background:
-    /* Leather grain */
-    url("data:image/svg+xml,%3Csvg viewBox='0 0 50 50' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.15'/%3E%3C/svg%3E"),
-    /* Leather gradient */
+    var(--texture-leather),
     linear-gradient(90deg,
-      var(--color-leather-light) 0%,
-      var(--color-leather) 30%,
-      var(--color-leather-dark) 100%);
+      var(--leather-highlight) 0%,
+      var(--leather-mid) 30%,
+      var(--leather-deep) 100%);
 
   border: none;
-  border-radius: 6px 0 0 6px;
+  border-radius: 8px 0 0 8px;
   cursor: pointer;
 
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-
-  /* Leather depth */
-  box-shadow:
-    -4px 0 12px rgba(0, 0, 0, 0.5),
-    inset 1px 0 3px rgba(255, 255, 255, 0.1),
-    inset -2px 0 4px rgba(0, 0, 0, 0.4);
-
-  transition: all 0.3s ease;
-}
-
-/* Stitching detail on strap */
-#discoveries-toggle::before {
-  content: '';
-  position: absolute;
-  top: 8px;
-  bottom: 8px;
-  left: 6px;
-  width: 2px;
-
-  /* Stitching dashes */
-  background: repeating-linear-gradient(180deg,
-      var(--color-stitching) 0px,
-      var(--color-stitching) 4px,
-      transparent 4px,
-      transparent 8px);
-  opacity: 0.7;
-}
-
-/* Brass buckle clasp */
-#discoveries-toggle::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 24px;
-  height: 32px;
-
-  /* Brass buckle */
-  background:
-    linear-gradient(135deg,
-      var(--color-brass-light) 0%,
-      var(--color-brass) 50%,
-      var(--color-brass-dark) 100%);
-
-  border-radius: 4px;
-  border: 2px solid var(--color-brass-dark);
+  gap: 8px;
 
   box-shadow:
-    0 2px 4px rgba(0, 0, 0, 0.4),
-    inset 0 1px 2px rgba(255, 255, 255, 0.3);
+    -6px 0 20px rgba(0,0,0,0.5),
+    inset 1px 0 0 rgba(255,255,255,0.08);
+
+  transition: all var(--transition-medium);
 }
 
 #discoveries-toggle:hover {
-  left: -54px;
-  width: 54px;
-
+  width: 58px;
   background:
-    url("data:image/svg+xml,%3Csvg viewBox='0 0 50 50' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.15'/%3E%3C/svg%3E"),
+    var(--texture-leather),
     linear-gradient(90deg,
-      var(--color-leather-highlight) 0%,
-      var(--color-leather-light) 30%,
-      var(--color-leather) 100%);
+      var(--leather-highlight) 0%,
+      var(--leather-light) 30%,
+      var(--leather-mid) 100%);
+}
 
+.toggle-binding {
+  position: absolute;
+  top: 12px;
+  bottom: 12px;
+  left: 8px;
+  width: 3px;
+  background: repeating-linear-gradient(180deg,
+    var(--brass-dark) 0px,
+    var(--brass-dark) 4px,
+    transparent 4px,
+    transparent 8px);
+  opacity: 0.6;
+}
+
+.toggle-clasp {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 28px;
+  background: linear-gradient(135deg,
+    var(--brass-light) 0%,
+    var(--brass-primary) 50%,
+    var(--brass-dark) 100%);
+  border-radius: 3px;
   box-shadow:
-    -6px 0 18px rgba(0, 0, 0, 0.6),
-    0 0 12px rgba(184, 134, 11, 0.2),
-    inset 1px 0 3px rgba(255, 255, 255, 0.15),
-    inset -2px 0 4px rgba(0, 0, 0, 0.4);
+    0 2px 4px rgba(0,0,0,0.4),
+    inset 0 1px 1px rgba(255,255,255,0.3);
+}
+
+.clasp-hook {
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 8px;
+  height: 8px;
+  border: 2px solid var(--brass-shadow);
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+}
+
+.toggle-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin-right: 8px;
 }
 
 .toggle-icon {
-  font-size: 1.4rem;
-  color: var(--color-brass);
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.3));
-  position: relative;
-  z-index: 5;
-  margin-top: 30px;
+  font-size: 1.2rem;
+  color: var(--brass-light);
+  text-shadow: 0 1px 3px rgba(0,0,0,0.6);
 }
 
 .discovery-count {
   font-family: var(--font-display);
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--color-brass-light);
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-  position: relative;
-  z-index: 5;
-  margin-bottom: 20px;
-}
-
-/* Keyboard Hint - Embossed Brass Key */
-.toggle-hint {
-  position: absolute;
-  bottom: 8px;
-  left: 50%;
-  transform: translateX(-50%);
-
-  font-family: var(--font-display);
   font-size: 0.7rem;
   font-weight: 600;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-
-  /* Embossed brass key look */
-  color: var(--color-leather-dark);
-  background:
-    linear-gradient(180deg,
-      var(--color-brass-light) 0%,
-      var(--color-brass) 50%,
-      var(--color-brass-dark) 100%);
-
-  padding: 3px 8px;
-  border-radius: 3px;
-
-  box-shadow:
-    0 1px 2px rgba(0, 0, 0, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3);
-
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
-  z-index: 10;
+  color: var(--brass-light);
+  text-shadow: 0 1px 2px rgba(0,0,0,0.6);
 }
 
-/* Journal Interior - Aged Paper Pages */
-.discoveries-content {
-  padding: 28px 24px;
-  height: 100%;
-  overflow-y: auto;
-  margin: 12px;
-  border-radius: 2px;
+#discoveries-toggle .toggle-hint {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.55rem;
+  padding: 2px 6px;
+}
 
-  /* Aged paper pages background */
+/* Leather spine edge */
+.journal-spine {
+  width: 14px;
+  flex-shrink: 0;
   background:
-    /* Paper fiber texture */
-    url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='paper'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23paper)' opacity='0.06'/%3E%3C/svg%3E"),
-    /* Aged paper gradient */
+    var(--texture-leather),
+    linear-gradient(90deg,
+      var(--leather-worn) 0%,
+      var(--leather-dark) 50%,
+      var(--leather-deep) 100%);
+  border-radius: 4px 0 0 4px;
+  box-shadow: inset -4px 0 8px rgba(0,0,0,0.4);
+}
+
+/* Main journal body */
+.discoveries-content {
+  flex: 1;
+  padding: 20px 18px;
+  overflow-y: auto;
+
+  background:
+    var(--texture-paper),
     linear-gradient(180deg,
-      #f5efe0 0%,
-      #ebe3d0 20%,
-      #e8dcc4 50%,
-      #e2d4b8 80%,
-      #dccba8 100%);
+      var(--parchment-cream) 0%,
+      var(--parchment-light) 20%,
+      var(--parchment-mid) 80%,
+      var(--parchment-dark) 100%);
 
-  /* Page edge and binding shadow */
   box-shadow:
-    inset 4px 0 8px rgba(0, 0, 0, 0.15),
-    inset 0 3px 6px rgba(0, 0, 0, 0.1),
-    inset 0 -2px 4px rgba(0, 0, 0, 0.08),
-    /* Left edge - page binding */
-    inset 8px 0 4px -4px rgba(139, 105, 20, 0.15);
+    inset 4px 0 12px rgba(0,0,0,0.12),
+    inset 0 3px 8px rgba(0,0,0,0.08);
 
-  /* Custom scrollbar - leather and brass */
+  /* Custom scrollbar */
   scrollbar-width: thin;
-  scrollbar-color: var(--color-brass-aged) var(--color-leather-dark);
+  scrollbar-color: var(--brass-dark) var(--parchment-dark);
 }
 
 .discoveries-content::-webkit-scrollbar {
-  width: 10px;
+  width: 8px;
 }
 
 .discoveries-content::-webkit-scrollbar-track {
-  background: var(--color-leather-dark);
-  border-radius: 5px;
+  background: var(--parchment-dark);
 }
 
 .discoveries-content::-webkit-scrollbar-thumb {
   background: linear-gradient(180deg,
-      var(--color-brass-light) 0%,
-      var(--color-brass) 50%,
-      var(--color-brass-dark) 100%);
-  border-radius: 5px;
-  border: 1px solid var(--color-leather-dark);
+    var(--brass-light) 0%,
+    var(--brass-dark) 100%);
+  border-radius: 4px;
 }
 
-/* Embossed Brass Nameplate */
-.discoveries-content h2 {
+/* Journal Header */
+.journal-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--parchment-aged);
+}
+
+.header-ornament {
+  width: 20px;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    var(--brass-dark) 50%,
+    transparent 100%);
+}
+
+.journal-header h2 {
   font-family: var(--font-display);
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 500;
+  letter-spacing: 0.15em;
   text-transform: uppercase;
-  letter-spacing: 4px;
+  color: var(--ink);
+  margin: 0;
+}
+
+/* Progress dial */
+.journal-progress {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  padding: 12px;
+  background: rgba(0,0,0,0.03);
+  border-radius: 6px;
+  border: 1px solid var(--parchment-aged);
+}
+
+.progress-dial {
+  position: relative;
+  width: 36px;
+  height: 36px;
+}
+
+.progress-ring {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.progress-bg {
+  fill: none;
+  stroke: var(--parchment-aged);
+  stroke-width: 3;
+}
+
+.progress-fill {
+  fill: none;
+  stroke: var(--brass-primary);
+  stroke-width: 3;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.5s var(--ease-out-expo);
+}
+
+.progress-count {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.progress-label {
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-style: italic;
+  color: var(--ink-faded);
+}
+
+/* Empty State */
+.journal-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
   text-align: center;
+}
 
-  /* Embossed brass plate */
-  color: var(--color-leather-dark);
+.empty-quill {
+  width: 40px;
+  height: 40px;
+  margin-bottom: 16px;
+  background: linear-gradient(135deg,
+    var(--brass-light) 0%,
+    var(--brass-dark) 100%);
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'%3E%3Cpath d='M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 000-3.712zM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 00-1.32 2.214l-.8 2.685a.75.75 0 00.933.933l2.685-.8a5.25 5.25 0 002.214-1.32L19.513 8.2z'/%3E%3C/svg%3E");
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'%3E%3Cpath d='M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 000-3.712zM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 00-1.32 2.214l-.8 2.685a.75.75 0 00.933.933l2.685-.8a5.25 5.25 0 002.214-1.32L19.513 8.2z'/%3E%3C/svg%3E");
+  mask-size: contain;
+  -webkit-mask-size: contain;
+  opacity: 0.4;
+}
+
+.empty-text {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-style: italic;
+  color: var(--ink-faded);
+  margin-bottom: 4px;
+}
+
+.empty-hint {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  color: var(--parchment-aged);
+}
+
+/* Hide empty state when discoveries exist */
+#discoveries-list:not(:empty) + .journal-empty-state {
+  display: none;
+}
+
+
+/* ========================================
+   DISCOVERY CARDS
+   ======================================== */
+
+.discovery-set-section {
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px dashed var(--parchment-aged);
+}
+
+.discovery-set-section:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.discovery-set-header {
+  margin-bottom: 12px;
+}
+
+.set-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 2px;
+}
+
+.discovery-set-header h4 {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink);
+  margin: 0;
+}
+
+.set-upgrade-hint {
+  font-family: var(--font-body);
+  font-size: 0.6rem;
+  padding: 2px 6px;
+  background: rgba(184, 134, 11, 0.12);
+  border: 1px solid rgba(184, 134, 11, 0.25);
+  border-radius: 3px;
+  color: var(--brass-dark);
+}
+
+.set-progress-text {
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-style: italic;
+  color: var(--ink-faded);
+}
+
+.set-progress-text.completed {
+  color: var(--brass-dark);
+  font-weight: 600;
+  font-style: normal;
+}
+
+.discovery-set-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Individual Card */
+.discovery-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+
   background:
-    linear-gradient(180deg,
-      var(--color-brass-light) 0%,
-      var(--color-brass) 30%,
-      var(--color-brass-dark) 70%,
-      var(--color-brass) 100%);
+    var(--texture-paper),
+    linear-gradient(145deg,
+      var(--parchment-cream) 0%,
+      var(--parchment-light) 50%,
+      var(--parchment-mid) 100%);
 
-  padding: 10px 24px;
-  margin: 0 0 24px 0;
+  border: 1px solid var(--parchment-aged);
   border-radius: 3px;
   position: relative;
 
-  /* Embossed depth */
   box-shadow:
-    0 2px 4px rgba(0, 0, 0, 0.25),
-    inset 0 1px 1px rgba(255, 255, 255, 0.35),
-    inset 0 -1px 2px rgba(0, 0, 0, 0.2);
+    2px 2px 6px rgba(0,0,0,0.12),
+    -1px -1px 0 rgba(255,255,255,0.8);
 
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4);
-}
-
-/* Brass rivets on nameplate */
-.discoveries-content h2::before,
-.discoveries-content h2::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-
-  background:
-    radial-gradient(circle at 30% 30%,
-      var(--color-brass-light) 0%,
-      var(--color-brass) 50%,
-      var(--color-brass-dark) 100%);
-
-  box-shadow:
-    inset 0 -1px 2px rgba(0, 0, 0, 0.3),
-    0 1px 2px rgba(0, 0, 0, 0.2);
-}
-
-.discoveries-content h2::before {
-  left: 10px;
-}
-
-.discoveries-content h2::after {
-  right: 10px;
-}
-
-/* Discovery Cards - Aged Parchment Style */
-.discovery-card {
-  /* Aged parchment background */
-  background:
-    /* Subtle texture */
-    url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='paper'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23paper)' opacity='0.03'/%3E%3C/svg%3E"),
-    linear-gradient(135deg,
-      var(--color-parchment) 0%,
-      var(--color-parchment-dark) 50%,
-      var(--color-parchment-burnt) 100%);
-
-  /* Aged paper edges */
-  border: 1px solid var(--color-parchment-burnt);
-  border-radius: 2px;
-
-  padding: 14px 16px;
-  margin-bottom: 14px;
-
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  position: relative;
-
-  /* Paper shadow */
-  box-shadow:
-    2px 3px 6px rgba(0, 0, 0, 0.25),
-    -1px -1px 0 rgba(255, 255, 255, 0.5);
-
-  transition: all 0.3s ease;
-
-  /* Slight rotation for natural feel */
+  transition: all var(--transition-fast);
   transform: rotate(-0.3deg);
 }
 
@@ -546,125 +1073,102 @@ body {
   transform: rotate(0.4deg);
 }
 
-.discovery-card:nth-child(3n) {
-  transform: rotate(-0.6deg);
-}
-
 .discovery-card:hover {
-  transform: rotate(0deg) translateY(-2px) scale(1.02);
+  transform: rotate(0deg) translateY(-2px);
   box-shadow:
-    4px 6px 12px rgba(0, 0, 0, 0.35),
-    -1px -1px 0 rgba(255, 255, 255, 0.6);
+    4px 4px 12px rgba(0,0,0,0.18),
+    -1px -1px 0 rgba(255,255,255,0.8);
 }
 
-/* Pin/Tack Effect */
-.discovery-card::before {
+/* Wax seal accent */
+.discovery-card::after {
   content: '';
   position: absolute;
-  top: 8px;
-  right: 12px;
-  width: 10px;
-  height: 10px;
-
-  /* Brass tack */
-  background: radial-gradient(circle at 30% 30%,
-      var(--color-brass-light) 0%,
-      var(--color-brass) 40%,
-      var(--color-brass-dark) 100%);
+  top: 6px;
+  right: 8px;
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
-
+  background: radial-gradient(circle at 35% 35%,
+    #c44 0%,
+    #922 50%,
+    #711 100%);
   box-shadow:
-    0 2px 3px rgba(0, 0, 0, 0.4),
-    inset 0 -1px 2px rgba(0, 0, 0, 0.3),
-    inset 0 1px 1px rgba(255, 255, 255, 0.5);
+    0 1px 3px rgba(0,0,0,0.4),
+    inset 0 1px 1px rgba(255,255,255,0.2);
+  opacity: 0.9;
 }
 
-/* Constellation Mini-Map - Ink Drawing Style */
 .discovery-icon {
-  width: 52px;
-  height: 52px;
+  width: 44px;
+  height: 44px;
   flex-shrink: 0;
 
-  /* Aged paper circle background */
   background:
     radial-gradient(circle,
-      var(--color-parchment) 0%,
-      var(--color-parchment-dark) 80%,
-      var(--color-parchment-burnt) 100%);
+      var(--parchment-cream) 0%,
+      var(--parchment-mid) 80%,
+      var(--parchment-aged) 100%);
 
-  border: 2px solid var(--color-ink);
+  border: 2px solid var(--ink-faded);
   border-radius: 50%;
+  padding: 4px;
 
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 4px;
 
   box-shadow:
-    inset 0 1px 3px rgba(0, 0, 0, 0.2),
-    0 1px 0 rgba(255, 255, 255, 0.5);
+    inset 0 1px 3px rgba(0,0,0,0.15),
+    0 1px 0 rgba(255,255,255,0.6);
 }
 
-/* Override SVG colors for ink look */
 .discovery-icon svg {
-  filter: sepia(0.3) saturate(0.8);
+  width: 100%;
+  height: 100%;
+  filter: sepia(0.25) saturate(0.7);
 }
 
-.discovery-icon svg line {
-  stroke: var(--color-ink) !important;
-  opacity: 0.7 !important;
+.discovery-info {
+  flex: 1;
+  min-width: 0;
 }
 
-.discovery-icon svg circle {
-  fill: var(--color-ink) !important;
-}
-
-/* Constellation Name - Handwritten Style */
 .discovery-info h3 {
   font-family: var(--font-display);
+  font-size: 0.95rem;
   font-weight: 500;
-  font-size: 1.15rem;
   font-style: italic;
-  margin: 0 0 4px 0;
-  color: var(--color-ink);
-  letter-spacing: 0.02em;
+  color: var(--ink);
+  margin: 0 0 2px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* Description - Typewriter/Journal Style */
 .discovery-info p {
   font-family: var(--font-body);
-  font-size: 0.8rem;
+  font-size: 0.7rem;
+  color: var(--ink-faded);
   margin: 0;
-  color: rgba(45, 31, 20, 0.7);
-  line-height: 1.4;
   font-style: italic;
 }
 
-/* Discovery Notification - Reverted to Cosmic Style */
+
+/* ========================================
+   DISCOVERY NOTIFICATION
+   ======================================== */
+
 #discovery-notification {
   position: fixed;
-  /* Fixed centering */
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) scale(0.9);
-
-  /* Deep Space Cosmic Gradient */
-  background: radial-gradient(ellipse at center, rgba(255, 217, 61, 0.15) 0%, rgba(15, 16, 32, 0.95) 70%);
-  border: 2px solid var(--color-star-gold);
-  border-radius: 20px;
-  padding: 40px 60px;
-  text-align: center;
+  z-index: 200;
 
   opacity: 0;
   visibility: hidden;
-  transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-  z-index: 200;
-
-  /* Cosmic Glow */
-  box-shadow:
-    0 0 60px var(--color-connection),
-    0 0 120px var(--color-connection);
-
+  transition: all 0.4s var(--ease-out-back);
   pointer-events: none;
 }
 
@@ -674,257 +1178,1057 @@ body {
   transform: translate(-50%, -50%) scale(1);
 }
 
-#discovery-notification.hidden {
-  opacity: 0;
-  visibility: hidden;
-  transform: translate(-50%, -50%) scale(0.9);
+.notification-frame {
+  position: relative;
+  padding: 8px;
+}
+
+/* Ornate corner brackets */
+.frame-corner {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border: 3px solid var(--brass-primary);
+}
+
+.frame-corner.tl {
+  top: 0; left: 0;
+  border-right: none;
+  border-bottom: none;
+}
+
+.frame-corner.tr {
+  top: 0; right: 0;
+  border-left: none;
+  border-bottom: none;
+}
+
+.frame-corner.bl {
+  bottom: 0; left: 0;
+  border-right: none;
+  border-top: none;
+}
+
+.frame-corner.br {
+  bottom: 0; right: 0;
+  border-left: none;
+  border-top: none;
+}
+
+.notification-plate {
+  background:
+    var(--texture-paper),
+    linear-gradient(180deg,
+      var(--parchment-cream) 0%,
+      var(--parchment-light) 30%,
+      var(--parchment-mid) 100%);
+
+  padding: 28px 48px;
+  text-align: center;
+
+  border: 2px solid var(--brass-dark);
+
+  box-shadow:
+    var(--shadow-floating),
+    inset 0 0 20px rgba(0,0,0,0.05);
+}
+
+.plate-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.plate-header .header-line {
+  width: 30px;
+  height: 1px;
+  background: var(--brass-primary);
 }
 
 .notification-title {
-  display: block;
-  font-family: var(--font-ui);
-  font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.7);
-  text-transform: uppercase;
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  font-weight: 600;
   letter-spacing: 0.2em;
-  margin-bottom: 8px;
-  border-bottom: none;
+  text-transform: uppercase;
+  color: var(--brass-dark);
 }
 
 .constellation-name {
   display: block;
-  font-family: var(--font-serif);
-  font-size: 2.5rem;
+  font-family: var(--font-display);
+  font-size: 2rem;
   font-weight: 400;
-  color: var(--color-star-gold);
-  text-shadow: 0 0 20px var(--color-star-gold);
+  font-style: italic;
+  color: var(--ink);
+  letter-spacing: 0.02em;
 }
 
-/* Start Screen */
+.plate-footer {
+  margin-top: 12px;
+}
+
+.star-ornament {
+  color: var(--brass-primary);
+  font-size: 1rem;
+}
+
+
+/* ========================================
+   START SCREEN
+   ======================================== */
+
 #start-screen {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: #000;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  position: fixed;
+  inset: 0;
   z-index: 100;
-  transition: opacity 1s ease-out;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: var(--sky-void);
+  transition: opacity 1s ease-out, visibility 1s ease-out;
+}
+
+#start-screen.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.start-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center,
+    transparent 0%,
+    transparent 40%,
+    rgba(0,0,0,0.4) 100%);
+  pointer-events: none;
 }
 
 .start-content {
   text-align: center;
-  color: var(--color-text);
   max-width: 500px;
+  padding: 40px;
+  position: relative;
+}
+
+.title-ornament {
+  width: 60px;
+  height: 2px;
+  margin: 0 auto 20px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    var(--brass-primary) 20%,
+    var(--brass-light) 50%,
+    var(--brass-primary) 80%,
+    transparent 100%);
+}
+
+.title-ornament.bottom {
+  margin: 20px auto 40px;
 }
 
 h1 {
-  font-family: var(--font-serif);
-  font-size: 4rem;
-  margin-bottom: 0.5rem;
+  font-family: var(--font-display);
+  font-size: 3.5rem;
   font-weight: 300;
-  letter-spacing: 0.2rem;
-  color: var(--color-star-white);
-  text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+  letter-spacing: 0.15em;
+  color: var(--parchment-cream);
+  margin: 0;
+  text-shadow: 0 0 40px rgba(255,255,255,0.15);
 }
 
 .start-subtitle {
-  font-family: var(--font-serif);
-  font-size: 1.5rem;
+  font-family: var(--font-display);
+  font-size: 1.2rem;
   font-style: italic;
-  margin-bottom: 3rem;
-  opacity: 0.8;
+  font-weight: 300;
+  color: var(--parchment-mid);
+  margin: 8px 0 0;
+  letter-spacing: 0.1em;
 }
 
 #start-button {
-  background: transparent;
-  border: 1px solid var(--color-star-white);
-  color: var(--color-star-white);
-  padding: 1rem 3rem;
-  font-family: var(--font-serif);
-  font-size: 1.2rem;
-  letter-spacing: 0.1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+
+  padding: 16px 36px;
+
+  background: linear-gradient(180deg,
+    var(--brass-light) 0%,
+    var(--brass-primary) 50%,
+    var(--brass-dark) 100%);
+
+  border: none;
+  border-radius: 4px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  text-transform: uppercase;
+
+  box-shadow:
+    0 4px 16px rgba(0,0,0,0.5),
+    inset 0 1px 1px rgba(255,255,255,0.3),
+    inset 0 -1px 2px rgba(0,0,0,0.2);
+
+  transition: all var(--transition-fast);
 }
 
 #start-button:hover {
-  background: rgba(255, 255, 255, 0.1);
-  box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+  box-shadow:
+    0 6px 24px rgba(0,0,0,0.6),
+    inset 0 1px 2px rgba(255,255,255,0.4),
+    0 0 20px rgba(212, 168, 75, 0.2);
+}
+
+#start-button:active {
+  transform: translateY(0);
+  box-shadow:
+    0 2px 8px rgba(0,0,0,0.5),
+    inset 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.button-text {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--leather-dark);
+  text-shadow: 0 1px 0 rgba(255,255,255,0.3);
+}
+
+.button-icon {
+  font-size: 1.2rem;
+  color: var(--leather-dark);
 }
 
 .start-hint {
-  margin-top: 3rem;
-  font-family: var(--font-ui);
-  font-size: 0.9rem;
-  opacity: 0.5;
-  line-height: 1.5;
+  margin-top: 40px;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: var(--parchment-aged);
+  line-height: 1.6;
 }
 
-.pulse {
-  animation: pulse-animation 0.5s ease-in-out;
-}
-
-@keyframes pulse-animation {
-  0% {
-    transform: scale(1);
-  }
-
-  50% {
-    transform: scale(1.1);
-  }
-
-  100% {
-    transform: scale(1);
-  }
-}
 
 /* ========================================
-   OBSERVATORY SWITCHER
+   UTILITY CLASSES
    ======================================== */
 
-#observatory-switcher {
-  position: fixed;
-  bottom: 24px;
-  left: 24px;
-  z-index: 20;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-}
-
-.observatory-buttons {
-  display: flex;
-  gap: 4px;
-
-  /* Leather backing */
-  background:
-    linear-gradient(135deg,
-      var(--color-leather-light) 0%,
-      var(--color-leather) 50%,
-      var(--color-leather-dark) 100%);
-
-  padding: 6px;
-  border-radius: 8px;
-
-  box-shadow:
-    0 4px 12px rgba(0, 0, 0, 0.5),
-    inset 0 1px 1px rgba(255, 255, 255, 0.1);
-}
-
-.observatory-btn {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-
-  background:
-    linear-gradient(180deg,
-      var(--color-brass-light) 0%,
-      var(--color-brass) 50%,
-      var(--color-brass-dark) 100%);
-
-  border: none;
-  border-radius: 6px;
-  padding: 10px 14px;
-  cursor: pointer;
-
-  box-shadow:
-    0 2px 4px rgba(0, 0, 0, 0.3),
-    inset 0 1px 1px rgba(255, 255, 255, 0.3);
-
-  transition: all 0.2s ease;
-}
-
-.observatory-btn:hover {
-  background:
-    linear-gradient(180deg,
-      #e0b84d 0%,
-      var(--color-brass-light) 50%,
-      var(--color-brass) 100%);
-
-  transform: translateY(-2px);
-  box-shadow:
-    0 4px 8px rgba(0, 0, 0, 0.4),
-    inset 0 1px 2px rgba(255, 255, 255, 0.4);
-}
-
-.observatory-btn.active {
-  background:
-    linear-gradient(180deg,
-      var(--color-brass-aged) 0%,
-      var(--color-brass-dark) 50%,
-      var(--color-brass-shadow) 100%);
-
-  box-shadow:
-    inset 0 2px 4px rgba(0, 0, 0, 0.4),
-    0 1px 0 rgba(255, 255, 255, 0.1);
-
-  transform: translateY(1px);
-}
-
-.observatory-icon {
-  font-size: 1.4rem;
-  line-height: 1;
-}
-
-.observatory-label {
-  font-family: var(--font-display);
-  font-size: 0.65rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--color-leather-dark);
-}
-
-.observatory-btn.active .observatory-label {
-  color: var(--color-parchment);
-}
-
-.observatory-info {
-  /* Brass nameplate */
-  background:
-    linear-gradient(180deg,
-      var(--color-brass-light) 0%,
-      var(--color-brass) 40%,
-      var(--color-brass-dark) 100%);
-
-  padding: 4px 12px;
-  border-radius: 4px;
-
-  box-shadow:
-    0 2px 4px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3);
-}
-
-.observatory-name {
-  font-family: var(--font-display);
-  font-size: 0.7rem;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--color-leather-dark);
-}
-
-/* Utility Classes */
 .hidden {
   display: none !important;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
+.pulse {
+  animation: pulse-glow 0.5s ease-out;
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 0 rgba(212, 168, 75, 0);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(212, 168, 75, 0.4);
+  }
+}
+
+
+/* ========================================
+   MODAL SYSTEM
+   ======================================== */
+
+#modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0);
+  z-index: 1000;
+  transition: background 0.3s ease;
+  pointer-events: none;
+}
+
+#modal-backdrop:not(.hidden) {
+  pointer-events: auto;
+}
+
+#modal-backdrop.active {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+#modal-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+#modal-container > * {
+  pointer-events: auto;
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+#modal-container > *.active {
+  opacity: 1;
+  transform: scale(1);
+}
+
+
+/* ========================================
+   PATTERN MATCHING MODAL - Victorian Observatory
+   ======================================== */
+
+.pattern-match-modal {
+  position: relative;
+  max-width: 720px;
+  padding: 24px;
+  background:
+    /* Subtle paper texture noise */
+    repeating-linear-gradient(
+      0deg,
+      rgba(74, 55, 40, 0.02) 0px,
+      transparent 1px,
+      transparent 2px,
+      rgba(74, 55, 40, 0.02) 3px
+    ),
+    /* Aged parchment gradient */
+    radial-gradient(
+      ellipse at 30% 20%,
+      rgba(244, 236, 216, 1) 0%,
+      rgba(238, 226, 202, 1) 50%,
+      rgba(232, 218, 188, 1) 100%
+    );
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    0 0 80px rgba(184, 134, 11, 0.15);
+  border-radius: 2px;
+  filter: drop-shadow(0 4px 20px rgba(74, 55, 40, 0.3));
+}
+
+/* Parchment edge wear */
+.pattern-match-modal::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 5% 5%, rgba(139, 109, 71, 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 95% 5%, rgba(139, 109, 71, 0.06) 0%, transparent 40%),
+    radial-gradient(circle at 5% 95%, rgba(139, 109, 71, 0.07) 0%, transparent 40%),
+    radial-gradient(circle at 95% 95%, rgba(139, 109, 71, 0.09) 0%, transparent 40%);
+  pointer-events: none;
+  border-radius: 2px;
+  opacity: 0.6;
+}
+
+.modal-frame {
+  position: relative;
+  padding: 32px 40px;
+}
+
+/* Brass Corner Brackets - Victorian Instrument Detail */
+.pattern-match-modal .frame-corner {
+  position: absolute;
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(
+    135deg,
+    #D4A84B 0%,
+    #B8860B 30%,
+    #8B6914 70%,
+    #6B5410 100%
+  );
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    100% 20%,
+    20% 20%,
+    20% 100%,
+    0 100%
+  );
+  box-shadow:
+    inset -1px -1px 2px rgba(0, 0, 0, 0.4),
+    inset 1px 1px 1px rgba(255, 237, 160, 0.6),
+    0 2px 4px rgba(0, 0, 0, 0.3);
+  z-index: 10;
+}
+
+.pattern-match-modal .frame-corner::after {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  background: radial-gradient(
+    circle at 30% 30%,
+    rgba(255, 237, 160, 0.3) 0%,
+    transparent 50%
+  );
+  clip-path: inherit;
+}
+
+/* Decorative screw details */
+.pattern-match-modal .frame-corner::before {
+  content: '';
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  top: 6px;
+  left: 6px;
+  background: radial-gradient(
+    circle,
+    #6B5410 30%,
+    #8B6914 50%,
+    #6B5410 70%
+  );
+  border-radius: 50%;
+  box-shadow:
+    inset 0 1px 1px rgba(0, 0, 0, 0.6),
+    0 1px 0 rgba(255, 237, 160, 0.3);
+}
+
+.pattern-match-modal .frame-corner.tl {
+  top: 0;
+  left: 0;
+  transform: rotate(0deg);
+}
+
+.pattern-match-modal .frame-corner.tr {
+  top: 0;
+  right: 0;
+  transform: rotate(90deg);
+}
+
+.pattern-match-modal .frame-corner.bl {
+  bottom: 0;
+  left: 0;
+  transform: rotate(-90deg);
+}
+
+.pattern-match-modal .frame-corner.br {
+  bottom: 0;
+  right: 0;
+  transform: rotate(180deg);
+}
+
+.modal-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: center;
+}
+
+/* Header - Victorian Scientific Elegance */
+.modal-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.modal-header .header-line {
+  flex: 1;
+  height: 2px;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(139, 109, 71, 0.3) 20%,
+    rgba(139, 109, 71, 0.5) 50%,
+    rgba(139, 109, 71, 0.3) 80%,
+    transparent 100%
+  );
+  position: relative;
+}
+
+.modal-header .header-line::after {
+  content: '◆';
+  position: absolute;
+  right: -8px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 8px;
+  color: rgba(184, 134, 11, 0.6);
+}
+
+.modal-header .header-line:first-child::after {
+  left: -8px;
+  right: auto;
+}
+
+.modal-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 28px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  color: #3A2817;
+  text-align: center;
+  margin: 0;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4);
+  font-style: italic;
+}
+
+.modal-instruction {
+  font-family: 'Crimson Pro', serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: #5C4A3A;
+  text-align: center;
+  margin: 0;
+  letter-spacing: 0.3px;
+  line-height: 1.6;
+}
+
+/* Hourglass - Precision Victorian Timepiece */
+.countdown-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 0;
+}
+
+.hourglass {
+  position: relative;
+  width: 50px;
+  height: 70px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  filter: drop-shadow(0 2px 4px rgba(74, 55, 40, 0.3));
+}
+
+.hourglass-top,
+.hourglass-bottom {
+  position: relative;
+  width: 100%;
+  height: 30px;
+  background: linear-gradient(
+    135deg,
+    rgba(184, 134, 11, 0.15) 0%,
+    rgba(184, 134, 11, 0.08) 50%,
+    rgba(184, 134, 11, 0.15) 100%
+  );
+  border: 2px solid;
+  border-image: linear-gradient(
+    135deg,
+    #D4A84B,
+    #B8860B,
+    #8B6914
+  ) 1;
+  clip-path: polygon(
+    10% 0%,
+    90% 0%,
+    75% 30%,
+    50% 50%,
+    25% 30%
+  );
+}
+
+.hourglass-bottom {
+  clip-path: polygon(
+    50% 50%,
+    25% 70%,
+    10% 100%,
+    90% 100%,
+    75% 70%
+  );
+}
+
+/* Animated falling sand */
+.sand {
+  position: absolute;
+  top: 15%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: calc(25% * var(--progress, 0));
+  background: linear-gradient(
+    180deg,
+    #C9A86A 0%,
+    #B8975A 50%,
+    #A78649 100%
+  );
+  clip-path: polygon(
+    30% 0%,
+    70% 0%,
+    60% 50%,
+    50% 100%,
+    40% 50%
+  );
+  transition: height 0.1s linear;
+  box-shadow:
+    inset 0 -1px 2px rgba(0, 0, 0, 0.2),
+    0 1px 2px rgba(184, 134, 11, 0.3);
+}
+
+/* Sand accumulation in bottom */
+.hourglass-bottom::after {
+  content: '';
+  position: absolute;
+  bottom: 5%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(30px * var(--progress, 0));
+  height: calc(15px * var(--progress, 0));
+  background: linear-gradient(
+    180deg,
+    #A78649 0%,
+    #B8975A 50%,
+    #C9A86A 100%
+  );
+  border-radius: 50% 50% 0 0;
+  transition: all 0.1s linear;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.countdown-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  font-weight: 600;
+  color: #8B6914;
+  letter-spacing: 1px;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+/* Canvas - Embedded Observation Window */
+.pattern-match-modal canvas {
+  width: 600px;
+  height: 400px;
+  background:
+    radial-gradient(
+      ellipse at center,
+      rgba(10, 15, 35, 1) 0%,
+      rgba(5, 8, 20, 1) 100%
+    );
+  border: 3px solid;
+  border-image: linear-gradient(
+    45deg,
+    #6B5410 0%,
+    #8B6914 25%,
+    #B8860B 50%,
+    #8B6914 75%,
+    #6B5410 100%
+  ) 1;
+  box-shadow:
+    inset 0 0 40px rgba(0, 0, 0, 0.6),
+    inset 0 4px 8px rgba(0, 0, 0, 0.4),
+    0 4px 12px rgba(74, 55, 40, 0.4),
+    0 0 0 1px rgba(184, 134, 11, 0.2);
+  border-radius: 2px;
+  cursor: crosshair;
+}
+
+/* Progress Tracker */
+.progress-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 24px;
+  background: rgba(184, 134, 11, 0.08);
+  border: 1px solid rgba(184, 134, 11, 0.2);
+  border-radius: 2px;
+  box-shadow: inset 0 1px 3px rgba(74, 55, 40, 0.1);
+}
+
+.progress-container::before {
+  content: '✦';
+  font-size: 14px;
+  color: #B8860B;
+  animation: pulse-star 2s ease-in-out infinite;
+}
+
+@keyframes pulse-star {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+.progress-text {
+  font-family: 'Crimson Pro', serif;
+  font-size: 15px;
+  font-weight: 500;
+  color: #5C4A3A;
+  letter-spacing: 0.5px;
+}
+
+/* Entry Animation */
+@keyframes modal-reveal {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.pattern-match-modal.active {
+  animation: modal-reveal 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Ink spot detail - subtle authenticity */
+.modal-content::before {
+  content: '';
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  top: -10px;
+  right: 40px;
+  background: radial-gradient(
+    circle,
+    rgba(74, 55, 40, 0.12) 0%,
+    rgba(74, 55, 40, 0.06) 50%,
+    transparent 70%
+  );
+  border-radius: 50%;
+  transform: rotate(25deg);
+}
+
+/* Paper grain texture overlay */
+.modal-frame::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      transparent 0px,
+      rgba(139, 109, 71, 0.01) 1px,
+      transparent 2px
+    ),
+    repeating-linear-gradient(
+      0deg,
+      transparent 0px,
+      rgba(139, 109, 71, 0.01) 1px,
+      transparent 2px
+    );
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+
+/* Phase Transition Animations */
+.modal-content {
+  transition: opacity 0.35s ease-out, transform 0.35s cubic-bezier(0.34, 1.2, 0.64, 1);
+}
+
+.modal-content.phase-transitioning {
+  opacity: 0.4;
+  transform: scale(0.98);
+}
+
+/* Study Phase - Emphasis on Learning */
+.phase-study .modal-title {
+  font-size: 32px;
+  font-weight: 600;
+  background: linear-gradient(
+    135deg,
+    #8B6914 0%,
+    #B8860B 40%,
+    #D4A84B 60%,
+    #8B6914 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  position: relative;
+  padding-bottom: 8px;
+}
+
+.phase-study .modal-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 2px;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(184, 134, 11, 0.6) 20%,
+    rgba(212, 168, 75, 0.8) 50%,
+    rgba(184, 134, 11, 0.6) 80%,
+    transparent 100%
+  );
+  box-shadow: 0 1px 3px rgba(184, 134, 11, 0.4);
+}
+
+.phase-study .modal-instruction {
+  font-style: italic;
+  color: #6B5410;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+/* Challenge Phase - Focus on Interaction */
+.phase-challenge .modal-instruction {
+  font-weight: 500;
+  color: #5C4A3A;
+}
+
+/* Visual Progress Bar Enhancement */
+.progress-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-container::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: var(--progress-percent, 0%);
+  background: linear-gradient(
+    90deg,
+    rgba(212, 168, 75, 0.15) 0%,
+    rgba(184, 134, 11, 0.25) 50%,
+    rgba(212, 168, 75, 0.15) 100%
+  );
+  border-right: 2px solid rgba(184, 134, 11, 0.4);
+  transition: width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: inset 0 0 10px rgba(212, 168, 75, 0.2);
+}
+
+.progress-text {
+  position: relative;
+  z-index: 1;
+}
+
+/* Star Click Feedback - Canvas Shimmer */
+@keyframes canvas-shimmer {
+  0% {
+    box-shadow:
+      inset 0 0 40px rgba(0, 0, 0, 0.6),
+      inset 0 4px 8px rgba(0, 0, 0, 0.4),
+      0 4px 12px rgba(74, 55, 40, 0.4),
+      0 0 0 1px rgba(184, 134, 11, 0.2);
+  }
+  50% {
+    box-shadow:
+      inset 0 0 40px rgba(0, 0, 0, 0.6),
+      inset 0 4px 8px rgba(0, 0, 0, 0.4),
+      0 4px 12px rgba(74, 55, 40, 0.4),
+      0 0 0 1px rgba(184, 134, 11, 0.2),
+      0 0 20px rgba(212, 168, 75, 0.4),
+      inset 0 0 15px rgba(212, 168, 75, 0.1);
+  }
+  100% {
+    box-shadow:
+      inset 0 0 40px rgba(0, 0, 0, 0.6),
+      inset 0 4px 8px rgba(0, 0, 0, 0.4),
+      0 4px 12px rgba(74, 55, 40, 0.4),
+      0 0 0 1px rgba(184, 134, 11, 0.2);
+  }
+}
+
+.pattern-match-modal canvas.star-clicked {
+  animation: canvas-shimmer 0.3s ease-out;
+}
+
+/* Completion Flourish - Ornamental Celebration */
+@keyframes completion-flourish {
+  0% {
+    opacity: 0;
+    transform: scale(0.9) translateY(-5px);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes brass-shimmer {
+  0%, 100% {
+    text-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.4),
+      0 0 10px rgba(212, 168, 75, 0);
+  }
+  50% {
+    text-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.6),
+      0 0 15px rgba(212, 168, 75, 0.6),
+      0 0 25px rgba(184, 134, 11, 0.3);
+  }
+}
+
+.modal-instruction.pattern-complete {
+  animation:
+    completion-flourish 0.6s cubic-bezier(0.34, 1.56, 0.64, 1),
+    brass-shimmer 2s ease-in-out 0.6s;
+  font-size: 20px;
+  font-weight: 600;
+  font-style: italic;
+  background: linear-gradient(
+    135deg,
+    #8B6914 0%,
+    #B8860B 30%,
+    #D4A84B 50%,
+    #B8860B 70%,
+    #8B6914 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 1px;
+}
+
+.modal-instruction.pattern-complete::before {
+  content: '✦';
+  margin-right: 8px;
+  color: #D4A84B;
+  animation: pulse-star 1.5s ease-in-out infinite;
+}
+
+.modal-instruction.pattern-complete::after {
+  content: '✦';
+  margin-left: 8px;
+  color: #D4A84B;
+  animation: pulse-star 1.5s ease-in-out infinite 0.75s;
+}
+
+/* Enhanced Hourglass Sand Animation */
+.sand {
+  transition:
+    height 0.15s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.15s ease-out;
+  opacity: 0.95;
+}
+
+.hourglass-bottom::after {
+  transition:
+    all 0.15s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.2s ease-out;
+}
+
+/* Subtle sand grain texture */
+.sand::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      transparent 0px,
+      rgba(255, 237, 160, 0.1) 1px,
+      transparent 2px
+    );
+  opacity: 0.4;
+  clip-path: inherit;
+}
+
+/* Countdown urgency - final seconds */
+.countdown-container.urgent .countdown-text {
+  animation: urgent-pulse 0.5s ease-in-out infinite;
+  color: #A34E00;
+}
+
+@keyframes urgent-pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.85;
+  }
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+
+@media (max-width: 900px) {
   :root {
-    --telescope-diameter: min(95vw, 70vh);
-    --telescope-border-width: 16px;
+    --telescope-size: min(90vw, 75vh);
+  }
+
+  #lens-case {
+    left: 16px;
+    padding: 12px 10px;
+  }
+
+  .lens-bezel {
+    width: 36px;
+    height: 36px;
   }
 
   #discoveries-panel {
-    width: 300px;
+    width: 280px;
+  }
+
+  #observatory-dial {
+    bottom: 20px;
+  }
+}
+
+@media (max-width: 600px) {
+  :root {
+    --telescope-size: min(95vw, 65vh);
+  }
+
+  #lens-case {
+    top: auto;
+    bottom: 100px;
+    left: 12px;
+    transform: none;
+  }
+
+  #discoveries-panel {
+    width: 100%;
+    height: 50vh;
+    max-height: none;
+    top: auto;
+    bottom: 0;
+    transform: translateY(0);
+    border-radius: 16px 16px 0 0;
+  }
+
+  #discoveries-panel.collapsed {
+    transform: translateY(calc(100% - 60px));
+  }
+
+  #discoveries-toggle {
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -100%) rotate(90deg);
+    width: 60px;
+    height: 100px;
+  }
+
+  .journal-spine {
+    display: none;
+  }
+
+  #observatory-dial {
+    bottom: auto;
+    top: 20px;
+  }
+
+  h1 {
+    font-size: 2.5rem;
   }
 }

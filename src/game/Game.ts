@@ -5,7 +5,14 @@
 import { StarField } from './StarField';
 import { Telescope } from './Telescope';
 import { Constellation } from './Constellation';
+import { Nebula } from './Nebula';
+import { StarCluster } from './StarCluster';
+import { Galaxy } from './Galaxy';
+import { type CelestialObject } from './CelestialObject';
+
 import { DiscoveriesTab } from '../ui/DiscoveriesTab';
+import { ModalManager } from '../ui/ModalManager';
+import { PatternMatchModal } from '../ui/PatternMatchModal';
 import { AudioManager } from '../audio/AudioManager';
 import {
   CONSTELLATIONS,
@@ -15,6 +22,10 @@ import {
   type ConstellationData,
   type Observatory
 } from '../data/constellations';
+import { CONSTELLATION_SETS } from '../data/sets';
+import { NEBULAE, getNebulaeByObservatory } from '../data/nebulae';
+import { CLUSTERS, getClustersByObservatory } from '../data/clusters';
+import { GALAXIES, getGalaxiesByObservatory } from '../data/galaxies';
 
 
 export interface GameState {
@@ -35,9 +46,17 @@ export class Game {
   private state: GameState;
   private starField: StarField;
   private telescope: Telescope;
-  private constellations: Constellation[];
+
+  // All objects to render/update
+  private celestialObjects: CelestialObject[] = [];
+
+  // Specific references for logic that needs them
+  private constellations: Constellation[] = [];
+
   private discoveriesTab: DiscoveriesTab;
+  private modalManager: ModalManager;
   private audioManager: AudioManager;
+  private modalActive: boolean = false;
 
   private lastFrameTime: number = 0;
   private animationFrameId: number = 0;
@@ -66,9 +85,12 @@ export class Game {
     // Initialize subsystems
     this.starField = new StarField(SKY_WIDTH, SKY_HEIGHT);
     this.telescope = new Telescope(telescopeOverlay);
-    this.constellations = this.loadConstellationsForObservatory(this.state.currentObservatory);
-    this.discoveriesTab = new DiscoveriesTab(this.state.currentObservatory);
+    this.modalManager = new ModalManager();
     this.audioManager = new AudioManager();
+    this.discoveriesTab = new DiscoveriesTab(this.state.currentObservatory);
+
+    // Load initial objects
+    this.loadCelestialObjects(this.state.currentObservatory);
 
     // Set up event listeners
     this.setupEventListeners();
@@ -99,16 +121,101 @@ export class Game {
       toggle.addEventListener('click', togglePanel);
     }
 
-    // Keyboard shortcut: 'D' to toggle discoveries
+    // Lens Case - Two separate lens buttons
+    const attachLensListeners = () => {
+      const lensCase = document.getElementById('lens-case');
+      if (lensCase) {
+        lensCase.addEventListener('click', (e) => {
+          const slot = (e.target as HTMLElement).closest('.lens-slot') as HTMLElement;
+          if (!slot) return;
+
+          const lensType = slot.dataset.lens;
+          if (lensType === 'standard') {
+            this.setLens(1.0);
+          } else if (lensType === 'wide') {
+            this.setLens(0.5);
+          } else if (lensType === 'deep') {
+            this.setLens(3.0);
+          }
+          e.preventDefault();
+        });
+      } else {
+        setTimeout(attachLensListeners, 500);
+      }
+    };
+    attachLensListeners();
+
+    // Keyboard shortcuts
     window.addEventListener('keydown', (e) => {
-      if (e.key === 'd' || e.key === 'D') {
-        // Don't trigger if user is typing in an input
-        if (document.activeElement?.tagName !== 'INPUT' &&
-          document.activeElement?.tagName !== 'TEXTAREA') {
-          togglePanel();
-        }
+      // Skip if typing in an input
+      if (document.activeElement?.tagName === 'INPUT' ||
+          document.activeElement?.tagName === 'TEXTAREA') {
+        return;
+      }
+
+      // Tab - Toggle discoveries panel
+      if (e.key === 'Tab') {
+        e.preventDefault();
+        togglePanel();
+      }
+
+      // 1 - Standard lens
+      if (e.key === '1') {
+        this.setLens(1.0);
+      }
+
+      // 2 - Wide lens
+      if (e.key === '2') {
+        this.setLens(0.5);
+      }
+
+      // 3 - Deep Field lens
+      if (e.key === '3') {
+        this.setLens(3.0);
+      }
+
+      // Arrow keys - Observatory switching
+      if (e.key === 'ArrowLeft') {
+        this.switchObservatory('northern');
+      }
+      if (e.key === 'ArrowRight') {
+        this.switchObservatory('southern');
       }
     });
+  }
+
+  private toggleLens(): void {
+    const currentMag = this.telescope.getMagnification();
+    const newMag = currentMag === 1.0 ? 0.5 : 1.0;
+    this.setLens(newMag);
+  }
+
+  private setLens(magnification: number): void {
+    const currentMag = this.telescope.getMagnification();
+    if (currentMag === magnification) return;
+
+    this.telescope.setMagnification(magnification);
+
+    // Update lens case UI
+    const standardSlot = document.getElementById('lens-standard');
+    const wideSlot = document.getElementById('lens-wide');
+    const deepSlot = document.getElementById('lens-deep');
+
+    if (standardSlot && wideSlot && deepSlot) {
+      // Remove all active classes
+      standardSlot.classList.remove('active');
+      wideSlot.classList.remove('active');
+      deepSlot.classList.remove('active');
+
+      // Add active to current lens
+      if (magnification === 1.0) {
+        standardSlot.classList.add('active');
+      } else if (magnification === 0.5) {
+        wideSlot.classList.add('active');
+      } else if (magnification === 3.0) {
+        deepSlot.classList.add('active');
+      }
+    }
   }
 
   private resizeCanvas(): void {
@@ -117,10 +224,37 @@ export class Game {
   }
 
   /**
-   * Load constellations for a specific observatory
+   * Load celestial objects for a specific observatory
    */
-  private loadConstellationsForObservatory(observatory: Observatory): Constellation[] {
-    return getConstellationsByObservatory(observatory).map(data => new Constellation(data));
+  private loadCelestialObjects(observatory: Observatory): void {
+    this.celestialObjects = [];
+    this.constellations = [];
+
+    // Load Constellations
+    const constellationData = getConstellationsByObservatory(observatory);
+    for (const data of constellationData) {
+      const c = new Constellation(data);
+      this.constellations.push(c);
+      this.celestialObjects.push(c);
+    }
+
+    // Load Nebulae (filtered by observatory)
+    const nebulaeData = getNebulaeByObservatory(observatory);
+    for (const data of nebulaeData) {
+      this.celestialObjects.push(new Nebula(data));
+    }
+
+    // Load Star Clusters (filtered by observatory)
+    const clustersData = getClustersByObservatory(observatory);
+    for (const data of clustersData) {
+      this.celestialObjects.push(new StarCluster(data));
+    }
+
+    // Load Galaxies (filtered by observatory)
+    const galaxiesData = getGalaxiesByObservatory(observatory);
+    for (const data of galaxiesData) {
+      this.celestialObjects.push(new Galaxy(data));
+    }
   }
 
   /**
@@ -134,11 +268,38 @@ export class Game {
     this.state.viewY = SKY_HEIGHT / 2;
     this.state.discoveredCount = 0;
 
-    // Reload constellations for the new observatory
-    this.constellations = this.loadConstellationsForObservatory(observatory);
+    // Reload objects
+    this.loadCelestialObjects(observatory);
 
     // Update discoveries tab
     this.discoveriesTab.setObservatory(observatory);
+
+    // Update dial UI
+    const dialElement = document.getElementById('observatory-dial');
+    if (dialElement) {
+      const sectors = dialElement.querySelectorAll('.dial-sector');
+      sectors.forEach(sector => {
+        const sectorEl = sector as HTMLElement;
+        if (sectorEl.dataset.observatory === observatory) {
+          sectorEl.classList.add('active');
+        } else {
+          sectorEl.classList.remove('active');
+        }
+      });
+    }
+
+    // Update nameplate text
+    const locationEl = document.querySelector('.observatory-location');
+    const coordsEl = document.querySelector('.observatory-coords');
+    if (locationEl && coordsEl) {
+      if (observatory === 'northern') {
+        locationEl.textContent = 'Alpine Observatory';
+        coordsEl.textContent = '46°N · Swiss Alps';
+      } else {
+        locationEl.textContent = 'Andean Observatory';
+        coordsEl.textContent = '30°S · Chilean Andes';
+      }
+    }
   }
 
   /**
@@ -201,6 +362,9 @@ export class Game {
    * Update game state
    */
   private update(deltaTime: number): void {
+    // Skip game updates when modal is active
+    if (this.modalActive) return;
+
     // Update telescope view offset with drift effect
     this.telescope.update(this.state.mouseX, this.state.mouseY, deltaTime);
 
@@ -220,103 +384,164 @@ export class Game {
     const margin = 400;
     this.state.viewY = Math.max(margin, Math.min(SKY_HEIGHT - margin, this.state.viewY));
 
-    // Check for constellation discovery
-    this.checkConstellationDiscovery(deltaTime);
+    // Check for discovery
+    this.checkDiscovery(deltaTime);
 
-    // Update constellation animations - pass whether each is in view
+    // Update all objects
     const skyX = this.state.viewX;
     const skyY = this.state.viewY;
-    const telescopeRadius = this.telescope.getRadius();
 
-    for (const constellation of this.constellations) {
-      const data = constellation.getData();
-      // Calculate distance accounting for horizontal wrap-around
-      const dx = this.getWrappedDeltaX(skyX, data.centerX);
-      const dy = skyY - data.centerY;
+    // Visibile radius depends on magnification
+    // Standard radius covers X amount of sky. 
+    // If zoom is 0.5x, we see 2x more sky, so effective radius for culling is larger.
+    const effectiveTelescopeRadius = this.telescope.getInWorldRadius();
+
+    for (const obj of this.celestialObjects) {
+      // Calculate visibility genericly
+      const dx = this.getWrappedDeltaX(skyX, obj.x);
+      const dy = skyY - obj.y;
       const distance = Math.hypot(dx, dy);
-      const isInView = distance < data.radius + telescopeRadius * 0.5;
+      // Use efficient radius
+      const isInView = distance < obj.radius + effectiveTelescopeRadius * 0.6; // 0.6 safety margin
 
-      // Cancel animation if moved out of view
-      if (!isInView && constellation.isAnimatingDiscovery()) {
-        constellation.cancelDiscovery();
-        // Decrement count since discovery was cancelled
-        if (this.state.discoveredCount > 0) {
-          this.state.discoveredCount--;
+      // Handle Constellation-specific cancellation logic
+      if (obj instanceof Constellation) {
+        if (!isInView && obj.isAnimatingDiscovery()) {
+          obj.cancelDiscovery();
+          if (this.state.discoveredCount > 0) this.state.discoveredCount--;
         }
       }
 
-      constellation.update(deltaTime, isInView);
+      obj.update(deltaTime, isInView);
     }
   }
 
   /**
-   * Check if player is hovering over any undiscovered constellation
+   * Check if player is hovering over any undiscovered object
    */
-  private checkConstellationDiscovery(deltaTime: number): void {
-    const telescopePos = this.telescope.getPosition();
+  private checkDiscovery(deltaTime: number): void {
     const telescopeRadius = this.telescope.getRadius();
-
-    // Sky coordinates are simply the current view position (telescope is at center)
     const skyX = this.state.viewX;
     const skyY = this.state.viewY;
 
     let isHoveringAny = false;
+    let hoveringObject: CelestialObject | null = null;
 
-    for (const constellation of this.constellations) {
-      if (constellation.isDiscovered()) continue;
+    for (const obj of this.celestialObjects) {
+      if (obj.isDiscovered) continue;
 
-      const data = constellation.getData();
-      const dx = this.getWrappedDeltaX(skyX, data.centerX);
-      const dy = skyY - data.centerY;
+      const dx = this.getWrappedDeltaX(skyX, obj.x);
+      const dy = skyY - obj.y;
       const distance = Math.hypot(dx, dy);
 
-      if (distance < data.radius + telescopeRadius * 0.3) {
-        // Player is hovering over this constellation
+      if (distance < obj.radius + telescopeRadius * 0.3) {
+        // Player is hovering over this object
         isHoveringAny = true;
-        const discovered = constellation.addHoverTime(deltaTime);
+        hoveringObject = obj;
 
-        // Play build-up sound based on discovery progress
-        const progress = constellation.getDiscoveryProgress();
-        this.audioManager.playDiscoveryBuildUp(progress);
-
-        if (discovered) {
-          this.audioManager.stopDiscoveryBuildUp();
-          this.onConstellationDiscovered(constellation);
+        // Accumulate hover time for discovery
+        if (obj.addHoverTime(deltaTime)) {
+          this.onObjectDiscovered(obj);
         }
+
+        // Play build-up sound based on discovery progress (Constellation primarily)
+        if (obj instanceof Constellation) {
+          const progress = obj.discoveryProgress;
+          this.audioManager.playDiscoveryBuildUp(progress);
+        } else if (obj instanceof Nebula) {
+          // Nebula has property directly
+          const progress = obj.discoveryProgress;
+          this.audioManager.startNebulaDrone(progress);
+        }
+
       } else {
-        constellation.resetHoverTime();
+        obj.resetHoverTime();
       }
     }
 
-    // Stop build-up if not hovering over any constellation
+    // Stop sounds if not hovering
     if (!isHoveringAny) {
       this.audioManager.stopDiscoveryBuildUp();
+      this.audioManager.stopNebulaDrone();
+    } else if (hoveringObject && !(hoveringObject instanceof Nebula)) {
+      // If hovering something else, make sure nebula drone stops
+      this.audioManager.stopNebulaDrone();
     }
   }
 
   /**
-   * Handle constellation discovery
+   * generic discovery handler
    */
-  private onConstellationDiscovered(constellation: Constellation): void {
-    const data = constellation.getData();
+  private onObjectDiscovered(obj: CelestialObject): void {
     this.state.discoveredCount++;
 
-    // Play sound for each connection as it's revealed
-    constellation.setOnConnectionRevealed((index, total) => {
-      this.audioManager.playStarConnectionSound(index, total);
-    });
+    if (obj instanceof Constellation) {
+      // Stop build up
+      this.audioManager.stopDiscoveryBuildUp();
 
-    // Set up callback for when path-tracing animation completes
-    constellation.setOnAnimationComplete(() => {
-      // Play completion sound
+      const c = obj as Constellation;
+      const data = c.getData();
+
+      c.setOnConnectionRevealed((index, total) => {
+        this.audioManager.playStarConnectionSound(index, total);
+      });
+
+      c.setOnAnimationComplete(() => {
+        // Open pattern match modal instead of immediately logging discovery
+        this.openPatternMatchModal(c);
+      });
+    } else if (obj instanceof Nebula) {
+      // Nebula discovery immediate
+      this.audioManager.stopNebulaDrone();
       this.audioManager.playDiscoverySound();
+      this.showDiscoveryNotification(obj.name);
+      this.discoveriesTab.addDiscovery(obj.getData());
+    } else if (obj instanceof StarCluster) {
+      // Start sparkles
+      this.audioManager.playClusterSparkle(1.0);
+      this.showDiscoveryNotification(obj.name);
+      // StarClusters animate automatically in their update loop
+      this.discoveriesTab.addDiscovery(obj.getData());
+    } else if (obj instanceof Galaxy) {
+      // Galaxy discovery - deep cosmic sound
+      this.audioManager.playDiscoverySound(); // Could add galaxy-specific sound later
+      this.showDiscoveryNotification(obj.name);
+      this.discoveriesTab.addDiscovery(obj.getData());
+    }
+  }
 
-      // Update UI
-      this.discoveriesTab.addDiscovery(data);
+  /**
+   * Open pattern match modal for constellation discovery
+   */
+  private openPatternMatchModal(constellation: Constellation): void {
+    this.modalActive = true;
 
-      // Show notification
-      this.showDiscoveryNotification(data.name);
-    });
+    const modal = new PatternMatchModal(
+      constellation,
+      () => {
+        this.onPatternMatchComplete(constellation);
+      },
+      this.audioManager // Pass audio manager for sound feedback
+    );
+
+    this.modalManager.show(modal.render());
+  }
+
+  /**
+   * Handle pattern match completion
+   */
+  private onPatternMatchComplete(constellation: Constellation): void {
+    const data = constellation.getData();
+
+    // NOW we actually log the discovery
+    this.audioManager.playCosmicFlash();
+    this.discoveriesTab.addDiscovery(data);
+    this.showDiscoveryNotification(data.name);
+    if (data.set) this.checkSetCompletion(data.set);
+
+    // Close modal
+    this.modalActive = false;
+    this.modalManager.hide();
   }
 
   /**
@@ -352,8 +577,16 @@ export class Game {
     const { ctx, canvas } = this;
     const { viewX, viewY } = this.state;
 
-    // Clear canvas with deep space color
-    ctx.fillStyle = '#050510';
+    // Clear canvas with deep space gradient
+    const gradient = ctx.createRadialGradient(
+      canvas.width / 2, canvas.height / 2, 0,
+      canvas.width / 2, canvas.height / 2, canvas.height
+    );
+    gradient.addColorStop(0, '#0f1020');
+    gradient.addColorStop(0.6, '#0a0a18');
+    gradient.addColorStop(1, '#050510');
+
+    ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     // Get telescope position and radius for clipping
@@ -366,12 +599,65 @@ export class Game {
     ctx.arc(telescopePos.x, telescopePos.y, telescopeRadius, 0, Math.PI * 2);
     ctx.clip();
 
+    // Apply Magnification
+    // We scale around the center of the telescope
+    const mag = this.telescope.getMagnification();
+
+    // Enhanced vignette at Deep Field (3.0x) magnification
+    if (mag === 3.0) {
+      const vignetteGradient = ctx.createRadialGradient(
+        telescopePos.x, telescopePos.y, telescopeRadius * 0.4,
+        telescopePos.x, telescopePos.y, telescopeRadius
+      );
+      vignetteGradient.addColorStop(0, 'rgba(0, 0, 0, 0)');
+      vignetteGradient.addColorStop(0.7, 'rgba(0, 0, 0, 0.15)');
+      vignetteGradient.addColorStop(1, 'rgba(0, 0, 0, 0.4)');
+
+      ctx.fillStyle = vignetteGradient;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
+
+    // Transform to center, scale, transform back
+    ctx.translate(telescopePos.x, telescopePos.y);
+    ctx.scale(mag, mag);
+    ctx.translate(-telescopePos.x, -telescopePos.y);
+
+    // Calculate DSO scale and visual effect parameters based on magnification
+    const dsoScale = 0.4 + (mag / 3.0) * 0.6;
+    const constellationOpacity = mag === 3.0 ? 0.4 : 1.0;
+    const dsoGlow = mag === 3.0 ? 1.3 : 1.0;
+
+    // Render Order:
+    // 0. Galaxies (Furthest background)
+    // 1. Nebulae (Background)
+    // 2. StarField (Stars)
+    // 3. Constellations & Clusters (Foreground)
+
+    // Galaxies (furthest)
+    for (const obj of this.celestialObjects) {
+      if (obj instanceof Galaxy) {
+        obj.render(ctx, viewX, viewY, canvas.width, canvas.height, dsoScale, dsoGlow);
+      }
+    }
+
+    // Nebulae
+    for (const obj of this.celestialObjects) {
+      if (obj instanceof Nebula) {
+        obj.render(ctx, viewX, viewY, canvas.width, canvas.height, dsoScale, dsoGlow);
+      }
+    }
+
+    // StarField (Stars)
     // Draw star field within telescope view
     this.starField.render(ctx, viewX, viewY, canvas.width, canvas.height, telescopePos);
 
-    // Draw constellations
-    for (const constellation of this.constellations) {
-      constellation.render(ctx, viewX, viewY, canvas.width, canvas.height);
+    // Constellations & Clusters
+    for (const obj of this.celestialObjects) {
+      if (obj instanceof Constellation) {
+        obj.render(ctx, viewX, viewY, canvas.width, canvas.height, constellationOpacity);
+      } else if (obj instanceof StarCluster) {
+        obj.render(ctx, viewX, viewY, canvas.width, canvas.height, dsoScale, dsoGlow);
+      }
     }
 
     ctx.restore();
@@ -410,5 +696,63 @@ export class Game {
     }
 
     ctx.restore();
+  }
+
+  /**
+   * Check if a constellation set is completed
+   */
+  private checkSetCompletion(setId: string): void {
+    const set = CONSTELLATION_SETS[setId];
+    if (!set) return;
+
+    // Get all constellations in this set
+    const setConstellations = this.constellations.filter(c => c.getData().set === setId);
+    const allFound = setConstellations.every(c => c.isDiscovered);
+
+    if (allFound) {
+      // Apply upgrades
+      if (set.upgradeId === 'stabilizer') {
+        this.telescope.setDriftFactor(1.0); // Maximum stability
+        this.showUpgradeNotification(set.name, set.upgradeName!);
+      } else if (set.upgradeId === 'wide_angle') {
+        this.telescope.setRadiusMultiplier(1.15); // 15% larger
+        this.showUpgradeNotification(set.name, set.upgradeName!);
+      } else {
+        // Just show set completion if no specific upgrade
+        this.showDiscoveryNotification(`${set.name} Completed!`);
+      }
+    }
+  }
+
+  /**
+   * Show upgrade notification
+   */
+  private showUpgradeNotification(setName: string, upgradeName: string): void {
+    const notification = document.getElementById('discovery-notification');
+    const titleEl = notification?.querySelector('.notification-title');
+    const nameEl = notification?.querySelector('.constellation-name');
+
+    if (notification && titleEl && nameEl) {
+      notification.classList.remove('hidden');
+      titleEl.textContent = `${setName} Completed!`;
+      nameEl.textContent = `Unlocked: ${upgradeName}`;
+      nameEl.classList.add('upgrade-text'); // Add exciting style class
+
+      // Trigger animation
+      requestAnimationFrame(() => {
+        notification.classList.add('visible');
+      });
+
+      // Hide after longer delay for upgrades
+      setTimeout(() => {
+        notification.classList.remove('visible');
+        setTimeout(() => {
+          notification.classList.add('hidden');
+          // Reset text
+          titleEl.textContent = 'Constellation Discovered';
+          nameEl.classList.remove('upgrade-text');
+        }, 5000);
+      }, 5000);
+    }
   }
 }

@@ -23,4 +23,5 @@ export interface ConstellationData {
   observatory: Observatory;
   stars: Star[];
   connections: [number, number][];
+  set?: string; // ID of the set this constellation belongs to
 }

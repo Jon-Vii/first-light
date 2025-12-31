@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Inter:wght@300;400;500&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -20,43 +20,158 @@
     <!-- Main canvas for the star field and telescope -->
     <canvas id="sky-canvas"></canvas>
 
-    <!-- Telescope overlay (the brass rim effect) -->
-    <div id="telescope-overlay"></div>
+    <!-- Telescope overlay with lens glass effect -->
+    <div id="telescope-overlay">
+      <div class="lens-glass-effect"></div>
+      <div class="lens-dust"></div>
+    </div>
 
-    <!-- Observatory switcher -->
-    <div id="observatory-switcher"></div>
+    <!-- Lens Case - Victorian instrument box -->
+    <div id="lens-case" class="instrument-panel">
+      <div class="case-lid">
+        <span class="engraved-label">OPTICAL LENSES</span>
+      </div>
+      <div class="lens-slots">
+        <button class="lens-slot active" data-lens="standard" id="lens-standard">
+          <div class="lens-bezel">
+            <div class="lens-glass standard-glass"></div>
+          </div>
+          <div class="lens-plate">
+            <span class="lens-name">Standard</span>
+            <span class="lens-mag">1.0×</span>
+          </div>
+          <kbd class="key-hint">1</kbd>
+        </button>
+        <button class="lens-slot" data-lens="wide" id="lens-wide">
+          <div class="lens-bezel">
+            <div class="lens-glass wide-glass"></div>
+          </div>
+          <div class="lens-plate">
+            <span class="lens-name">Wide Field</span>
+            <span class="lens-mag">0.5×</span>
+          </div>
+          <kbd class="key-hint">2</kbd>
+        </button>
+        <button class="lens-slot" data-lens="deep" id="lens-deep">
+          <div class="lens-bezel">
+            <div class="lens-glass deep-glass"></div>
+          </div>
+          <div class="lens-plate">
+            <span class="lens-name">Deep Field</span>
+            <span class="lens-mag">3.0×</span>
+          </div>
+          <kbd class="key-hint">3</kbd>
+        </button>
+      </div>
+    </div>
 
-    <!-- Discoveries panel -->
+    <!-- Observatory Dial - Bottom Center -->
+    <div id="observatory-dial">
+      <div class="dial-housing">
+        <div class="dial-face">
+          <div class="dial-marker north"></div>
+          <div class="dial-marker south"></div>
+          <button class="dial-sector north-sector active" data-observatory="northern">
+            <kbd class="key-hint">←</kbd>
+            <span class="sector-label">N</span>
+          </button>
+          <button class="dial-sector south-sector" data-observatory="southern">
+            <span class="sector-label">S</span>
+            <kbd class="key-hint">→</kbd>
+          </button>
+          <div class="dial-pointer"></div>
+          <div class="dial-center"></div>
+        </div>
+      </div>
+      <div class="observatory-nameplate" id="observatory-nameplate">
+        <div class="nameplate-text">
+          <span class="observatory-location">Alpine Observatory</span>
+          <span class="observatory-coords">46°N · Swiss Alps</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Discoveries Journal Panel -->
     <aside id="discoveries-panel" class="collapsed">
-      <button id="discoveries-toggle" aria-label="Toggle discoveries panel (D)">
-        <span class="toggle-icon">★</span>
-        <span class="discovery-count">0</span>
-        <span class="toggle-hint">D</span>
+      <button id="discoveries-toggle" aria-label="Toggle discoveries panel (Tab)">
+        <div class="toggle-binding"></div>
+        <div class="toggle-clasp">
+          <div class="clasp-hook"></div>
+        </div>
+        <div class="toggle-content">
+          <span class="toggle-icon">✦</span>
+          <span class="discovery-count">0/88</span>
+        </div>
+        <kbd class="key-hint">Tab</kbd>
       </button>
+      <div class="journal-spine"></div>
       <div class="discoveries-content">
-        <h2>Discoveries</h2>
+        <header class="journal-header">
+          <div class="header-ornament left"></div>
+          <h2>Field Notes</h2>
+          <div class="header-ornament right"></div>
+        </header>
+        <div class="journal-progress">
+          <div class="progress-dial">
+            <svg viewBox="0 0 36 36" class="progress-ring">
+              <circle class="progress-bg" cx="18" cy="18" r="15.5"/>
+              <circle class="progress-fill" cx="18" cy="18" r="15.5"
+                stroke-dasharray="97.4" stroke-dashoffset="97.4"/>
+            </svg>
+            <span class="progress-count">0</span>
+          </div>
+          <span class="progress-label">discoveries</span>
+        </div>
         <div id="discoveries-list"></div>
+        <div class="journal-empty-state">
+          <div class="empty-quill"></div>
+          <p class="empty-text">Your observations await...</p>
+          <p class="empty-hint">Explore the night sky through your telescope</p>
+        </div>
       </div>
     </aside>
 
-    <!-- Discovery notification (appears when constellation is found) -->
+    <!-- Discovery Notification - Antique announcement plate -->
     <div id="discovery-notification" class="hidden">
-      <div class="notification-content">
-        <span class="notification-title">Constellation Discovered</span>
-        <span class="constellation-name"></span>
+      <div class="notification-frame">
+        <div class="frame-corner tl"></div>
+        <div class="frame-corner tr"></div>
+        <div class="frame-corner bl"></div>
+        <div class="frame-corner br"></div>
+        <div class="notification-plate">
+          <div class="plate-header">
+            <div class="header-line"></div>
+            <span class="notification-title">New Discovery</span>
+            <div class="header-line"></div>
+          </div>
+          <span class="constellation-name"></span>
+          <div class="plate-footer">
+            <div class="star-ornament">✦</div>
+          </div>
+        </div>
       </div>
     </div>
 
     <!-- Start screen -->
     <div id="start-screen">
+      <div class="start-vignette"></div>
       <div class="start-content">
+        <div class="title-ornament top"></div>
         <h1>Seeing Stars</h1>
-        <p class="start-subtitle">An antique telescope adventure</p>
-        <button id="start-button">Begin Exploration</button>
-        <p class="start-hint">Move your telescope across the night sky<br>to discover hidden constellations</p>
+        <p class="start-subtitle">An Astronomer's Journey</p>
+        <div class="title-ornament bottom"></div>
+        <button id="start-button">
+          <span class="button-text">Begin Observation</span>
+          <span class="button-icon">◉</span>
+        </button>
+        <p class="start-hint">Guide your telescope across the celestial sphere<br>to uncover hidden constellations</p>
       </div>
     </div>
   </div>
+
+  <!-- Modal System -->
+  <div id="modal-backdrop" class="hidden"></div>
+  <div id="modal-container"></div>
 
   <script type="module" src="./main.js"></script>
 </body>

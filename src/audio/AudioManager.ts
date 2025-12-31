@@ -370,6 +370,7 @@ export class AudioManager {
     }
   }
 
+
   /**
    * Stop discovery build-up sound with smooth fade-out
    */
@@ -397,5 +398,122 @@ export class AudioManager {
       this.buildUpGains = [];
       this.isBuildUpPlaying = false;
     }, 300);
+  }
+
+  // === NEBULA AUDIO ===
+  private nebulaOscillators: OscillatorNode[] = [];
+  private nebulaGains: GainNode[] = [];
+  private isNebulaPlaying: boolean = false;
+
+  /**
+   * Play atmospheric drone for nebula hover
+   * Deep, breathing pads
+   */
+  startNebulaDrone(progress: number): void {
+    if (!this.ensureInitialized() || !this.audioContext || !this.masterGain) return;
+
+    const ctx = this.audioContext;
+    const now = ctx.currentTime;
+
+    if (!this.isNebulaPlaying) {
+      this.isNebulaPlaying = true;
+
+      // Drone 1: Deep bass
+      const osc1 = ctx.createOscillator();
+      const gain1 = ctx.createGain();
+      osc1.type = 'sawtooth'; // Richer texture
+      osc1.frequency.value = 65.41; // C2
+
+      // Filter the sawtooth to make it soft
+      const filter1 = ctx.createBiquadFilter();
+      filter1.type = 'lowpass';
+      filter1.frequency.value = 200;
+
+      osc1.connect(filter1);
+      filter1.connect(gain1);
+      gain1.connect(this.masterGain);
+
+      osc1.start();
+      gain1.gain.value = 0;
+
+      this.nebulaOscillators.push(osc1);
+      this.nebulaGains.push(gain1);
+
+      // Drone 2: Fifth
+      const osc2 = ctx.createOscillator();
+      const gain2 = ctx.createGain();
+      osc2.type = 'sine';
+      osc2.frequency.value = 98.00; // G2
+
+      osc2.connect(gain2);
+      gain2.connect(this.masterGain);
+
+      osc2.start();
+      gain2.gain.value = 0;
+
+      this.nebulaOscillators.push(osc2);
+      this.nebulaGains.push(gain2);
+    }
+
+    // Modulate volume based on progress
+    const vol = Math.min(0.2, progress * 0.2);
+    for (const gain of this.nebulaGains) {
+      gain.gain.setTargetAtTime(vol, now, 0.2);
+    }
+  }
+
+  stopNebulaDrone(): void {
+    if (!this.isNebulaPlaying || !this.audioContext) return;
+
+    const now = this.audioContext.currentTime;
+    for (const gain of this.nebulaGains) {
+      gain.gain.setTargetAtTime(0, now, 0.5);
+    }
+
+    setTimeout(() => {
+      this.nebulaOscillators.forEach(o => { try { o.stop(); o.disconnect(); } catch (e) { } });
+      this.nebulaGains = [];
+      this.nebulaOscillators = [];
+      this.isNebulaPlaying = false;
+    }, 600);
+  }
+
+  // === CLUSTER AUDIO ===
+
+  /**
+   * Play a granular sparkle sound for star clusters
+   * Burst of high frequency short grains
+   */
+  playClusterSparkle(intensity: number): void {
+    if (!this.ensureInitialized() || !this.audioContext || !this.masterGain) return;
+
+    const ctx = this.audioContext;
+    const now = ctx.currentTime;
+
+    // Launch a few high pitched grains
+    const count = Math.floor(3 + intensity * 5); // 3 to 8 grains
+
+    for (let i = 0; i < count; i++) {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc.type = 'sine';
+      // Random high frequencies from pentatonic high octaves
+      const freqBase = this.pentatonicScale[Math.floor(Math.random() * this.pentatonicScale.length)] || 880;
+      osc.frequency.value = freqBase * (Math.random() > 0.5 ? 2 : 4); // Very high
+
+      const timeOffset = Math.random() * 0.1;
+      const duration = 0.05 + Math.random() * 0.1;
+
+      gain.gain.setValueAtTime(0, now + timeOffset);
+      gain.gain.linearRampToValueAtTime(0.05, now + timeOffset + 0.01);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + timeOffset + duration);
+
+      osc.connect(gain);
+      gain.connect(this.masterGain);
+
+      osc.start(now + timeOffset);
+      osc.stop(now + timeOffset + duration + 0.1);
+    }
   }
 }

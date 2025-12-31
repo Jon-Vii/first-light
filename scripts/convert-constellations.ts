@@ -1,3 +1,5 @@
+import { CONSTELLATION_TO_SET } from '../src/data/sets';
+
 /**
  * Constellation Data Conversion Script
  * 
@@ -124,6 +126,7 @@ interface ConstellationData {
   observatory: 'northern' | 'southern';
   stars: { id: string; x: number; y: number; brightness: number }[];
   connections: [number, number][];
+  set?: string;
 }
 
 // Convert RA/Dec to screen coordinates
@@ -222,18 +225,15 @@ async function main() {
     const rawCenterX = adjustedXs.reduce((a, b) => a + b, 0) / adjustedXs.length;
     const centerY = Math.round(ys.reduce((a, b) => a + b, 0) / ys.length);
 
-    // Shift everything back to positive coordinates if center is negative
-    let offsetX = 0;
-    if (rawCenterX < 300) {
-      // Shift the whole constellation right to be visible
-      offsetX = 500 - Math.round(rawCenterX);
-      for (const point of points) {
-        point.x += offsetX;
-      }
-    }
-
     const finalXs = points.map(p => p.x);
-    const centerX = Math.round(finalXs.reduce((a, b) => a + b, 0) / finalXs.length);
+    let centerX = Math.round(finalXs.reduce((a, b) => a + b, 0) / finalXs.length);
+
+    // Normalize centerX to 0-SKY_WIDTH range (wrap negative values)
+    if (centerX < 0) {
+      centerX = centerX + SKY_WIDTH;
+    } else if (centerX >= SKY_WIDTH) {
+      centerX = centerX - SKY_WIDTH;
+    }
 
     const maxDist = Math.max(...points.map(p =>
       Math.sqrt((p.x - centerX) ** 2 + (p.y - centerY) ** 2)
@@ -244,13 +244,28 @@ async function main() {
     const avgDec = points.reduce((sum, p) => sum + p.dec, 0) / points.length;
     const observatory = getObservatory(avgDec);
 
-    // Create star entries
-    const stars = points.map((p, i) => ({
-      id: `${finalId}-${i}`,
-      x: p.x,
-      y: p.y,
-      brightness: 0.8 + Math.random() * 0.2, // Random brightness 0.8-1.0
-    }));
+    // Create star entries (normalize X coordinates to 0-SKY_WIDTH range)
+    const stars = points.map((p, i) => {
+      let x = p.x;
+      if (x < 0) {
+        x = x + SKY_WIDTH;
+      } else if (x >= SKY_WIDTH) {
+        x = x - SKY_WIDTH;
+      }
+
+      return {
+        id: `${finalId}-${i}`,
+        x,
+        y: p.y,
+        brightness: 0.8 + Math.random() * 0.2, // Random brightness 0.8-1.0
+      };
+    });
+
+    // Lookup set ID
+    // Use the 3-letter code (lowercase) to check against our set mapping
+    // Handle cases like "Ser-1" -> "ser"
+    const lookupCode = code.toLowerCase();
+    const setId = CONSTELLATION_TO_SET[lookupCode];
 
     constellations.push({
       id: finalId,
@@ -264,6 +279,7 @@ async function main() {
       observatory,
       stars,
       connections,
+      set: setId,
     });
   }
 

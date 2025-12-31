@@ -60,8 +60,8 @@ describe('Telescope', () => {
     test('calculates radius as 42.5% of smaller dimension', () => {
       const radius = telescope.getRadius();
 
-      // 1080 is smaller, so: 1080 * 0.425 = 459
-      expect(radius).toBe(1080 * 0.425);
+      // 1080 is smaller, so: 1080 * 0.36 = 388.8
+      expect(radius).toBe(1080 * 0.36);
     });
 
     test('uses height when height is smaller', () => {
@@ -72,7 +72,7 @@ describe('Telescope', () => {
       const newTelescope = new Telescope(mockElement);
       const radius = newTelescope.getRadius();
 
-      expect(radius).toBe(800 * 0.425);
+      expect(radius).toBe(800 * 0.36);
     });
 
     test('uses width when width is smaller', () => {
@@ -82,7 +82,7 @@ describe('Telescope', () => {
       const newTelescope = new Telescope(mockElement);
       const radius = newTelescope.getRadius();
 
-      expect(radius).toBe(600 * 0.425);
+      expect(radius).toBe(600 * 0.36);
     });
   });
 

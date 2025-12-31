@@ -14,7 +14,9 @@ export class Telescope {
   private targetOffsetY: number = 0;
 
   // Lag/drift parameters for smooth parallax
-  private readonly lagFactor = 0.06;  // Lower = more lag/drift
+  private readonly defaultLagFactor = 0.06;  // Lower = more lag/drift
+  private currentLagFactor = 0.06;
+  private radiusMultiplier = 1.0;
 
   constructor(element: HTMLDivElement) {
     this.element = element;
@@ -34,7 +36,24 @@ export class Telescope {
     // Telescope diameter is 92% of min viewport dimension (from CSS)
     // The visual hole in the SVG is radius 310 out of 400 (77.5%)
     // Effective radius factor = 0.5 * 0.92 * 0.775 = 0.3565
-    return Math.min(window.innerWidth, window.innerHeight) * 0.36;
+    return Math.min(window.innerWidth, window.innerHeight) * 0.36 * this.radiusMultiplier;
+  }
+
+  /**
+   * Set drift/stabilizer factor (0.0 to 1.0)
+   * Higher = less lag (more stable)
+   */
+  setDriftFactor(factor: number): void {
+    // Map factor to lag range: 0.06 (default) to 0.2 (stabilized)
+    this.currentLagFactor = this.defaultLagFactor + (factor * 0.14);
+  }
+
+  /**
+   * Set radius multiplier (e.g., 1.15 for 15% larger)
+   */
+  setRadiusMultiplier(multiplier: number): void {
+    this.radiusMultiplier = multiplier;
+    this.radius = this.calculateRadius();
   }
 
   /**
@@ -46,7 +65,7 @@ export class Telescope {
     this.targetOffsetY = mouseY - window.innerHeight / 2;
 
     // Apply smooth lag/drift to create parallax feel
-    const lagAmount = 1 - Math.pow(1 - this.lagFactor, deltaTime * 60);
+    const lagAmount = 1 - Math.pow(1 - this.currentLagFactor, deltaTime * 60);
 
     const dx = this.targetOffsetX - this.currentOffsetX;
     const dy = this.targetOffsetY - this.currentOffsetY;
@@ -88,5 +107,24 @@ export class Telescope {
    */
   getRadius(): number {
     return this.radius;
+  }
+
+  // Magnification
+  private magnification: number = 1.0;
+
+  setMagnification(level: number): void {
+    this.magnification = level;
+  }
+
+  getMagnification(): number {
+    return this.magnification;
+  }
+
+  /**
+   * Get the effective radius in world coordinates based on current zoom
+   * When zoomed OUT (mag < 1), we see MORE world, so radius is LARGER.
+   */
+  getInWorldRadius(): number {
+    return this.radius / this.magnification;
   }
 }
