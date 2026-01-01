@@ -1,86 +1,72 @@
-# Seeing Stars 🔭✨
+# Seeing Stars
 
-An atmospheric browser-based exploration game where you peer through an antique telescope to discover constellations in a vast night sky.
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)
+![Bun](https://img.shields.io/badge/Bun-000?logo=bun&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-green)
+[![Deploy](https://img.shields.io/badge/Play%20Now-Vercel-black?logo=vercel)](https://first-light.vercel.app)
+
+*A meditative journey through the celestial sphere*
+
+Step into the shoes of a 19th-century astronomer. Peer through the brass eyepiece of an antique telescope, sweep across the endless night sky, and chart the heavens one constellation at a time.
+
+## The Experience
+
+Guide your telescope across a vast star field spanning both hemispheres. When starlight catches your lens just right, hold steady—watch as ancient patterns reveal themselves, lines tracing between stars to the sound of crystalline chimes. Log each discovery in your field notes and unlock the tools of a master observer.
 
 ## Features
 
-- **Telescope Viewport**: A magnified circular view that follows your cursor with realistic drift/lag
-- **Constellation Discovery**: Hover over celestial patterns to reveal and collect them
-- **Animated Reveals**: Watch as constellation lines trace between stars with sound effects
-- **Discoveries Collection**: A Pokédex-style panel to track your found constellations
-- **Atmospheric Audio**: Ambient soundscape with discovery chimes
+**Discovery**
+- 88 constellations from the IAU catalog, organized into thematic sets
+- Deep sky objects: nebulae, star clusters, and distant galaxies
+- Pattern-matching challenges after each find
 
-## Getting Started
+**The Telescope**
+- Three interchangeable lenses: Standard, Wide Field, and Deep Field
+- Realistic drift and momentum as you pan across the sky
+- Circular viewport with authentic vignette and chromatic aberration
 
-### Prerequisites
+**Progression**
+- Complete constellation sets to unlock telescope upgrades
+- Switch between Northern and Southern observatories
+- Track your discoveries in a leather-bound field journal
 
-- [Bun](https://bun.sh) runtime installed
-
-### Installation
-
-```bash
-# Install dependencies
-bun install
-
-# Start development (builds and watches for changes + serves)
-bun run dev
-# In another terminal:
-bun run serve
-
-# Or build and run in one command:
-bun run start
-```
-
-Then open http://localhost:3000 in your browser.
+**Atmosphere**
+- Victorian observatory aesthetic with brass fixtures and aged parchment
+- Procedural ambient soundscape—no audio files, all synthesized
+- Animated reveals as constellation lines trace between stars
 
 ## How to Play
 
-1. Move your cursor to control the telescope
-2. Explore the night sky by sweeping the telescope around
-3. When you hover over a hidden constellation, you'll see stars begin to pulse
-4. Keep the telescope over the constellation to discover it
-5. Watch the beautiful reveal animation as paths trace between stars
-6. Collect all 6 constellations!
+1. Move your cursor to guide the telescope
+2. Explore—stars will pulse when you're near something undiscovered
+3. Hold steady over a constellation until the discovery triggers
+4. Watch the reveal animation and complete the pattern challenge
+5. Check your Field Notes to track progress
 
-## Tech Stack
+## Controls
 
-- **Runtime**: Bun
-- **Language**: TypeScript
-- **Rendering**: HTML5 Canvas
-- **Audio**: Web Audio API (procedural sound generation)
-- **Styling**: Vanilla CSS with custom properties
+| Input | Action |
+|-------|--------|
+| Mouse | Pan telescope |
+| 1 / 2 / 3 | Switch lens |
+| ← / → | Change observatory |
+| Tab | Toggle field notes |
 
-## Project Structure
+## Getting Started
 
-```
-seeing-stars/
-├── src/
-│   ├── main.ts              # Entry point
-│   ├── game/
-│   │   ├── Game.ts          # Main game loop & state
-│   │   ├── Telescope.ts     # Telescope viewport
-│   │   ├── StarField.ts     # Star rendering
-│   │   └── Constellation.ts # Constellation logic
-│   ├── ui/
-│   │   └── DiscoveriesTab.ts
-│   ├── audio/
-│   │   └── AudioManager.ts
-│   └── data/
-│       └── constellations.ts
-├── public/
-│   ├── index.html
-│   └── styles.css
-└── package.json
+Requires [Bun](https://bun.sh).
+
+```bash
+bun install
+bun run dev     # Watch for changes
+bun run serve   # Start dev server at localhost:3000
 ```
 
-## Constellations to Discover
+## Tech
 
-- 🏹 **Orion** - The Hunter
-- 🐻 **Ursa Major** - The Great Bear  
-- 👑 **Cassiopeia** - The Queen
-- 🦢 **Cygnus** - The Swan
-- 🎵 **Lyra** - The Lyre
-- 🦂 **Scorpius** - The Scorpion
+- TypeScript + HTML5 Canvas
+- Web Audio API (procedural synthesis)
+- Bun runtime
 
 ## License
 
