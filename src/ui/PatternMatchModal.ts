@@ -103,7 +103,7 @@ export class PatternMatchModal {
             <span class="countdown-text"></span>
           </div>
 
-          <canvas width="600" height="400"></canvas>
+          <canvas width="600" height="300"></canvas>
 
           <div class="progress-container hidden">
             <div class="progress-text"></div>

@@ -1806,7 +1806,7 @@ h1 {
 /* Canvas - Embedded Observation Window */
 .pattern-match-modal canvas {
   width: 600px;
-  height: 400px;
+  height: 300px;
   background:
     radial-gradient(
       ellipse at center,
@@ -1940,16 +1940,7 @@ h1 {
 .phase-study .modal-title {
   font-size: 32px;
   font-weight: 600;
-  background: linear-gradient(
-    135deg,
-    #8B6914 0%,
-    #B8860B 40%,
-    #D4A84B 60%,
-    #8B6914 100%
-  );
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #3A2817;
   position: relative;
   padding-bottom: 8px;
 }
@@ -1965,17 +1956,17 @@ h1 {
   background: linear-gradient(
     to right,
     transparent 0%,
-    rgba(184, 134, 11, 0.6) 20%,
-    rgba(212, 168, 75, 0.8) 50%,
-    rgba(184, 134, 11, 0.6) 80%,
+    rgba(58, 40, 23, 0.4) 20%,
+    rgba(58, 40, 23, 0.6) 50%,
+    rgba(58, 40, 23, 0.4) 80%,
     transparent 100%
   );
-  box-shadow: 0 1px 3px rgba(184, 134, 11, 0.4);
+  box-shadow: 0 1px 3px rgba(58, 40, 23, 0.3);
 }
 
 .phase-study .modal-instruction {
   font-style: italic;
-  color: #6B5410;
+  color: #5A4030;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
@@ -2231,4 +2222,763 @@ h1 {
   h1 {
     font-size: 2.5rem;
   }
+}
+
+
+/* ========================================
+   DSO DISCOVERY MODALS
+   Deep Sky Object Minigames
+   Victorian Field Journal Aesthetic
+   ======================================== */
+
+/* Base DSO Modal - Inherits pattern-match-modal structure */
+.dso-modal {
+  position: relative;
+  max-width: 720px;
+  max-height: 90vh;  /* Constrain to viewport height */
+  padding: 24px;
+  overflow-y: auto;  /* Enable scrolling for long content */
+  background:
+    /* Subtle paper texture noise */
+    repeating-linear-gradient(
+      0deg,
+      rgba(74, 55, 40, 0.02) 0px,
+      transparent 1px,
+      transparent 2px,
+      rgba(74, 55, 40, 0.02) 3px
+    ),
+    /* Aged parchment gradient */
+    radial-gradient(
+      ellipse at 30% 20%,
+      rgba(244, 236, 216, 1) 0%,
+      rgba(238, 226, 202, 1) 50%,
+      rgba(232, 218, 188, 1) 100%
+    );
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    0 0 80px rgba(184, 134, 11, 0.15);
+  border-radius: 2px;
+  filter: drop-shadow(0 4px 20px rgba(74, 55, 40, 0.3));
+}
+
+/* Parchment edge wear */
+.dso-modal::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 5% 5%, rgba(139, 109, 71, 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 95% 5%, rgba(139, 109, 71, 0.06) 0%, transparent 40%),
+    radial-gradient(circle at 5% 95%, rgba(139, 109, 71, 0.07) 0%, transparent 40%),
+    radial-gradient(circle at 95% 95%, rgba(139, 109, 71, 0.09) 0%, transparent 40%);
+  pointer-events: none;
+  border-radius: 2px;
+  opacity: 0.6;
+}
+
+/* Dark sky background for DSO modal canvases */
+.dso-modal canvas {
+  background:
+    radial-gradient(
+      ellipse at center,
+      rgba(10, 15, 35, 1) 0%,
+      rgba(5, 8, 20, 1) 100%
+    );
+  border-radius: 4px;
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.6),
+    inset 0 0 40px rgba(0, 0, 0, 0.8);
+}
+
+/* Phase-based canvas visibility - ONLY for DSO modals */
+.dso-modal .phase-study canvas {
+  display: block;
+}
+
+.dso-modal .phase-challenge > canvas {
+  display: none;
+}
+
+
+/* ========================================
+   NEBULA & GALAXY FEATURE CHALLENGES
+   True/False Feature Identification
+   ======================================== */
+
+.nebula-feature-challenge,
+.galaxy-structure-challenge {
+  width: 100%;
+  max-width: 600px;
+}
+
+.challenge-subheading {
+  font-family: 'Crimson Pro', serif;
+  font-size: 15px;
+  font-weight: 500;
+  color: #5C4A3A;
+  text-align: center;
+  margin: 0 0 20px 0;
+  letter-spacing: 0.4px;
+  font-style: italic;
+}
+
+/* Challenge Section Container (for Galaxy modal) */
+.challenge-section {
+  margin-bottom: 28px;
+}
+
+.section-header {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: #3A2817;
+  text-align: center;
+  margin: 0 0 12px 0;
+  letter-spacing: 0.5px;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
+  border-bottom: 1px solid rgba(139, 109, 71, 0.25);
+  padding-bottom: 8px;
+}
+
+.section-question {
+  font-family: 'Crimson Pro', serif;
+  font-size: 15px;
+  font-weight: 400;
+  color: #5C4A3A;
+  text-align: center;
+  margin: 0 0 16px 0;
+  font-style: italic;
+}
+
+
+/* ========================================
+   FEATURE CHECKLIST - Hand-inked Observations
+   ======================================== */
+
+.feature-checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 16px;
+  background:
+    /* Fine linen texture */
+    repeating-linear-gradient(
+      90deg,
+      rgba(139, 109, 71, 0.015) 0px,
+      transparent 1px,
+      transparent 2px
+    ),
+    linear-gradient(
+      to bottom,
+      rgba(255, 250, 240, 0.6) 0%,
+      rgba(250, 245, 235, 0.4) 100%
+    );
+  border: 1px solid rgba(139, 109, 71, 0.2);
+  border-radius: 3px;
+  box-shadow:
+    0 1px 3px rgba(74, 55, 40, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  transition: all var(--ease-gentle) 200ms;
+}
+
+.feature-item:hover {
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(139, 109, 71, 0.02) 0px,
+      transparent 1px,
+      transparent 2px
+    ),
+    linear-gradient(
+      to bottom,
+      rgba(255, 252, 245, 0.8) 0%,
+      rgba(252, 248, 240, 0.6) 100%
+    );
+  border-color: rgba(184, 134, 11, 0.3);
+  transform: translateX(2px);
+}
+
+.feature-text {
+  flex: 1;
+  font-family: 'Crimson Pro', serif;
+  font-size: 15px;
+  font-weight: 400;
+  color: #3A2817;
+  line-height: 1.5;
+  letter-spacing: 0.2px;
+}
+
+
+/* ========================================
+   TOGGLE BUTTONS - Brass Slide Switches
+   ======================================== */
+
+.toggle-group {
+  display: flex;
+  gap: 6px;
+  background: rgba(74, 55, 40, 0.08);
+  padding: 3px;
+  border-radius: 4px;
+  box-shadow: inset 0 1px 3px rgba(74, 55, 40, 0.2);
+}
+
+.toggle-btn {
+  padding: 6px 14px;
+  font-family: 'Crimson Pro', serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: #6B5A45;
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(245, 239, 224, 1) 0%,
+      rgba(235, 227, 210, 1) 100%
+    );
+  border: 1px solid rgba(139, 109, 71, 0.3);
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all var(--ease-snappy) 150ms;
+  box-shadow:
+    0 1px 2px rgba(74, 55, 40, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  position: relative;
+  overflow: hidden;
+}
+
+.toggle-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.2) 0%,
+    transparent 50%
+  );
+  opacity: 0;
+  transition: opacity var(--ease-gentle) 200ms;
+}
+
+.toggle-btn:hover::before {
+  opacity: 1;
+}
+
+.toggle-btn:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    0 2px 4px rgba(74, 55, 40, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  border-color: rgba(184, 134, 11, 0.4);
+}
+
+.toggle-btn:active {
+  transform: translateY(0);
+  box-shadow:
+    0 1px 2px rgba(74, 55, 40, 0.2),
+    inset 0 1px 3px rgba(74, 55, 40, 0.15);
+}
+
+/* Selected State - Brass Engagement */
+.toggle-btn.selected {
+  background:
+    /* Polished brass gradient */
+    linear-gradient(
+      135deg,
+      #D4A84B 0%,
+      #B8860B 50%,
+      #8B6914 100%
+    );
+  color: #2A1F0F;
+  border-color: #8B6914;
+  box-shadow:
+    0 2px 6px rgba(139, 105, 20, 0.4),
+    inset 0 1px 0 rgba(255, 237, 160, 0.6),
+    inset 0 -1px 2px rgba(74, 55, 40, 0.3);
+  font-weight: 700;
+  text-shadow: 0 1px 0 rgba(255, 237, 160, 0.4);
+}
+
+.toggle-btn.selected::before {
+  background: radial-gradient(
+    circle at 30% 30%,
+    rgba(255, 237, 160, 0.3) 0%,
+    transparent 60%
+  );
+  opacity: 1;
+}
+
+.toggle-btn.selected:hover {
+  background:
+    linear-gradient(
+      135deg,
+      #DDB456 0%,
+      #C59520 50%,
+      #9A7520 100%
+    );
+  box-shadow:
+    0 3px 8px rgba(139, 105, 20, 0.5),
+    inset 0 1px 0 rgba(255, 237, 160, 0.7),
+    inset 0 -1px 2px rgba(74, 55, 40, 0.4);
+}
+
+
+/* ========================================
+   GALAXY TYPE SELECTION - Morphological Classification
+   ======================================== */
+
+.type-section {
+  margin-bottom: 24px;
+}
+
+.type-options {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.type-btn {
+  padding: 10px 20px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  color: #4A3828;
+  background:
+    /* Aged paper */
+    linear-gradient(
+      to bottom,
+      rgba(250, 245, 235, 1) 0%,
+      rgba(242, 235, 220, 1) 100%
+    );
+  border: 2px solid rgba(139, 109, 71, 0.3);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all var(--ease-gentle) 200ms;
+  box-shadow:
+    0 2px 4px rgba(74, 55, 40, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  position: relative;
+  min-width: 120px;
+}
+
+.type-btn:hover {
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(255, 250, 240, 1) 0%,
+      rgba(248, 242, 228, 1) 100%
+    );
+  border-color: rgba(184, 134, 11, 0.5);
+  transform: translateY(-2px);
+  box-shadow:
+    0 4px 8px rgba(74, 55, 40, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+.type-btn:active {
+  transform: translateY(0);
+}
+
+/* Selected Type - Brass Highlight */
+.type-btn.selected {
+  background:
+    /* Rich brass */
+    linear-gradient(
+      135deg,
+      #D4A84B 0%,
+      #C29520 30%,
+      #B8860B 60%,
+      #8B6914 100%
+    );
+  color: #1F1609;
+  border-color: #6B5410;
+  border-width: 3px;
+  box-shadow:
+    0 3px 10px rgba(139, 105, 20, 0.5),
+    inset 0 2px 0 rgba(255, 237, 160, 0.5),
+    inset 0 -2px 4px rgba(74, 55, 40, 0.4);
+  font-weight: 600;
+  text-shadow: 0 1px 1px rgba(255, 237, 160, 0.5);
+  transform: translateY(-2px) scale(1.03);
+}
+
+.type-btn.selected:hover {
+  background:
+    linear-gradient(
+      135deg,
+      #DDB456 0%,
+      #CDA030 30%,
+      #C59520 60%,
+      #9A7520 100%
+    );
+  box-shadow:
+    0 4px 12px rgba(139, 105, 20, 0.6),
+    inset 0 2px 0 rgba(255, 237, 160, 0.6),
+    inset 0 -2px 4px rgba(74, 55, 40, 0.5);
+}
+
+
+/* ========================================
+   CLUSTER MATCHING CHALLENGE
+   Visual Identification Grid
+   ======================================== */
+
+.cluster-match-challenge {
+  width: 100%;
+  max-width: 600px;
+}
+
+.cluster-options {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.cluster-option {
+  aspect-ratio: 1;
+  background:
+    /* Dark sky background for cluster preview */
+    radial-gradient(
+      ellipse at 50% 50%,
+      rgba(10, 15, 30, 1) 0%,
+      rgba(5, 8, 20, 1) 100%
+    );
+  border: 3px solid var(--brass-primary);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all var(--ease-gentle) 250ms;
+  position: relative;
+  overflow: hidden;
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.5),
+    inset 0 0 20px rgba(0, 0, 0, 0.6),
+    inset 0 2px 0 rgba(255, 237, 160, 0.1);
+}
+
+/* Brass frame decorative corners */
+.cluster-option::before {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border: 1px solid rgba(184, 134, 11, 0.3);
+  border-radius: 2px;
+  pointer-events: none;
+  opacity: 0.6;
+  transition: opacity var(--ease-gentle) 250ms;
+}
+
+.cluster-option canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.cluster-option:hover {
+  border-color: var(--brass-light);
+  transform: scale(1.05);
+  box-shadow:
+    0 6px 20px rgba(184, 134, 11, 0.4),
+    inset 0 0 20px rgba(0, 0, 0, 0.6),
+    inset 0 2px 0 rgba(255, 237, 160, 0.2),
+    0 0 30px rgba(184, 134, 11, 0.2);
+}
+
+.cluster-option:hover::before {
+  opacity: 1;
+  border-color: rgba(212, 168, 75, 0.6);
+}
+
+/* Correct Selection - Golden Glow */
+.cluster-option.correct {
+  border-color: #FFD700;
+  border-width: 4px;
+  animation: correctPulse 600ms var(--ease-gentle);
+  box-shadow:
+    0 0 30px rgba(255, 215, 0, 0.8),
+    0 0 60px rgba(255, 215, 0, 0.4),
+    inset 0 0 20px rgba(255, 215, 0, 0.2);
+  pointer-events: none;
+}
+
+@keyframes correctPulse {
+  0% {
+    transform: scale(1);
+    box-shadow:
+      0 0 20px rgba(255, 215, 0, 0.6),
+      0 0 40px rgba(255, 215, 0, 0.3);
+  }
+  50% {
+    transform: scale(1.08);
+    box-shadow:
+      0 0 40px rgba(255, 215, 0, 1),
+      0 0 80px rgba(255, 215, 0, 0.6),
+      inset 0 0 30px rgba(255, 215, 0, 0.3);
+  }
+  100% {
+    transform: scale(1.05);
+    box-shadow:
+      0 0 30px rgba(255, 215, 0, 0.8),
+      0 0 60px rgba(255, 215, 0, 0.4),
+      inset 0 0 20px rgba(255, 215, 0, 0.2);
+  }
+}
+
+/* Incorrect Selection - Red Flash */
+.cluster-option.incorrect {
+  border-color: #C84030;
+  animation: incorrectShake 400ms var(--ease-snappy);
+  box-shadow:
+    0 0 20px rgba(200, 64, 48, 0.6),
+    inset 0 0 15px rgba(200, 64, 48, 0.2);
+}
+
+@keyframes incorrectShake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-6px);
+  }
+  75% {
+    transform: translateX(6px);
+  }
+}
+
+
+/* ========================================
+   SUBMIT BUTTON - Brass Observatory Lever
+   ======================================== */
+
+.submit-btn {
+  margin-top: 24px;
+  padding: 12px 32px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: #1F1609;
+  background:
+    /* Polished brass gradient */
+    linear-gradient(
+      135deg,
+      #D4A84B 0%,
+      #C29520 25%,
+      #B8860B 50%,
+      #8B6914 75%,
+      #6B5410 100%
+    );
+  border: 3px solid #6B5410;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all var(--ease-gentle) 250ms;
+  box-shadow:
+    0 4px 12px rgba(107, 84, 16, 0.5),
+    inset 0 2px 0 rgba(255, 237, 160, 0.6),
+    inset 0 -3px 8px rgba(74, 55, 40, 0.4);
+  position: relative;
+  overflow: hidden;
+  text-shadow: 0 1px 2px rgba(255, 237, 160, 0.5);
+}
+
+/* Brass shine effect */
+.submit-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 237, 160, 0.3) 0%,
+      transparent 40%,
+      transparent 60%,
+      rgba(255, 237, 160, 0.2) 100%
+    );
+  pointer-events: none;
+}
+
+/* Engraved detail */
+.submit-btn::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(74, 55, 40, 0.4) 50%,
+    transparent 100%
+  );
+}
+
+.submit-btn:hover {
+  background:
+    linear-gradient(
+      135deg,
+      #DDB456 0%,
+      #CDA030 25%,
+      #C59520 50%,
+      #9A7520 75%,
+      #7A5F18 100%
+    );
+  transform: translateY(-2px);
+  box-shadow:
+    0 6px 16px rgba(107, 84, 16, 0.6),
+    inset 0 2px 0 rgba(255, 237, 160, 0.7),
+    inset 0 -3px 8px rgba(74, 55, 40, 0.5),
+    0 0 20px rgba(212, 168, 75, 0.3);
+}
+
+.submit-btn:active {
+  transform: translateY(0);
+  box-shadow:
+    0 2px 6px rgba(107, 84, 16, 0.5),
+    inset 0 1px 0 rgba(255, 237, 160, 0.5),
+    inset 0 2px 8px rgba(74, 55, 40, 0.5);
+}
+
+
+/* ========================================
+   VALIDATION FEEDBACK - Ink Blot Flash
+   ======================================== */
+
+.unanswered-flash {
+  animation: unansweredPulse 400ms var(--ease-snappy) 2;
+}
+
+.incorrect-flash {
+  animation: incorrectPulse 800ms var(--ease-snappy) 1;
+}
+
+/* Specific incorrect state for feature items - red border + shake like cluster */
+.feature-item.incorrect-flash {
+  border-color: #C84030;
+  animation: incorrectShake 400ms var(--ease-snappy);
+  box-shadow:
+    0 0 12px rgba(200, 64, 48, 0.4),
+    inset 0 0 8px rgba(200, 64, 48, 0.15);
+}
+
+/* Galaxy type section incorrect state */
+.type-section.incorrect-flash .type-btn.selected {
+  border-color: #C84030;
+  animation: incorrectShake 400ms var(--ease-snappy);
+  box-shadow:
+    0 0 12px rgba(200, 64, 48, 0.4),
+    inset 0 0 8px rgba(200, 64, 48, 0.15);
+}
+
+@keyframes unansweredPulse {
+  0%, 100% {
+    background:
+      repeating-linear-gradient(
+        90deg,
+        rgba(139, 109, 71, 0.015) 0px,
+        transparent 1px,
+        transparent 2px
+      ),
+      linear-gradient(
+        to bottom,
+        rgba(255, 250, 240, 0.6) 0%,
+        rgba(250, 245, 235, 0.4) 100%
+      );
+    border-color: rgba(139, 109, 71, 0.2);
+  }
+  50% {
+    background:
+      repeating-linear-gradient(
+        90deg,
+        rgba(200, 64, 48, 0.08) 0px,
+        transparent 1px,
+        transparent 2px
+      ),
+      linear-gradient(
+        to bottom,
+        rgba(255, 235, 230, 0.8) 0%,
+        rgba(255, 240, 235, 0.6) 100%
+      );
+    border-color: rgba(200, 64, 48, 0.5);
+    box-shadow:
+      0 0 12px rgba(200, 64, 48, 0.3),
+      inset 0 0 8px rgba(200, 64, 48, 0.15);
+  }
+}
+
+@keyframes incorrectPulse {
+  0%, 100% {
+    background:
+      repeating-linear-gradient(
+        90deg,
+        rgba(139, 109, 71, 0.015) 0px,
+        transparent 1px,
+        transparent 2px
+      ),
+      linear-gradient(
+        to bottom,
+        rgba(255, 250, 240, 0.6) 0%,
+        rgba(250, 245, 235, 0.4) 100%
+      );
+    border-color: rgba(139, 109, 71, 0.2);
+  }
+  50% {
+    background:
+      repeating-linear-gradient(
+        90deg,
+        rgba(200, 64, 48, 0.12) 0px,
+        transparent 1px,
+        transparent 2px
+      ),
+      linear-gradient(
+        to bottom,
+        rgba(255, 220, 215, 0.9) 0%,
+        rgba(255, 230, 225, 0.7) 100%
+      );
+    border-color: rgba(200, 64, 48, 0.6);
+    box-shadow:
+      0 0 16px rgba(200, 64, 48, 0.4),
+      inset 0 0 10px rgba(200, 64, 48, 0.2);
+  }
+}
+
+/* Error message styling for quiz feedback */
+.challenge-instruction.error-message {
+  color: rgba(200, 64, 48, 0.9);
+  font-weight: 600;
+  animation: errorPulse 400ms ease-out 2;
+}
+
+@keyframes errorPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+/* Insufficient content states */
+.insufficient-clusters,
+.no-features {
+  font-family: 'Crimson Pro', serif;
+  font-size: 16px;
+  font-style: italic;
+  color: #6B5A45;
+  text-align: center;
+  padding: 40px 20px;
+  opacity: 0.7;
 }

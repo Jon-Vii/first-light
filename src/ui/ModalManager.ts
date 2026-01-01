@@ -45,8 +45,11 @@ export class ModalManager {
     });
   }
 
-  hide(): void {
-    if (!this.activeModal) return;
+  hide(onComplete?: () => void): void {
+    if (!this.activeModal) {
+      onComplete?.();
+      return;
+    }
 
     // Fade out
     this.backdrop.classList.remove('active');
@@ -61,6 +64,7 @@ export class ModalManager {
         this.activeModal = null;
       }
       this.backdrop.classList.add('hidden');
+      onComplete?.();
     }, 300); // Match CSS transition duration
   }
 

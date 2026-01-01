@@ -229,6 +229,47 @@ export class AudioManager {
   }
 
   /**
+   * Play a gentle chime for completing the pattern matching challenge.
+   * Lighter than cosmic flash - celebrates player skill, not discovery.
+   * Uses a major triad arpeggio (C5 → E5 → G5 → C6) for a clear, uplifting tone.
+   */
+  playPatternCompletionChime(): void {
+    if (!this.ensureInitialized() || !this.audioContext || !this.masterGain) {
+      return;
+    }
+
+    const currentTime = this.audioContext.currentTime;
+
+    // Create oscillators for a major triad arpeggio (C5 → E5 → G5 → C6)
+    const frequencies = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+    const baseVolume = 0.15;
+
+    frequencies.forEach((freq, index) => {
+      const osc = this.audioContext!.createOscillator();
+      const gainNode = this.audioContext!.createGain();
+
+      // Sine wave for pure, bell-like tone
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+
+      // Stagger the notes in quick succession (50ms apart)
+      const startTime = currentTime + (index * 0.05);
+      const endTime = startTime + 0.8;
+
+      // Bell envelope: quick attack, gentle decay
+      gainNode.gain.setValueAtTime(0, startTime);
+      gainNode.gain.linearRampToValueAtTime(baseVolume, startTime + 0.02);
+      gainNode.gain.exponentialRampToValueAtTime(0.001, endTime);
+
+      osc.connect(gainNode);
+      gainNode.connect(this.masterGain!);
+
+      osc.start(startTime);
+      osc.stop(endTime);
+    });
+  }
+
+  /**
    * Play a single star connection sound - rich bell-like chime
    * Uses pentatonic scale, layered oscillators with detuning
    */

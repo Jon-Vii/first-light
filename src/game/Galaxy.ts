@@ -20,6 +20,7 @@ export class Galaxy implements CelestialObject {
   private animationTime: number = 0;
   private readonly animationDuration = 5.0; // Slightly longer than nebulae for distant feel
   private bloomProgress: number = 0;
+  private onAnimationComplete: (() => void) | null = null;
 
   // Procedural effects
   private timeOffset: number;
@@ -58,6 +59,11 @@ export class Galaxy implements CelestialObject {
       if (this.animationTime >= this.animationDuration) {
         this.isAnimating = false;
         this.bloomProgress = 1;
+        // Trigger completion callback
+        if (this.onAnimationComplete) {
+          this.onAnimationComplete();
+          this.onAnimationComplete = null;
+        }
       }
     } else if (this.isDiscovered) {
       this.bloomProgress = 1;
@@ -88,6 +94,13 @@ export class Galaxy implements CelestialObject {
     this.isAnimating = true;
     this.animationTime = 0;
     this.bloomProgress = 0;
+  }
+
+  /**
+   * Set callback for when animation completes
+   */
+  setOnAnimationComplete(callback: () => void): void {
+    this.onAnimationComplete = callback;
   }
 
   render(

@@ -400,6 +400,77 @@ export class Constellation implements CelestialObject {
       ? this.revealedConnections
       : this.data.connections.length;
 
+    /**
+     * Check if a line between two points crosses the wrap boundary
+     * and should be drawn as two segments instead.
+     */
+    const shouldWrapLine = (x1: number, x2: number): boolean => {
+      const skyWidth = 6000;
+      const distance = Math.abs(x2 - x1);
+      return distance > skyWidth / 2;
+    };
+
+    /**
+     * Draw a line that may wrap around the sky boundary
+     */
+    const drawWrappedLine = (
+      x1Coord: number, y1Coord: number,
+      x2Coord: number, y2Coord: number,
+      viewXCoord: number,
+      canvasWidthParam: number,
+      alpha: number
+    ): void => {
+      const skyWidth = 6000;
+
+      // Calculate screen positions
+      const screenX1 = x1Coord - viewXCoord + canvasWidthParam / 2;
+      const screenY1 = y1Coord;
+      const screenX2 = x2Coord - viewXCoord + canvasWidthParam / 2;
+      const screenY2 = y2Coord;
+
+      // Check if line crosses wrap boundary
+      if (shouldWrapLine(x1Coord, x2Coord)) {
+        // Draw two segments: one on each side of the screen
+        // This prevents the line from stretching across the entire canvas
+
+        // Determine which star is on the left vs right
+        const leftX = x1Coord < x2Coord ? x1Coord : x2Coord;
+        const rightX = x1Coord < x2Coord ? x2Coord : x1Coord;
+        const leftY = x1Coord < x2Coord ? y1Coord : y2Coord;
+        const rightY = x1Coord < x2Coord ? y2Coord : y1Coord;
+
+        // Calculate screen positions of original stars
+        const leftScreenX = leftX - viewXCoord + canvasWidthParam / 2;
+        const rightScreenX = rightX - viewXCoord + canvasWidthParam / 2;
+
+        // Wrapped position of right star on left side
+        const wrappedRightX = rightX - skyWidth;
+        const wrappedScreenX = wrappedRightX - viewXCoord + canvasWidthParam / 2;
+
+        // Wrapped position of left star on right side
+        const wrappedLeftX = leftX + skyWidth;
+        const wrappedLeftScreenX = wrappedLeftX - viewXCoord + canvasWidthParam / 2;
+
+        // Check if either original star is visible (with generous margin for constellation radius)
+        const margin = 200; // Larger margin to account for constellation spread
+        const leftStarVisible = leftScreenX >= -margin && leftScreenX <= canvasWidthParam + margin;
+        const rightStarVisible = rightScreenX >= -margin && rightScreenX <= canvasWidthParam + margin;
+
+        // If left star is visible, draw segment to wrapped right star
+        if (leftStarVisible || (wrappedScreenX >= -margin && wrappedScreenX <= canvasWidthParam + margin)) {
+          this.drawGlowingLine(ctx, leftScreenX, leftY, wrappedScreenX, rightY, alpha);
+        }
+
+        // If right star is visible, draw segment from wrapped left star
+        if (rightStarVisible || (wrappedLeftScreenX >= -margin && wrappedLeftScreenX <= canvasWidthParam + margin)) {
+          this.drawGlowingLine(ctx, wrappedLeftScreenX, leftY, rightScreenX, rightY, alpha);
+        }
+      } else {
+        // Normal line drawing (no wrap)
+        this.drawGlowingLine(ctx, screenX1, screenY1, screenX2, screenY2, alpha);
+      }
+    };
+
     // Draw fully revealed connections with glow
     for (let i = 0; i < connectionsToRender; i++) {
       const connection = this.data.connections[i];
@@ -414,12 +485,11 @@ export class Constellation implements CelestialObject {
       const pos1 = this.getScaledStarPosition(star1);
       const pos2 = this.getScaledStarPosition(star2);
 
-      const x1 = pos1.x - viewX + canvasWidth / 2;
       const y1 = pos1.y - viewY + canvasHeight / 2;
-      const x2 = pos2.x - viewX + canvasWidth / 2;
       const y2 = pos2.y - viewY + canvasHeight / 2;
 
-      this.drawGlowingLine(ctx, x1, y1, x2, y2, lineAlpha);
+      // Use wrapped line drawing to handle constellations that span the wrap boundary
+      drawWrappedLine(pos1.x, y1, pos2.x, y2, viewX, canvasWidth, lineAlpha);
     }
 
     // Draw the current connection being animated with spark head
@@ -434,22 +504,41 @@ export class Constellation implements CelestialObject {
           const pos1 = this.getScaledStarPosition(star1);
           const pos2 = this.getScaledStarPosition(star2);
 
-          const x1 = pos1.x - viewX + canvasWidth / 2;
           const y1 = pos1.y - viewY + canvasHeight / 2;
-          const x2 = pos2.x - viewX + canvasWidth / 2;
           const y2 = pos2.y - viewY + canvasHeight / 2;
 
           // Animate the line drawing with spark head
           // (Star flash is already skipped for already-lit stars in update())
           const progress = this.currentConnectionProgress;
-          const currentX = x1 + (x2 - x1) * progress;
-          const currentY = y1 + (y2 - y1) * progress;
 
-          // Draw partial glowing line
-          this.drawGlowingLine(ctx, x1, y1, currentX, currentY, lineAlpha);
+          // Calculate partial position in world coordinates for wrap-aware interpolation
+          const skyWidth = 6000;
+          let partialX = pos1.x;
+          let partialY = y1;
 
-          // Draw spark head at leading edge
-          this.drawSparkHead(ctx, currentX, currentY);
+          if (shouldWrapLine(pos1.x, pos2.x)) {
+            // For wrap-around lines, we need to interpolate differently
+            const dx = pos2.x - pos1.x;
+            if (Math.abs(dx) > skyWidth / 2) {
+              // Wrapping case - adjust the target for interpolation
+              const adjustedX2 = dx > 0 ? pos2.x - skyWidth : pos2.x + skyWidth;
+              partialX = pos1.x + (adjustedX2 - pos1.x) * progress;
+              // Normalize back to 0-6000 range
+              if (partialX < 0) partialX += skyWidth;
+              if (partialX >= skyWidth) partialX -= skyWidth;
+            }
+          } else {
+            // Normal interpolation
+            partialX = pos1.x + (pos2.x - pos1.x) * progress;
+          }
+          partialY = y1 + (y2 - y1) * progress;
+
+          // Draw partial glowing line using wrap-aware drawing
+          drawWrappedLine(pos1.x, y1, partialX, partialY, viewX, canvasWidth, lineAlpha);
+
+          // Draw spark head at leading edge (in screen coordinates)
+          const partialScreenX = partialX - viewX + canvasWidth / 2;
+          this.drawSparkHead(ctx, partialScreenX, partialY);
         }
       }
     }

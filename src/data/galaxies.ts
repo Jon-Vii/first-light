@@ -1,6 +1,12 @@
 import { type NebulaLayer } from './nebulae';
 import type { Observatory } from './types';
 
+export interface GalaxyFeature {
+  description: string;
+  isPresent: boolean;
+  category?: 'structure' | 'morphology' | 'component';
+}
+
 export interface GalaxyData {
   id: string;
   name: string;
@@ -12,6 +18,7 @@ export interface GalaxyData {
   galaxyType: 'spiral' | 'elliptical' | 'irregular';
   observatory: Observatory;
   layers: NebulaLayer[];
+  features?: GalaxyFeature[];
 }
 
 export const GALAXIES: GalaxyData[] = [
@@ -110,6 +117,14 @@ export const GALAXIES: GalaxyData[] = [
       { offsetX: -42, offsetY: -16, width: 14, height: 11, color: '#887788', opacity: 0.18, shape: 'ellipse', blendMode: 'screen' },
       { offsetX: -42, offsetY: -16, width: 9, height: 7, color: '#aa99aa', opacity: 0.24, shape: 'ellipse', blendMode: 'screen' },
       { offsetX: -42, offsetY: -16, width: 5, height: 4, color: '#ccbbaa', opacity: 0.32, shape: 'ellipse', blendMode: 'screen' }
+    ],
+    features: [
+      { description: "Has visible spiral arms", isPresent: true, category: 'structure' },
+      { description: "Shows prominent dust lanes", isPresent: true, category: 'structure' },
+      { description: "Has companion galaxies visible (M32, M110)", isPresent: true, category: 'component' },
+      { description: "Displays a large central bulge", isPresent: true, category: 'structure' },
+      { description: "Has an edge-on orientation", isPresent: false, category: 'morphology' },
+      { description: "Shows a central bar structure", isPresent: false, category: 'structure' }
     ]
   },
 
@@ -212,6 +227,14 @@ export const GALAXIES: GalaxyData[] = [
 
       // Arm distortion from tidal pull
       { offsetX: 21, offsetY: 16, width: 14, height: 11, rotation: 0.9, color: '#8899aa', opacity: 0.17, shape: 'cloud', blendMode: 'screen' }
+    ],
+    features: [
+      { description: "Has visible spiral arms", isPresent: true, category: 'structure' },
+      { description: "Shows blue star-forming regions in the arms", isPresent: true, category: 'structure' },
+      { description: "Has a companion galaxy in tidal interaction (NGC 5195)", isPresent: true, category: 'component' },
+      { description: "Displays a face-on orientation", isPresent: true, category: 'morphology' },
+      { description: "Has an edge-on orientation", isPresent: false, category: 'morphology' },
+      { description: "Shows a prominent dust lane", isPresent: false, category: 'structure' }
     ]
   },
 
@@ -297,6 +320,14 @@ export const GALAXIES: GalaxyData[] = [
       // Subtle enhancement showing slightly boxy bulge shape
       { offsetX: -8, offsetY: 0, width: 12, height: 18, rotation: 0, color: '#d4ccbb', opacity: 0.16, shape: 'ellipse', blendMode: 'screen' },
       { offsetX: 8, offsetY: 0, width: 12, height: 18, rotation: 0, color: '#d4ccbb', opacity: 0.16, shape: 'ellipse', blendMode: 'screen' }
+    ],
+    features: [
+      { description: "Has a prominent dust lane bisecting the disk", isPresent: true, category: 'structure' },
+      { description: "Shows a large central bulge", isPresent: true, category: 'structure' },
+      { description: "Has an edge-on orientation", isPresent: true, category: 'morphology' },
+      { description: "Displays a thin extended disk", isPresent: true, category: 'structure' },
+      { description: "Has visible spiral arms", isPresent: false, category: 'structure' },
+      { description: "Shows a face-on orientation", isPresent: false, category: 'morphology' }
     ]
   }
 ];

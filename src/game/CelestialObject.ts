@@ -14,7 +14,15 @@ export interface CelestialObject {
   // Updates state (called every frame)
   update(dt: number, isInView: boolean): void;
   // Renders the object
-  render(ctx: CanvasRenderingContext2D, viewportX: number, viewportY: number, canvasWidth: number, canvasHeight: number): void;
+  render(
+    ctx: CanvasRenderingContext2D,
+    viewportX: number,
+    viewportY: number,
+    canvasWidth: number,
+    canvasHeight: number,
+    scale?: number,
+    glowMultiplier?: number
+  ): void;
   // Checks if point is within interaction radius
   containsPoint(x: number, y: number): boolean;
 

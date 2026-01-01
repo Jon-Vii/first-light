@@ -20,6 +20,7 @@ export class Nebula implements CelestialObject {
   private animationTime: number = 0;
   private readonly animationDuration = 4.0;
   private bloomProgress: number = 0;
+  private onAnimationComplete: (() => void) | null = null;
 
   // Procedural noise offsets for "breathing" effect
   private timeOffset: number;
@@ -55,6 +56,11 @@ export class Nebula implements CelestialObject {
         this.isAnimating = false;
         // Ensure fully visible
         this.bloomProgress = 1;
+        // Trigger completion callback
+        if (this.onAnimationComplete) {
+          this.onAnimationComplete();
+          this.onAnimationComplete = null;
+        }
       }
     } else if (this.isDiscovered) {
       this.bloomProgress = 1;
@@ -85,6 +91,13 @@ export class Nebula implements CelestialObject {
     this.isAnimating = true;
     this.animationTime = 0;
     this.bloomProgress = 0;
+  }
+
+  /**
+   * Set callback for when animation completes
+   */
+  setOnAnimationComplete(callback: () => void): void {
+    this.onAnimationComplete = callback;
   }
 
   // ... (previous methods unchanged)

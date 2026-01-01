@@ -29,6 +29,7 @@ export class StarCluster implements CelestialObject {
   private isAnimating: boolean = false;
   private animationTime: number = 0;
   private readonly animationDuration = 2.5; // Fast, energetic discovery
+  private onAnimationComplete: (() => void) | null = null;
 
   constructor(data: ClusterData) {
     this.data = data;
@@ -104,11 +105,23 @@ export class StarCluster implements CelestialObject {
     }
   }
 
+  /**
+   * Set callback for when animation completes
+   */
+  setOnAnimationComplete(callback: () => void): void {
+    this.onAnimationComplete = callback;
+  }
+
   update(dt: number, _isInView: boolean): void {
     if (this.isAnimating) {
       this.animationTime += dt;
       if (this.animationTime >= this.animationDuration) {
         this.isAnimating = false;
+        // Trigger completion callback
+        if (this.onAnimationComplete) {
+          this.onAnimationComplete();
+          this.onAnimationComplete = null;
+        }
       }
     }
   }

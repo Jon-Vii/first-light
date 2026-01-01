@@ -13,6 +13,9 @@ import { type CelestialObject } from './CelestialObject';
 import { DiscoveriesTab } from '../ui/DiscoveriesTab';
 import { ModalManager } from '../ui/ModalManager';
 import { PatternMatchModal } from '../ui/PatternMatchModal';
+import { NebulaFeatureModal } from '../ui/NebulaFeatureModal';
+import { ClusterMatchModal } from '../ui/ClusterMatchModal';
+import { GalaxyStructureModal } from '../ui/GalaxyStructureModal';
 import { AudioManager } from '../audio/AudioManager';
 import {
   CONSTELLATIONS,
@@ -420,6 +423,9 @@ export class Game {
    * Check if player is hovering over any undiscovered object
    */
   private checkDiscovery(deltaTime: number): void {
+    // Don't process new discoveries while a modal is active
+    if (this.modalActive) return;
+
     const telescopeRadius = this.telescope.getRadius();
     const skyX = this.state.viewX;
     const skyY = this.state.viewY;
@@ -487,26 +493,33 @@ export class Game {
       });
 
       c.setOnAnimationComplete(() => {
+        // Play dramatic finish sound when animation completes
+        this.audioManager.playCosmicFlash();
+
         // Open pattern match modal instead of immediately logging discovery
         this.openPatternMatchModal(c);
       });
     } else if (obj instanceof Nebula) {
-      // Nebula discovery immediate
+      // Stop nebula drone and wait for bloom animation
       this.audioManager.stopNebulaDrone();
-      this.audioManager.playDiscoverySound();
-      this.showDiscoveryNotification(obj.name);
-      this.discoveriesTab.addDiscovery(obj.getData());
+      const n = obj as Nebula;
+      n.setOnAnimationComplete(() => {
+        this.openNebulaFeatureModal(n);
+      });
     } else if (obj instanceof StarCluster) {
-      // Start sparkles
+      // Play cluster sparkle and wait for reveal animation
       this.audioManager.playClusterSparkle(1.0);
-      this.showDiscoveryNotification(obj.name);
-      // StarClusters animate automatically in their update loop
-      this.discoveriesTab.addDiscovery(obj.getData());
+      const sc = obj as StarCluster;
+      sc.setOnAnimationComplete(() => {
+        this.openClusterMatchModal(sc);
+      });
     } else if (obj instanceof Galaxy) {
-      // Galaxy discovery - deep cosmic sound
-      this.audioManager.playDiscoverySound(); // Could add galaxy-specific sound later
-      this.showDiscoveryNotification(obj.name);
-      this.discoveriesTab.addDiscovery(obj.getData());
+      // Play discovery sound and wait for bloom animation
+      this.audioManager.playDiscoverySound();
+      const g = obj as Galaxy;
+      g.setOnAnimationComplete(() => {
+        this.openGalaxyStructureModal(g);
+      });
     }
   }
 
@@ -533,15 +546,92 @@ export class Game {
   private onPatternMatchComplete(constellation: Constellation): void {
     const data = constellation.getData();
 
-    // NOW we actually log the discovery
-    this.audioManager.playCosmicFlash();
+    // Play gentle completion chime for pattern matching success
+    this.audioManager.playPatternCompletionChime();
+
+    // Log the discovery
     this.discoveriesTab.addDiscovery(data);
     this.showDiscoveryNotification(data.name);
     if (data.set) this.checkSetCompletion(data.set);
 
-    // Close modal
-    this.modalActive = false;
-    this.modalManager.hide();
+    // Close modal - defer modalActive = false until after fade-out completes
+    this.modalManager.hide(() => {
+      this.modalActive = false;
+    });
+  }
+
+  /**
+   * Open nebula feature identification modal
+   */
+  private openNebulaFeatureModal(nebula: Nebula): void {
+    this.modalActive = true;
+
+    const modal = new NebulaFeatureModal(
+      nebula,
+      () => {
+        this.onDSOModalComplete(nebula);
+      },
+      this.audioManager
+    );
+
+    this.modalManager.show(modal.render());
+  }
+
+  /**
+   * Open star cluster visual matching modal
+   */
+  private openClusterMatchModal(cluster: StarCluster): void {
+    this.modalActive = true;
+
+    // Get all StarCluster instances for the quiz options
+    const allClusters = this.celestialObjects.filter(
+      (obj): obj is StarCluster => obj instanceof StarCluster
+    );
+
+    const modal = new ClusterMatchModal(
+      cluster,
+      allClusters,
+      () => {
+        this.onDSOModalComplete(cluster);
+      },
+      this.audioManager
+    );
+
+    this.modalManager.show(modal.render());
+  }
+
+  /**
+   * Open galaxy structure identification modal
+   */
+  private openGalaxyStructureModal(galaxy: Galaxy): void {
+    this.modalActive = true;
+
+    const modal = new GalaxyStructureModal(
+      galaxy,
+      () => {
+        this.onDSOModalComplete(galaxy);
+      },
+      this.audioManager
+    );
+
+    this.modalManager.show(modal.render());
+  }
+
+  /**
+   * Handle DSO modal completion (nebula, cluster, or galaxy)
+   */
+  private onDSOModalComplete(obj: CelestialObject): void {
+    // Play gentle completion chime for quiz success
+    this.audioManager.playPatternCompletionChime();
+
+    // Add to discoveries
+    this.discoveriesTab.addDiscovery(obj.getData());
+    this.showDiscoveryNotification(obj.name);
+
+    // Close modal - defer modalActive = false until after fade-out completes
+    this.modalManager.hide(() => {
+      this.modalActive = false;
+    });
   }
 
   /**

@@ -11,6 +11,12 @@ export interface NebulaLayer {
   blendMode?: GlobalCompositeOperation; // 'screen', 'source-over', 'multiply', etc.
 }
 
+export interface NebulaFeature {
+  description: string;
+  isPresent: boolean;
+  category?: 'structure' | 'color' | 'component';
+}
+
 import type { Observatory } from './types';
 
 export interface NebulaData {
@@ -23,6 +29,7 @@ export interface NebulaData {
   rotation?: number;
   observatory: Observatory;
   layers: NebulaLayer[];
+  features?: NebulaFeature[];
 }
 
 export const NEBULAE: NebulaData[] = [
@@ -163,6 +170,14 @@ export const NEBULAE: NebulaData[] = [
       // Bright ionization fronts at wing edges
       { offsetX: -10, offsetY: -18, width: 30, height: 24, rotation: -0.2, color: '#bb7788', opacity: 0.18, shape: 'cloud', blendMode: 'screen' },
       { offsetX: 50, offsetY: -8, width: 32, height: 26, rotation: 0.22, color: '#aa6677', opacity: 0.17, shape: 'cloud', blendMode: 'screen' }
+    ],
+    features: [
+      { description: "Contains dark dust lanes forming a 'Fish Mouth' shape", isPresent: true, category: 'structure' },
+      { description: "Has a bright central star cluster (Trapezium)", isPresent: true, category: 'component' },
+      { description: "Shows a companion nebula (M43)", isPresent: true, category: 'component' },
+      { description: "Displays greenish OIII emission regions", isPresent: true, category: 'color' },
+      { description: "Has a ring or shell structure", isPresent: false, category: 'structure' },
+      { description: "Shows dark pillar structures", isPresent: false, category: 'structure' }
     ]
   },
 
@@ -238,6 +253,14 @@ export const NEBULAE: NebulaData[] = [
       // Brighter knots on inner edge
       { offsetX: -10, offsetY: 0, width: 11, height: 10, rotation: 0.2, color: '#9dccbb', opacity: 0.28, shape: 'cloud', blendMode: 'screen' },
       { offsetX: 10, offsetY: -1, width: 12, height: 11, rotation: -0.3, color: '#8dbbaa', opacity: 0.27, shape: 'cloud', blendMode: 'screen' }
+    ],
+    features: [
+      { description: "Has a ring or shell structure", isPresent: true, category: 'structure' },
+      { description: "Shows a central white dwarf star", isPresent: true, category: 'component' },
+      { description: "Displays blue-green OIII emission in the inner ring", isPresent: true, category: 'color' },
+      { description: "Shows a red outer shell from H-alpha emission", isPresent: true, category: 'color' },
+      { description: "Contains dark pillar structures", isPresent: false, category: 'structure' },
+      { description: "Has a central pulsar", isPresent: false, category: 'component' }
     ]
   },
 
@@ -323,6 +346,14 @@ export const NEBULAE: NebulaData[] = [
       { offsetX: -20, offsetY: -10, width: 12, height: 10, rotation: 0.4, color: '#ee9977', opacity: 0.28, shape: 'cloud', blendMode: 'screen' },
       { offsetX: 18, offsetY: 12, width: 11, height: 9, rotation: -0.5, color: '#dd8866', opacity: 0.26, shape: 'cloud', blendMode: 'screen' },
       { offsetX: -8, offsetY: 14, width: 10, height: 8, rotation: 0.7, color: '#cc7755', opacity: 0.24, shape: 'cloud', blendMode: 'screen' }
+    ],
+    features: [
+      { description: "Shows filamentary structure throughout", isPresent: true, category: 'structure' },
+      { description: "Has a central pulsar", isPresent: true, category: 'component' },
+      { description: "Displays an irregular, chaotic shape", isPresent: true, category: 'structure' },
+      { description: "Shows orange-red emission", isPresent: true, category: 'color' },
+      { description: "Has a ring or shell structure", isPresent: false, category: 'structure' },
+      { description: "Contains a companion nebula", isPresent: false, category: 'component' }
     ]
   },
 
@@ -410,6 +441,14 @@ export const NEBULAE: NebulaData[] = [
       // Fainter wisps
       { offsetX: -18, offsetY: -54, width: 28, height: 24, rotation: -0.15, color: '#885566', opacity: 0.18, shape: 'cloud', blendMode: 'screen' },
       { offsetX: 22, offsetY: 42, width: 32, height: 28, rotation: 0.25, color: '#774455', opacity: 0.14, shape: 'cloud', blendMode: 'screen' }
+    ],
+    features: [
+      { description: "Contains dark pillar structures (Pillars of Creation)", isPresent: true, category: 'structure' },
+      { description: "Shows bright star-forming regions at pillar tips", isPresent: true, category: 'component' },
+      { description: "Displays silhouetted dust columns", isPresent: true, category: 'structure' },
+      { description: "Shows red and green emission nebulosity", isPresent: true, category: 'color' },
+      { description: "Has a ring or shell structure", isPresent: false, category: 'structure' },
+      { description: "Shows filamentary structure", isPresent: false, category: 'structure' }
     ]
   },
 
@@ -492,6 +531,14 @@ export const NEBULAE: NebulaData[] = [
       // Fainter outer wisps extending the nebula
       { offsetX: -42, offsetY: -12, width: 48, height: 36, rotation: -0.35, color: '#663344', opacity: 0.14, shape: 'cloud', blendMode: 'screen' },
       { offsetX: 38, offsetY: 14, width: 52, height: 38, rotation: 0.4, color: '#774455', opacity: 0.15, shape: 'cloud', blendMode: 'screen' }
+    ],
+    features: [
+      { description: "Has a dark lane bisecting the nebula", isPresent: true, category: 'structure' },
+      { description: "Shows bright hourglass-shaped regions", isPresent: true, category: 'structure' },
+      { description: "Contains an embedded star cluster", isPresent: true, category: 'component' },
+      { description: "Displays pink-red emission nebulosity", isPresent: true, category: 'color' },
+      { description: "Shows dark pillar structures", isPresent: false, category: 'structure' },
+      { description: "Has a ring or shell structure", isPresent: false, category: 'structure' }
     ]
   },
 
@@ -563,6 +610,14 @@ export const NEBULAE: NebulaData[] = [
 
       // Wisps connecting to broader dark cloud complex
       { offsetX: -8, offsetY: 18, width: 24, height: 28, rotation: -0.2, color: '#140a14', opacity: 0.65, shape: 'cloud', blendMode: 'source-over' }
+    ],
+    features: [
+      { description: "Shows a horse-shaped dark cloud silhouette", isPresent: true, category: 'structure' },
+      { description: "Has a bright ionization rim along its edge", isPresent: true, category: 'structure' },
+      { description: "Appears as a dark absorption nebula", isPresent: true, category: 'structure' },
+      { description: "Shows pink-red background emission", isPresent: true, category: 'color' },
+      { description: "Contains bright star-forming pillars", isPresent: false, category: 'structure' },
+      { description: "Has a central white dwarf", isPresent: false, category: 'component' }
     ]
   },
 
@@ -665,6 +720,14 @@ export const NEBULAE: NebulaData[] = [
       { offsetX: -12, offsetY: 10, width: 11, height: 9, rotation: -0.55, color: '#88bbaa', opacity: 0.27, shape: 'cloud', blendMode: 'screen' },
       { offsetX: 10, offsetY: 12, width: 9, height: 8, rotation: 0.9, color: '#77aa99', opacity: 0.24, shape: 'cloud', blendMode: 'screen' },
       { offsetX: -10, offsetY: -12, width: 10, height: 8, rotation: -0.85, color: '#88cc99', opacity: 0.25, shape: 'cloud', blendMode: 'screen' }
+    ],
+    features: [
+      { description: "Has a ring or shell structure", isPresent: true, category: 'structure' },
+      { description: "Shows a central white dwarf star", isPresent: true, category: 'component' },
+      { description: "Displays cometary knots texture throughout", isPresent: true, category: 'structure' },
+      { description: "Shows blue-green inner ring emission", isPresent: true, category: 'color' },
+      { description: "Has a horse-shaped silhouette", isPresent: false, category: 'structure' },
+      { description: "Contains dark pillar structures", isPresent: false, category: 'structure' }
     ]
   }
 ];
