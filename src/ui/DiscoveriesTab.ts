@@ -20,7 +20,11 @@ export class DiscoveriesTab {
   private countElement: HTMLElement | null;
   private progressCountElement: HTMLElement | null;
   private progressFillElement: SVGCircleElement | null;
-  private discoveries: DiscoveryItem[] = [];
+  private panelElement: HTMLElement | null;
+  private discoveriesByObservatory: Map<Observatory, DiscoveryItem[]> = new Map([
+    ['northern', []],
+    ['southern', []]
+  ]);
   private totalItems: number = 0;
   private currentObservatory: Observatory;
 
@@ -35,9 +39,11 @@ export class DiscoveriesTab {
     this.countElement = document.querySelector('.discovery-count');
     this.progressCountElement = document.querySelector('.progress-count');
     this.progressFillElement = document.querySelector('.progress-fill');
+    this.panelElement = document.getElementById('discoveries-panel');
     this.currentObservatory = observatory;
     this.calculateTotalItems();
     this.updateCount();
+    this.updateHeader();
   }
 
   private calculateTotalItems(): void {
@@ -49,28 +55,40 @@ export class DiscoveriesTab {
   }
 
   /**
-   * Switch to a different observatory, clearing discoveries for this session
+   * Get the discovery list for the current observatory
+   */
+  private getCurrentDiscoveries(): DiscoveryItem[] {
+    return this.discoveriesByObservatory.get(this.currentObservatory) || [];
+  }
+
+  /**
+   * Switch to a different observatory, preserving discoveries per-observatory
    */
   setObservatory(observatory: Observatory): void {
     this.currentObservatory = observatory;
     this.calculateTotalItems();
-    this.discoveries = [];
+
+    // Don't clear discoveries - they're now stored per-observatory
     this.setSections.clear();
 
     if (this.listElement) {
       this.listElement.innerHTML = '';
     }
 
+    // Re-render the current observatory's discoveries
+    this.render();
     this.updateCount();
+    this.updateHeader();
   }
 
   /**
    * Add a newly discovered item
    */
   addDiscovery(item: DiscoveryItem): void {
-    if (this.discoveries.some(d => d.id === item.id)) return;
+    const discoveries = this.getCurrentDiscoveries();
+    if (discoveries.some(d => d.id === item.id)) return;
 
-    this.discoveries.push(item);
+    discoveries.push(item);
     this.updateCount();
     this.addCardToSet(item);
 
@@ -86,7 +104,8 @@ export class DiscoveriesTab {
    * Update the discovery count badge and progress dial
    */
   private updateCount(): void {
-    const count = this.discoveries.length;
+    const discoveries = this.getCurrentDiscoveries();
+    const count = discoveries.length;
 
     // Update badge text
     if (this.countElement) {
@@ -169,23 +188,24 @@ export class DiscoveriesTab {
    * Update the progress text in the set header
    */
   private updateSetProgress(setId: string, section: HTMLElement, type: 'constellation' | 'nebula' | 'cluster' | 'galaxy'): void {
+    const discoveries = this.getCurrentDiscoveries();
     let setDiscoveries = 0;
     let setTotal = 0;
     let isSet = false;
 
     if (type === 'constellation' && setId && CONSTELLATION_SETS[setId]) {
-      setDiscoveries = this.discoveries.filter(d => (d as ConstellationData).set === setId).length;
+      setDiscoveries = discoveries.filter(d => (d as ConstellationData).set === setId).length;
       setTotal = getConstellationsByObservatory(this.currentObservatory)
         .filter(d => d.set === setId).length;
       isSet = true;
     } else if (type === 'nebula') {
-      setDiscoveries = this.discoveries.filter(d => 'layers' in d && !('galaxyType' in d)).length;
+      setDiscoveries = discoveries.filter(d => 'layers' in d && !('galaxyType' in d)).length;
       setTotal = NEBULAE.length;
     } else if (type === 'cluster') {
-      setDiscoveries = this.discoveries.filter(d => 'starCount' in d).length;
+      setDiscoveries = discoveries.filter(d => 'starCount' in d).length;
       setTotal = CLUSTERS.length;
     } else if (type === 'galaxy') {
-      setDiscoveries = this.discoveries.filter(d => 'galaxyType' in d).length;
+      setDiscoveries = discoveries.filter(d => 'galaxyType' in d).length;
       setTotal = GALAXIES.length;
     } else {
       return;
@@ -391,9 +411,35 @@ export class DiscoveriesTab {
   }
 
   /**
-   * Get all discoveries
+   * Get all discoveries for the current observatory
    */
   getDiscoveries(): DiscoveryItem[] {
-    return this.discoveries;
+    return this.getCurrentDiscoveries();
+  }
+
+  /**
+   * Update the Field Notes header to show current observatory
+   */
+  private updateHeader(): void {
+    const header = this.panelElement?.querySelector('.journal-header h2');
+    if (!header) return;
+
+    const observatoryName = this.currentObservatory === 'northern'
+      ? 'Alpine Observatory'
+      : 'Andean Observatory';
+
+    header.textContent = `Field Notes - ${observatoryName}`;
+  }
+
+  /**
+   * Re-render all discoveries for the current observatory
+   */
+  private render(): void {
+    const discoveries = this.getCurrentDiscoveries();
+
+    // Re-add all cards in order
+    for (const item of discoveries) {
+      this.addCardToSet(item);
+    }
   }
 }

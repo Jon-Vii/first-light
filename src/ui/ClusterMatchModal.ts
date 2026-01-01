@@ -176,6 +176,11 @@ export class ClusterMatchModal extends BaseDSOModal {
     ctx.fillStyle = 'rgba(5, 8, 20, 1)';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+    // Temporarily mark as discovered to render stars properly
+    // (Similar pattern to BaseDSOModal.renderObjectOnCanvas)
+    const wasDiscovered = cluster.isDiscovered;
+    cluster.isDiscovered = true;
+
     // Use the actual StarCluster's render method
     // Pass cluster position as view position to center the cluster
     cluster.render(
@@ -185,6 +190,9 @@ export class ClusterMatchModal extends BaseDSOModal {
       canvas.width,
       canvas.height
     );
+
+    // Restore original discovery state
+    cluster.isDiscovered = wasDiscovered;
 
     // Draw cluster name
     ctx.font = '12px "Cormorant Garamond", serif';
