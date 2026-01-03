@@ -31,7 +31,7 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "name": "Andromeda",
     "latinName": "Andromeda",
     "description": "The Chained Princess - Home to the Andromeda Galaxy, our nearest major galaxy.",
-    "centerX": 137,
+    "centerX": 6137,
     "centerY": 866,
     "radius": 100,
     "discovered": false,
@@ -39,49 +39,49 @@ export const CONSTELLATIONS: ConstellationData[] = [
     "stars": [
       {
         "id": "and-0",
-        "x": 516,
+        "x": 6516,
         "y": 795,
         "brightness": 0.9620375792412359
       },
       {
         "id": "and-1",
-        "x": 291,
+        "x": 6291,
         "y": 906,
         "brightness": 0.9539600694919892
       },
       {
         "id": "and-2",
-        "x": 164,
+        "x": 6164,
         "y": 986,
         "brightness": 0.8442559488824752
       },
       {
         "id": "and-3",
-        "x": 35,
+        "x": 6035,
         "y": 1015,
         "brightness": 0.9066089978527462
       },
       {
         "id": "and-4",
-        "x": 238,
+        "x": 6238,
         "y": 1110,
         "brightness": 0.8190373602716711
       },
       {
         "id": "and-5",
-        "x": 197,
+        "x": 6197,
         "y": 1096,
         "brightness": 0.8078582302172482
       },
       {
         "id": "and-6",
-        "x": 161,
+        "x": 6161,
         "y": 1011,
         "brightness": 0.8617579805036171
       },
       {
         "id": "and-7",
-        "x": 154,
+        "x": 6154,
         "y": 938,
         "brightness": 0.8695561889308879
       },
@@ -111,25 +111,25 @@ export const CONSTELLATIONS: ConstellationData[] = [
       },
       {
         "id": "and-12",
-        "x": 236,
+        "x": 6236,
         "y": 858,
         "brightness": 0.9147656992589484
       },
       {
         "id": "and-13",
-        "x": 208,
+        "x": 6208,
         "y": 815,
         "brightness": 0.8561203879625044
       },
       {
         "id": "and-14",
-        "x": 290,
+        "x": 6290,
         "y": 713,
         "brightness": 0.9794980302752021
       },
       {
         "id": "and-15",
-        "x": 408,
+        "x": 6408,
         "y": 690,
         "brightness": 0.8405811359544688
       },
@@ -2542,13 +2542,13 @@ export const CONSTELLATIONS: ConstellationData[] = [
       },
       {
         "id": "peg-3",
-        "x": 35,
+        "x": 6035,
         "y": 1015,
         "brightness": 0.8225792441624378
       },
       {
         "id": "peg-4",
-        "x": 55,
+        "x": 6055,
         "y": 1247,
         "brightness": 0.801832426569973
       },
@@ -8650,19 +8650,19 @@ export const CONSTELLATIONS: ConstellationData[] = [
       },
       {
         "id": "tuc-2",
-        "x": 131,
+        "x": 6131,
         "y": 2549,
         "brightness": 0.8470375434153091
       },
       {
         "id": "tuc-3",
-        "x": 84,
+        "x": 6084,
         "y": 2581,
         "brightness": 0.9180036666935544
       },
       {
         "id": "tuc-4",
-        "x": 0,
+        "x": 6000,
         "y": 2593,
         "brightness": 0.960585588248384
       },

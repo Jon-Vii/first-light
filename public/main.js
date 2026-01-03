@@ -1107,7 +1107,7 @@ var CONSTELLATIONS = [
     name: "Andromeda",
     latinName: "Andromeda",
     description: "The Chained Princess - Home to the Andromeda Galaxy, our nearest major galaxy.",
-    centerX: 137,
+    centerX: 6137,
     centerY: 866,
     radius: 100,
     discovered: false,
@@ -1115,49 +1115,49 @@ var CONSTELLATIONS = [
     stars: [
       {
         id: "and-0",
-        x: 516,
+        x: 6516,
         y: 795,
         brightness: 0.9620375792412359
       },
       {
         id: "and-1",
-        x: 291,
+        x: 6291,
         y: 906,
         brightness: 0.9539600694919892
       },
       {
         id: "and-2",
-        x: 164,
+        x: 6164,
         y: 986,
         brightness: 0.8442559488824752
       },
       {
         id: "and-3",
-        x: 35,
+        x: 6035,
         y: 1015,
         brightness: 0.9066089978527462
       },
       {
         id: "and-4",
-        x: 238,
+        x: 6238,
         y: 1110,
         brightness: 0.8190373602716711
       },
       {
         id: "and-5",
-        x: 197,
+        x: 6197,
         y: 1096,
         brightness: 0.8078582302172482
       },
       {
         id: "and-6",
-        x: 161,
+        x: 6161,
         y: 1011,
         brightness: 0.8617579805036171
       },
       {
         id: "and-7",
-        x: 154,
+        x: 6154,
         y: 938,
         brightness: 0.8695561889308879
       },
@@ -1187,25 +1187,25 @@ var CONSTELLATIONS = [
       },
       {
         id: "and-12",
-        x: 236,
+        x: 6236,
         y: 858,
         brightness: 0.9147656992589484
       },
       {
         id: "and-13",
-        x: 208,
+        x: 6208,
         y: 815,
         brightness: 0.8561203879625044
       },
       {
         id: "and-14",
-        x: 290,
+        x: 6290,
         y: 713,
         brightness: 0.9794980302752021
       },
       {
         id: "and-15",
-        x: 408,
+        x: 6408,
         y: 690,
         brightness: 0.8405811359544688
       },
@@ -3618,13 +3618,13 @@ var CONSTELLATIONS = [
       },
       {
         id: "peg-3",
-        x: 35,
+        x: 6035,
         y: 1015,
         brightness: 0.8225792441624378
       },
       {
         id: "peg-4",
-        x: 55,
+        x: 6055,
         y: 1247,
         brightness: 0.801832426569973
       },
@@ -9726,19 +9726,19 @@ var CONSTELLATIONS = [
       },
       {
         id: "tuc-2",
-        x: 131,
+        x: 6131,
         y: 2549,
         brightness: 0.8470375434153091
       },
       {
         id: "tuc-3",
-        x: 84,
+        x: 6084,
         y: 2581,
         brightness: 0.9180036666935544
       },
       {
         id: "tuc-4",
-        x: 0,
+        x: 6000,
         y: 2593,
         brightness: 0.960585588248384
       },
@@ -11972,10 +11972,6 @@ class ClusterMatchModal extends BaseDSOModal {
     cluster.isDiscovered = true;
     cluster.render(ctx, cluster.x, cluster.y, canvas.width, canvas.height);
     cluster.isDiscovered = wasDiscovered;
-    ctx.font = '12px "Cormorant Garamond", serif';
-    ctx.fillStyle = "rgba(200, 220, 255, 0.7)";
-    ctx.textAlign = "center";
-    ctx.fillText(cluster.name, canvas.width / 2, canvas.height - 15);
   }
   handleOptionClick(clusterId, optionElement) {
     const targetId = this.targetCluster.getData().id;
@@ -12218,24 +12214,24 @@ class GalaxyStructureModal extends BaseDSOModal {
 
 // src/audio/AudioManager.ts
 var AMBIENT_CONFIG = {
-  AMBIENT_MASTER_GAIN: 0.25,
+  AMBIENT_MASTER_GAIN: 0.22,
   FADE_IN_TIME: 3,
   FADE_OUT_TIME: 2,
   SUB_BASS: {
-    FREQUENCY: 36.71,
-    GAIN: 0.06,
-    LFO_RATE: 0.02,
-    LFO_DEPTH: 2
+    FREQUENCY: 55,
+    GAIN: 0.025,
+    LFO_RATE: 0.008,
+    LFO_DEPTH: 3
   },
   DRONE: {
-    FREQUENCIES: [73.42, 110, 146.83],
-    DETUNE_HZ: [0.5, 0.3, 0.4],
-    GAINS: [0.025, 0.018, 0.012],
-    FILTER_FREQ: 400,
-    FILTER_Q: 0.7,
-    FILTER_LFO_RATE: 0.03,
-    FILTER_LFO_MIN: 300,
-    FILTER_LFO_MAX: 600
+    FREQUENCIES: [130.81, 196, 261.63],
+    DETUNE_HZ: [0.7, 0.5, 0.3],
+    GAINS: [0.018, 0.015, 0.012],
+    FILTER_FREQ: 500,
+    FILTER_Q: 0.5,
+    FILTER_LFO_RATE: 0.025,
+    FILTER_LFO_MIN: 400,
+    FILTER_LFO_MAX: 800
   },
   TEXTURE: {
     GAIN: 0.008,
@@ -12248,19 +12244,19 @@ var AMBIENT_CONFIG = {
   },
   SHIMMER: {
     FREQUENCIES: [1046.5, 1318.5, 1568, 2093],
-    GAIN_MIN: 0.003,
-    GAIN_MAX: 0.008,
-    FADE_TIME_MIN: 8,
-    FADE_TIME_MAX: 15,
-    HOLD_TIME_MIN: 5,
-    HOLD_TIME_MAX: 20,
-    MAX_CONCURRENT: 2
+    GAIN_MIN: 0.004,
+    GAIN_MAX: 0.012,
+    FADE_TIME_MIN: 5,
+    FADE_TIME_MAX: 10,
+    HOLD_TIME_MIN: 3,
+    HOLD_TIME_MAX: 12,
+    MAX_CONCURRENT: 3
   },
   BUSES: {
-    SUB_BASS: 0.5,
-    DRONE: 0.7,
-    TEXTURE: 0.4,
-    SHIMMER: 0.3
+    SUB_BASS: 0.25,
+    DRONE: 0.6,
+    TEXTURE: 0.5,
+    SHIMMER: 0.45
   },
   SPATIAL: {
     DELAY_LEFT: 1.2,
@@ -13650,4 +13646,4 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-//# debugId=83903A95450C73EE64756E2164756E21
+//# debugId=43EC7609C2CAADBC64756E2164756E21

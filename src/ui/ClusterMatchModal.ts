@@ -193,12 +193,7 @@ export class ClusterMatchModal extends BaseDSOModal {
 
     // Restore original discovery state
     cluster.isDiscovered = wasDiscovered;
-
-    // Draw cluster name
-    ctx.font = '12px "Cormorant Garamond", serif';
-    ctx.fillStyle = 'rgba(200, 220, 255, 0.7)';
-    ctx.textAlign = 'center';
-    ctx.fillText(cluster.name, canvas.width / 2, canvas.height - 15);
+    // Note: Label is rendered via CSS, not on canvas (avoids duplicate)
   }
 
   /**
