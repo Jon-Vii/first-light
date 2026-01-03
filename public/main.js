@@ -9689,7 +9689,10 @@ class Nebula {
     this.onAnimationComplete = callback;
   }
   render(ctx, viewX, viewY, canvasWidth, canvasHeight, scale = 1, glowMultiplier = 1) {
-    if (this.x + this.radius < viewX || this.x - this.radius > viewX + canvasWidth || this.y + this.radius < viewY || this.y - this.radius > viewY + canvasHeight) {
+    const screenX = this.x - viewX + canvasWidth / 2;
+    const screenY = this.y - viewY + canvasHeight / 2;
+    const visualRadius = this.radius * scale * 1.5;
+    if (screenX + visualRadius < 0 || screenX - visualRadius > canvasWidth || screenY + visualRadius < 0 || screenY - visualRadius > canvasHeight) {
       return;
     }
     let globalAlpha = 0;
@@ -9716,14 +9719,14 @@ class Nebula {
     } else {}
     if (this.isDiscovered && !this.isAnimating) {
       ctx.setTransform(1, 0, 0, 1, 0, 0);
-      const screenX = this.x - viewX + canvasWidth / 2;
-      const screenY = this.y - viewY + canvasHeight / 2;
+      const screenX2 = this.x - viewX + canvasWidth / 2;
+      const screenY2 = this.y - viewY + canvasHeight / 2;
       ctx.globalCompositeOperation = "source-over";
       ctx.globalAlpha = 1;
       ctx.font = '16px "Cormorant Garamond", serif';
       ctx.fillStyle = `rgba(220, 200, 255, 0.7)`;
       ctx.textAlign = "center";
-      ctx.fillText(this.name, screenX, screenY + this.radius * 0.8 + 20);
+      ctx.fillText(this.name, screenX2, screenY2 + this.radius * 0.8 + 20);
     }
     ctx.restore();
   }
@@ -9844,6 +9847,10 @@ class StarCluster {
   render(ctx, viewX, viewY, canvasWidth, canvasHeight, scale = 1, glowMultiplier = 1) {
     const centerX = this.x - viewX + canvasWidth / 2;
     const centerY = this.y - viewY + canvasHeight / 2;
+    const visualRadius = this.radius * scale * 1.5;
+    if (centerX + visualRadius < 0 || centerX - visualRadius > canvasWidth || centerY + visualRadius < 0 || centerY - visualRadius > canvasHeight) {
+      return;
+    }
     ctx.save();
     ctx.translate(centerX, centerY);
     ctx.scale(scale, scale);
@@ -10012,7 +10019,10 @@ class Galaxy {
     this.onAnimationComplete = callback;
   }
   render(ctx, viewX, viewY, canvasWidth, canvasHeight, scale = 1, glowMultiplier = 1) {
-    if (this.x + this.radius < viewX || this.x - this.radius > viewX + canvasWidth || this.y + this.radius < viewY || this.y - this.radius > viewY + canvasHeight) {
+    const screenX = this.x - viewX + canvasWidth / 2;
+    const screenY = this.y - viewY + canvasHeight / 2;
+    const visualRadius = this.radius * scale * 1.5;
+    if (screenX + visualRadius < 0 || screenX - visualRadius > canvasWidth || screenY + visualRadius < 0 || screenY - visualRadius > canvasHeight) {
       return;
     }
     let globalAlpha = 0;
@@ -10043,14 +10053,14 @@ class Galaxy {
     }
     if (this.isDiscovered && !this.isAnimating) {
       ctx.setTransform(1, 0, 0, 1, 0, 0);
-      const screenX = this.x - viewX + canvasWidth / 2;
-      const screenY = this.y - viewY + canvasHeight / 2;
+      const screenX2 = this.x - viewX + canvasWidth / 2;
+      const screenY2 = this.y - viewY + canvasHeight / 2;
       ctx.globalCompositeOperation = "source-over";
       ctx.globalAlpha = 1;
       ctx.font = '15px "Cormorant Garamond", serif';
       ctx.fillStyle = `rgba(200, 210, 230, 0.75)`;
       ctx.textAlign = "center";
-      ctx.fillText(this.name, screenX, screenY + this.radius * 0.8 + 22);
+      ctx.fillText(this.name, screenX2, screenY2 + this.radius * 0.8 + 22);
     }
     ctx.restore();
   }
@@ -13315,7 +13325,7 @@ class Game {
       const dx = this.getWrappedDeltaX(skyX, obj.x);
       const dy = skyY - obj.y;
       const distance = Math.hypot(dx, dy);
-      const isInView = distance < obj.radius + effectiveTelescopeRadius * 0.6;
+      const isInView = distance < obj.radius + effectiveTelescopeRadius * 1.5;
       obj.update(deltaTime, isInView);
     }
   }
@@ -13660,5 +13670,5 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-//# debugId=8753600690BBEFD164756E2164756E21
+//# debugId=3B6B738020D884FD64756E2164756E21
 //# sourceMappingURL=main.js.map

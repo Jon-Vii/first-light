@@ -138,6 +138,13 @@ export class StarCluster implements CelestialObject {
     const centerX = this.x - viewX + canvasWidth / 2;
     const centerY = this.y - viewY + canvasHeight / 2;
 
+    // Skip if completely off-screen (with generous margin for scaled size and stars)
+    const visualRadius = this.radius * scale * 1.5;
+    if (centerX + visualRadius < 0 || centerX - visualRadius > canvasWidth ||
+        centerY + visualRadius < 0 || centerY - visualRadius > canvasHeight) {
+      return;
+    }
+
     ctx.save();
     // Apply DSO scale
     ctx.translate(centerX, centerY);

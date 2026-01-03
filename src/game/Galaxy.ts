@@ -112,9 +112,14 @@ export class Galaxy implements CelestialObject {
     scale: number = 1.0,
     glowMultiplier: number = 1.0
   ): void {
-    // Basic visibility check
-    if (this.x + this.radius < viewX || this.x - this.radius > viewX + canvasWidth ||
-      this.y + this.radius < viewY || this.y - this.radius > viewY + canvasHeight) {
+    // Calculate screen position
+    const screenX = this.x - viewX + canvasWidth / 2;
+    const screenY = this.y - viewY + canvasHeight / 2;
+
+    // Skip if completely off-screen (with generous margin for scaled size)
+    const visualRadius = this.radius * scale * 1.5;
+    if (screenX + visualRadius < 0 || screenX - visualRadius > canvasWidth ||
+        screenY + visualRadius < 0 || screenY - visualRadius > canvasHeight) {
       return;
     }
 

@@ -422,8 +422,8 @@ export class Game {
       const dx = this.getWrappedDeltaX(skyX, obj.x);
       const dy = skyY - obj.y;
       const distance = Math.hypot(dx, dy);
-      // Use efficient radius
-      const isInView = distance < obj.radius + effectiveTelescopeRadius * 0.6; // 0.6 safety margin
+      // Use generous safety margin to prevent premature culling (especially for scaled DSOs)
+      const isInView = distance < obj.radius + effectiveTelescopeRadius * 1.5;
 
       obj.update(deltaTime, isInView);
     }
