@@ -18,7 +18,7 @@ export class Nebula implements CelestialObject {
   // Animation state
   private isAnimating: boolean = false;
   private animationTime: number = 0;
-  private readonly animationDuration = 4.0;
+  private readonly animationDuration = 2.5;
   private bloomProgress: number = 0;
   private onAnimationComplete: (() => void) | null = null;
 

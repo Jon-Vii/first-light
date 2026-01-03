@@ -49,7 +49,7 @@ export class Constellation implements CelestialObject {
 
   // Discovery parameters
   private readonly hoverTimeRequired = 2.0;  // Seconds of hover to discover
-  private readonly animationDuration = 3.5;  // Duration of discovery animation
+  private readonly animationDuration = 2.5;  // Duration of discovery animation
   private readonly starFlashDuration = 0.6;  // How long the star flash lasts
   private readonly cosmicFlashDuration = 1.2;  // Duration of completion flash
 
@@ -536,6 +536,9 @@ export class Constellation implements CelestialObject {
     }
 
     // ========== STARS WITH MULTI-LAYERED CORONA ==========
+    // Calculate pulse once per frame for all unactivated stars (performance optimization)
+    const pulse = Math.sin(Date.now() * 0.005) * 0.3 + 0.7;
+
     for (let starIdx = 0; starIdx < this.data.stars.length; starIdx++) {
       const star = this.data.stars[starIdx];
       if (!star) continue;
@@ -556,7 +559,7 @@ export class Constellation implements CelestialObject {
         // Render unactivated stars with simple hint-style glow (same as before discovery)
         const hintAlpha = 0.35;
         const hintSize = 3 + star.brightness * 2;
-        const pulse = Math.sin(Date.now() * 0.005) * 0.3 + 0.7;
+        // Use pre-calculated pulse value (calculated once per frame above)
 
         ctx.beginPath();
         ctx.arc(screenX, screenY, hintSize * 3, 0, Math.PI * 2);

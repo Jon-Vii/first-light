@@ -9199,7 +9199,7 @@ class Constellation {
     cosmicHaze: "rgba(180, 140, 100, "
   };
   hoverTimeRequired = 2;
-  animationDuration = 3.5;
+  animationDuration = 2.5;
   starFlashDuration = 0.6;
   cosmicFlashDuration = 1.2;
   scale = 0.85;
@@ -9477,6 +9477,7 @@ class Constellation {
         }
       }
     }
+    const pulse = Math.sin(Date.now() * 0.005) * 0.3 + 0.7;
     for (let starIdx = 0;starIdx < this.data.stars.length; starIdx++) {
       const star = this.data.stars[starIdx];
       if (!star)
@@ -9492,7 +9493,6 @@ class Constellation {
       if (this.isAnimating && !isActivated) {
         const hintAlpha = 0.35;
         const hintSize = 3 + star.brightness * 2;
-        const pulse = Math.sin(Date.now() * 0.005) * 0.3 + 0.7;
         ctx.beginPath();
         ctx.arc(screenX, screenY, hintSize * 3, 0, Math.PI * 2);
         const glowGradient = ctx.createRadialGradient(screenX, screenY, 0, screenX, screenY, hintSize * 3);
@@ -9627,7 +9627,7 @@ class Nebula {
   hoverTimeRequired = 2;
   isAnimating = false;
   animationTime = 0;
-  animationDuration = 4;
+  animationDuration = 2.5;
   bloomProgress = 0;
   onAnimationComplete = null;
   timeOffset;
@@ -9955,7 +9955,7 @@ class Galaxy {
   hoverTimeRequired = 2;
   isAnimating = false;
   animationTime = 0;
-  animationDuration = 5;
+  animationDuration = 2.5;
   bloomProgress = 0;
   onAnimationComplete = null;
   timeOffset;
@@ -11157,6 +11157,7 @@ class PatternMatchModal {
   decoyStars = [];
   onComplete;
   phase = "study";
+  studyTimeDuration;
   studyTimeRemaining;
   studyTimer = null;
   bounds;
@@ -11173,7 +11174,8 @@ class PatternMatchModal {
     this.data = constellation.getData();
     this.onComplete = onComplete;
     this.audioManager = audioManager;
-    this.studyTimeRemaining = this.calculateStudyTime();
+    this.studyTimeDuration = this.calculateStudyTime();
+    this.studyTimeRemaining = this.studyTimeDuration;
     this.targetStars = new Set;
     for (let i = 0;i < this.data.stars.length; i++) {
       this.targetStars.add(i);
@@ -11353,7 +11355,7 @@ class PatternMatchModal {
   updateCountdown() {
     const countdownText = this.modalElement.querySelector(".countdown-text");
     countdownText.textContent = `${Math.ceil(this.studyTimeRemaining)}s`;
-    const progress = 1 - this.studyTimeRemaining / 5;
+    const progress = 1 - this.studyTimeRemaining / this.studyTimeDuration;
     const sand = this.modalElement.querySelector(".sand");
     if (sand) {
       sand.style.setProperty("--progress", progress.toString());
@@ -11459,7 +11461,7 @@ class PatternMatchModal {
     instructionEl.classList.add("pattern-complete");
     setTimeout(() => {
       this.onComplete();
-    }, 1500);
+    }, 1000);
   }
   renderStudyPhase() {
     const ctx = this.ctx;
@@ -11676,7 +11678,7 @@ class BaseDSOModal {
       modalContent.classList.remove("phase-study", "phase-transitioning");
       modalContent.classList.add("phase-challenge");
       this.modalElement.querySelector(".countdown-container").classList.add("hidden");
-    }, 350);
+    }, 300);
   }
   updateInstructions() {
     const instructionEl = this.modalElement.querySelector(".modal-instruction");
@@ -11868,7 +11870,7 @@ class NebulaFeatureModal extends BaseDSOModal {
       this.playCorrectSound();
       setTimeout(() => {
         this.completeChallenge();
-      }, 600);
+      }, 1000);
     } else {
       this.flashIncorrectAnswers();
     }
@@ -11906,7 +11908,7 @@ class ClusterMatchModal extends BaseDSOModal {
   allClusters;
   options = [];
   constructor(cluster, allClusters, onComplete, audioManager) {
-    super(cluster, onComplete, 4, audioManager);
+    super(cluster, onComplete, 5, audioManager);
     this.targetCluster = cluster;
     this.allClusters = allClusters;
     this.generateDecoys();
@@ -11994,7 +11996,7 @@ class ClusterMatchModal extends BaseDSOModal {
       this.playCorrectSound();
       setTimeout(() => {
         this.completeChallenge();
-      }, 600);
+      }, 1000);
     } else {
       optionElement.classList.add("incorrect");
       this.playErrorTone();
@@ -12167,7 +12169,7 @@ class GalaxyStructureModal extends BaseDSOModal {
       this.playCorrectSound();
       setTimeout(() => {
         this.completeChallenge();
-      }, 600);
+      }, 1000);
     } else {
       this.flashIncorrectAnswers(typeCorrect);
     }
@@ -12319,6 +12321,8 @@ class AudioManager {
   delayFilterRight = null;
   buildUpOscillators = [];
   buildUpGains = [];
+  cachedNoiseBuffer = null;
+  cachedCosmicFlashBuffer = null;
   isBuildUpPlaying = false;
   pentatonicScale = [
     523.25,
@@ -12512,16 +12516,18 @@ class AudioManager {
       return;
     const ctx = this.audioContext;
     const cfg = AMBIENT_CONFIG.TEXTURE;
-    const bufferSize = ctx.sampleRate * 2;
-    const noiseBuffer = ctx.createBuffer(2, bufferSize, ctx.sampleRate);
-    for (let channel = 0;channel < 2; channel++) {
-      const data = noiseBuffer.getChannelData(channel);
-      for (let i = 0;i < bufferSize; i++) {
-        data[i] = Math.random() * 2 - 1;
+    if (!this.cachedNoiseBuffer) {
+      const bufferSize = ctx.sampleRate * 2;
+      this.cachedNoiseBuffer = ctx.createBuffer(2, bufferSize, ctx.sampleRate);
+      for (let channel = 0;channel < 2; channel++) {
+        const data = this.cachedNoiseBuffer.getChannelData(channel);
+        for (let i = 0;i < bufferSize; i++) {
+          data[i] = Math.random() * 2 - 1;
+        }
       }
     }
     this.textureSource = ctx.createBufferSource();
-    this.textureSource.buffer = noiseBuffer;
+    this.textureSource.buffer = this.cachedNoiseBuffer;
     this.textureSource.loop = true;
     const splitter = ctx.createChannelSplitter(2);
     const merger = ctx.createChannelMerger(2);
@@ -12801,14 +12807,16 @@ class AudioManager {
     subGain.connect(this.masterGain);
     subOsc.start(now);
     subOsc.stop(now + 0.6);
-    const bufferSize = ctx.sampleRate * 0.8;
-    const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-    const noiseData = noiseBuffer.getChannelData(0);
-    for (let i = 0;i < bufferSize; i++) {
-      noiseData[i] = Math.random() * 2 - 1;
+    if (!this.cachedCosmicFlashBuffer) {
+      const bufferSize = ctx.sampleRate * 0.8;
+      this.cachedCosmicFlashBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+      const noiseData = this.cachedCosmicFlashBuffer.getChannelData(0);
+      for (let i = 0;i < bufferSize; i++) {
+        noiseData[i] = Math.random() * 2 - 1;
+      }
     }
     const noiseSource = ctx.createBufferSource();
-    noiseSource.buffer = noiseBuffer;
+    noiseSource.buffer = this.cachedCosmicFlashBuffer;
     const noiseFilter = ctx.createBiquadFilter();
     noiseFilter.type = "bandpass";
     noiseFilter.frequency.setValueAtTime(200, now);
@@ -13670,5 +13678,5 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-//# debugId=3B6B738020D884FD64756E2164756E21
+//# debugId=1FADBA91E51A850964756E2164756E21
 //# sourceMappingURL=main.js.map

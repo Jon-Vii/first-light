@@ -132,6 +132,10 @@ export class AudioManager {
   // Discovery build-up state
   private buildUpOscillators: OscillatorNode[] = [];
   private buildUpGains: GainNode[] = [];
+
+  // Cached noise buffers for performance
+  private cachedNoiseBuffer: AudioBuffer | null = null;
+  private cachedCosmicFlashBuffer: AudioBuffer | null = null;
   private isBuildUpPlaying: boolean = false;
 
   // Pentatonic scale frequencies (C major pentatonic: C, D, E, G, A)
@@ -459,21 +463,23 @@ export class AudioManager {
     const ctx = this.audioContext;
     const cfg = AMBIENT_CONFIG.TEXTURE;
 
-    // Create white noise buffer
-    const bufferSize = ctx.sampleRate * 2; // 2 seconds, will loop
-    const noiseBuffer = ctx.createBuffer(2, bufferSize, ctx.sampleRate);
+    // Create white noise buffer (cached for performance)
+    if (!this.cachedNoiseBuffer) {
+      const bufferSize = ctx.sampleRate * 2; // 2 seconds, will loop
+      this.cachedNoiseBuffer = ctx.createBuffer(2, bufferSize, ctx.sampleRate);
 
-    // Fill with white noise (stereo)
-    for (let channel = 0; channel < 2; channel++) {
-      const data = noiseBuffer.getChannelData(channel);
-      for (let i = 0; i < bufferSize; i++) {
-        data[i] = Math.random() * 2 - 1;
+      // Fill with white noise (stereo)
+      for (let channel = 0; channel < 2; channel++) {
+        const data = this.cachedNoiseBuffer.getChannelData(channel);
+        for (let i = 0; i < bufferSize; i++) {
+          data[i] = Math.random() * 2 - 1;
+        }
       }
     }
 
-    // Create buffer source
+    // Create buffer source (reuse cached buffer)
     this.textureSource = ctx.createBufferSource();
-    this.textureSource.buffer = noiseBuffer;
+    this.textureSource.buffer = this.cachedNoiseBuffer;
     this.textureSource.loop = true;
 
     // Create channel splitter for stereo processing
@@ -867,15 +873,18 @@ export class AudioManager {
     subOsc.stop(now + 0.6);
 
     // === RISING WHOOSH (filtered noise) ===
-    const bufferSize = ctx.sampleRate * 0.8;
-    const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-    const noiseData = noiseBuffer.getChannelData(0);
-    for (let i = 0; i < bufferSize; i++) {
-      noiseData[i] = Math.random() * 2 - 1;
+    // Reuse cached buffer for performance
+    if (!this.cachedCosmicFlashBuffer) {
+      const bufferSize = ctx.sampleRate * 0.8;
+      this.cachedCosmicFlashBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+      const noiseData = this.cachedCosmicFlashBuffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        noiseData[i] = Math.random() * 2 - 1;
+      }
     }
 
     const noiseSource = ctx.createBufferSource();
-    noiseSource.buffer = noiseBuffer;
+    noiseSource.buffer = this.cachedCosmicFlashBuffer;
 
     const noiseFilter = ctx.createBiquadFilter();
     noiseFilter.type = 'bandpass';

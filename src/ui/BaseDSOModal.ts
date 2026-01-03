@@ -153,7 +153,7 @@ export abstract class BaseDSOModal {
 
       // Hide countdown
       this.modalElement.querySelector('.countdown-container')!.classList.add('hidden');
-    }, 350); // Match CSS transition duration
+    }, 300); // Match CSS transition duration (design token: --transition-medium)
   }
 
   /**

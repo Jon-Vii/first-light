@@ -7,7 +7,7 @@ import { shuffleArray } from '../utils/array';
 /**
  * ClusterMatchModal - Visual matching minigame for star clusters
  *
- * Players study a cluster for 4 seconds, then identify it from a grid
+ * Players study a cluster for 5 seconds, then identify it from a grid
  * of 4 options (target + 3 decoys from the same observatory).
  *
  * Decoys are selected based on dissimilarity to create a fair challenge.
@@ -23,7 +23,7 @@ export class ClusterMatchModal extends BaseDSOModal {
     onComplete: () => void,
     audioManager?: AudioManager
   ) {
-    super(cluster, onComplete, 4, audioManager); // 4 second study time
+    super(cluster, onComplete, 5, audioManager); // 5 second study time (standardized)
     this.targetCluster = cluster;
     this.allClusters = allClusters;
 
@@ -199,7 +199,7 @@ export class ClusterMatchModal extends BaseDSOModal {
       // Brief delay before completion to show feedback
       setTimeout(() => {
         this.completeChallenge();
-      }, 600);
+      }, 1000);
     } else {
       // Incorrect selection - visual feedback only, can try again
       optionElement.classList.add('incorrect');

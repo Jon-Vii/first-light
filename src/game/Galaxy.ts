@@ -18,7 +18,7 @@ export class Galaxy implements CelestialObject {
   // Animation state
   private isAnimating: boolean = false;
   private animationTime: number = 0;
-  private readonly animationDuration = 5.0; // Slightly longer than nebulae for distant feel
+  private readonly animationDuration = 2.5;
   private bloomProgress: number = 0;
   private onAnimationComplete: (() => void) | null = null;
 

@@ -22,6 +22,7 @@ export class PatternMatchModal {
 
   // Phase tracking
   private phase: 'study' | 'challenge' = 'study';
+  private studyTimeDuration: number;
   private studyTimeRemaining: number;
   private studyTimer: number | null = null;
 
@@ -51,7 +52,8 @@ export class PatternMatchModal {
     this.audioManager = audioManager;
 
     // Calculate study time based on constellation complexity
-    this.studyTimeRemaining = this.calculateStudyTime();
+    this.studyTimeDuration = this.calculateStudyTime();
+    this.studyTimeRemaining = this.studyTimeDuration;
 
     // Initialize target stars (all stars in constellation)
     this.targetStars = new Set();
@@ -297,7 +299,7 @@ export class PatternMatchModal {
     countdownText.textContent = `${Math.ceil(this.studyTimeRemaining)}s`;
 
     // Animate sand
-    const progress = 1 - (this.studyTimeRemaining / 5.0);
+    const progress = 1 - (this.studyTimeRemaining / this.studyTimeDuration);
     const sand = this.modalElement.querySelector('.sand') as HTMLElement;
     if (sand) {
       sand.style.setProperty('--progress', progress.toString());
@@ -445,7 +447,7 @@ export class PatternMatchModal {
     // Brief delay before completing
     setTimeout(() => {
       this.onComplete();
-    }, 1500); // Extended to enjoy the flourish
+    }, 1000); // Standardized delay for consistent feel
   }
 
   private renderStudyPhase(): void {

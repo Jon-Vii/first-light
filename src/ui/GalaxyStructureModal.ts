@@ -271,7 +271,7 @@ export class GalaxyStructureModal extends BaseDSOModal {
       this.playCorrectSound();
       setTimeout(() => {
         this.completeChallenge();
-      }, 600);
+      }, 1000);
     } else {
       // Some answers incorrect - show feedback and allow retry
       this.flashIncorrectAnswers(typeCorrect);
