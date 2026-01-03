@@ -2,6 +2,7 @@ import { BaseDSOModal } from './BaseDSOModal';
 import type { Nebula } from '../game/Nebula';
 import type { NebulaFeature } from '../data/nebulae';
 import type { AudioManager } from '../audio/AudioManager';
+import { shuffleArray } from '../utils/array';
 
 /**
  * NebulaFeatureModal - True/False feature identification minigame
@@ -46,31 +47,19 @@ export class NebulaFeatureModal extends BaseDSOModal {
     const falseFeatures = features.filter(f => !f.isPresent);
 
     // Randomly select 3 true features (or all if less than 3)
-    const selectedTrue = this.shuffleArray([...trueFeatures])
+    const selectedTrue = shuffleArray([...trueFeatures])
       .slice(0, Math.min(3, trueFeatures.length));
 
     // Randomly select 2 false features (or all if less than 2)
-    const selectedFalse = this.shuffleArray([...falseFeatures])
+    const selectedFalse = shuffleArray([...falseFeatures])
       .slice(0, Math.min(2, falseFeatures.length));
 
     // Combine and shuffle
     const combined = [...selectedTrue, ...selectedFalse];
-    const shuffled = this.shuffleArray(combined);
+    const shuffled = shuffleArray(combined);
 
     // Return with null answers (not yet answered)
     return shuffled.map(feature => ({ feature, answer: null }));
-  }
-
-  /**
-   * Fisher-Yates shuffle algorithm
-   */
-  private shuffleArray<T>(array: T[]): T[] {
-    const shuffled = [...array];
-    for (let i = shuffled.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
-    return shuffled;
   }
 
   /**

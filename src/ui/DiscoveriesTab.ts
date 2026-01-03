@@ -442,4 +442,14 @@ export class DiscoveriesTab {
       this.addCardToSet(item);
     }
   }
+
+  /**
+   * Cleanup method for consistency with other UI components
+   */
+  destroy(): void {
+    this.setSections.clear();
+    if (this.listElement) {
+      this.listElement.innerHTML = '';
+    }
+  }
 }

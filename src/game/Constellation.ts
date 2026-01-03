@@ -3,6 +3,7 @@
  */
 
 import type { ConstellationData } from '../data/constellations';
+import { SKY_WIDTH } from '../data/constellations';
 
 
 import type { CelestialObject } from './CelestialObject';
@@ -111,10 +112,6 @@ export class Constellation implements CelestialObject {
    * Get current discovery progress (0-1)
    */
   get discoveryProgress(): number {
-    return this._discoveryProgress;
-  }
-
-  getDiscoveryProgress(): number {
     return this._discoveryProgress;
   }
 
@@ -274,9 +271,8 @@ export class Constellation implements CelestialObject {
     let effectiveViewX = viewX;
     const dx = this.data.centerX - viewX;
 
-    const skyWidth = 6000; // SKY_WIDTH from constants
-    if (dx < -skyWidth / 2) effectiveViewX -= skyWidth;
-    else if (dx > skyWidth / 2) effectiveViewX += skyWidth;
+    if (dx < -SKY_WIDTH / 2) effectiveViewX -= SKY_WIDTH;
+    else if (dx > SKY_WIDTH / 2) effectiveViewX += SKY_WIDTH;
 
     const centerScreenX = this.data.centerX - effectiveViewX + canvasWidth / 2;
     const centerScreenY = this.data.centerY - viewY + canvasHeight / 2;
@@ -405,9 +401,8 @@ export class Constellation implements CelestialObject {
      * and should be drawn as two segments instead.
      */
     const shouldWrapLine = (x1: number, x2: number): boolean => {
-      const skyWidth = 6000;
       const distance = Math.abs(x2 - x1);
-      return distance > skyWidth / 2;
+      return distance > SKY_WIDTH / 2;
     };
 
     /**
@@ -420,8 +415,6 @@ export class Constellation implements CelestialObject {
       canvasWidthParam: number,
       alpha: number
     ): void => {
-      const skyWidth = 6000;
-
       // Calculate screen positions
       const screenX1 = x1Coord - viewXCoord + canvasWidthParam / 2;
       const screenY1 = y1Coord;
@@ -444,11 +437,11 @@ export class Constellation implements CelestialObject {
         const rightScreenX = rightX - viewXCoord + canvasWidthParam / 2;
 
         // Wrapped position of right star on left side
-        const wrappedRightX = rightX - skyWidth;
+        const wrappedRightX = rightX - SKY_WIDTH;
         const wrappedScreenX = wrappedRightX - viewXCoord + canvasWidthParam / 2;
 
         // Wrapped position of left star on right side
-        const wrappedLeftX = leftX + skyWidth;
+        const wrappedLeftX = leftX + SKY_WIDTH;
         const wrappedLeftScreenX = wrappedLeftX - viewXCoord + canvasWidthParam / 2;
 
         // Check if either original star is visible (with generous margin for constellation radius)
@@ -512,20 +505,19 @@ export class Constellation implements CelestialObject {
           const progress = this.currentConnectionProgress;
 
           // Calculate partial position in world coordinates for wrap-aware interpolation
-          const skyWidth = 6000;
           let partialX = pos1.x;
           let partialY = y1;
 
           if (shouldWrapLine(pos1.x, pos2.x)) {
             // For wrap-around lines, we need to interpolate differently
             const dx = pos2.x - pos1.x;
-            if (Math.abs(dx) > skyWidth / 2) {
+            if (Math.abs(dx) > SKY_WIDTH / 2) {
               // Wrapping case - adjust the target for interpolation
-              const adjustedX2 = dx > 0 ? pos2.x - skyWidth : pos2.x + skyWidth;
+              const adjustedX2 = dx > 0 ? pos2.x - SKY_WIDTH : pos2.x + SKY_WIDTH;
               partialX = pos1.x + (adjustedX2 - pos1.x) * progress;
-              // Normalize back to 0-6000 range
-              if (partialX < 0) partialX += skyWidth;
-              if (partialX >= skyWidth) partialX -= skyWidth;
+              // Normalize back to 0-SKY_WIDTH range
+              if (partialX < 0) partialX += SKY_WIDTH;
+              if (partialX >= SKY_WIDTH) partialX -= SKY_WIDTH;
             }
           } else {
             // Normal interpolation

@@ -1,11 +1,11 @@
-# Seeing Stars — Game Design Document
+# First Light — Game Design Document
 
 > **Document Version:** 2.0  
 > **Last Updated:** 2025-12-24
 
 ## Overview
 
-**Seeing Stars** is an atmospheric, browser-based exploration game where players peer through an antique telescope to discover constellations in a vast night sky. The experience blends the wonder of astronomical discovery with collectible mechanics, wrapped in a mysterious, contemplative aesthetic.
+**First Light** is an atmospheric, browser-based exploration game where players peer through an antique telescope to discover constellations in a vast night sky. The experience blends the wonder of astronomical discovery with collectible mechanics, wrapped in a mysterious, contemplative aesthetic.
 
 ### Inspirations
 - **Myst** — Mysterious atmosphere, discovery through exploration
@@ -155,7 +155,7 @@ All sounds are generated procedurally—no external audio files required.
 ### Project Structure
 
 ```
-seeing-stars/
+first-light/
 ├── src/
 │   ├── main.ts              # Entry point, canvas setup
 │   ├── game/

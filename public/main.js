@@ -90,13 +90,15 @@ class Telescope {
   defaultLagFactor = 0.06;
   currentLagFactor = 0.06;
   radiusMultiplier = 1;
+  resizeHandler;
   constructor(element) {
     this.element = element;
     this.radius = this.calculateRadius();
-    window.addEventListener("resize", () => {
+    this.resizeHandler = () => {
       this.radius = this.calculateRadius();
       this.updateElementPosition();
-    });
+    };
+    window.addEventListener("resize", this.resizeHandler);
     this.updateElementPosition();
   }
   calculateRadius() {
@@ -104,6 +106,9 @@ class Telescope {
   }
   setDriftFactor(factor) {
     this.currentLagFactor = this.defaultLagFactor + factor * 0.14;
+  }
+  destroy() {
+    window.removeEventListener("resize", this.resizeHandler);
   }
   setRadiusMultiplier(multiplier) {
     this.radiusMultiplier = multiplier;
@@ -148,939 +153,6 @@ class Telescope {
   }
   getInWorldRadius() {
     return this.radius / this.magnification;
-  }
-}
-
-// src/game/Constellation.ts
-class Constellation {
-  get id() {
-    return this.data.id;
-  }
-  get name() {
-    return this.data.name;
-  }
-  get x() {
-    return this.data.centerX;
-  }
-  get y() {
-    return this.data.centerY;
-  }
-  get radius() {
-    return this.data.radius;
-  }
-  containsPoint(x, y) {
-    const dx = x - this.x;
-    const dy = y - this.y;
-    return dx * dx + dy * dy < this.radius * this.radius;
-  }
-  data;
-  hoverTime = 0;
-  _discoveryProgress = 0;
-  isAnimating = false;
-  animationTime = 0;
-  revealedConnections = 0;
-  currentConnectionProgress = 0;
-  lastRevealedConnections = 0;
-  onAnimationComplete = null;
-  onConnectionRevealed = null;
-  starActivationTimes = new Map;
-  cosmicFlashTime = 0;
-  colors = {
-    coreWhite: "rgba(255, 255, 245, ",
-    innerGold: "rgba(255, 225, 130, ",
-    midAmber: "rgba(255, 190, 80, ",
-    outerGlow: "rgba(220, 160, 60, ",
-    cosmicHaze: "rgba(180, 140, 100, "
-  };
-  hoverTimeRequired = 2;
-  animationDuration = 3.5;
-  starFlashDuration = 0.6;
-  cosmicFlashDuration = 1.2;
-  scale = 0.85;
-  constructor(data) {
-    this.data = { ...data };
-  }
-  getScaledStarPosition(star) {
-    const dx = star.x - this.data.centerX;
-    const dy = star.y - this.data.centerY;
-    return {
-      x: this.data.centerX + dx * this.scale,
-      y: this.data.centerY + dy * this.scale
-    };
-  }
-  getData() {
-    return this.data;
-  }
-  getAnimationDuration() {
-    return this.animationDuration;
-  }
-  setOnAnimationComplete(callback) {
-    this.onAnimationComplete = callback;
-  }
-  setOnConnectionRevealed(callback) {
-    this.onConnectionRevealed = callback;
-  }
-  get isDiscovered() {
-    return this.data.discovered;
-  }
-  get discoveryProgress() {
-    return this._discoveryProgress;
-  }
-  getDiscoveryProgress() {
-    return this._discoveryProgress;
-  }
-  addHoverTime(deltaTime) {
-    if (this.data.discovered || this.isAnimating)
-      return false;
-    this.hoverTime += deltaTime;
-    this._discoveryProgress = Math.min(1, this.hoverTime / this.hoverTimeRequired);
-    if (this.hoverTime >= this.hoverTimeRequired) {
-      this.discover();
-      return true;
-    }
-    return false;
-  }
-  resetHoverTime() {
-    this.hoverTime = 0;
-    this._discoveryProgress = 0;
-  }
-  discover() {
-    this.data.discovered = true;
-    this.isAnimating = true;
-    this.animationTime = 0;
-    this.revealedConnections = 0;
-    this.starActivationTimes.clear();
-    this.cosmicFlashTime = 0;
-  }
-  cancelDiscovery() {
-    if (!this.isAnimating)
-      return;
-    this.data.discovered = false;
-    this.isAnimating = false;
-    this.animationTime = 0;
-    this.revealedConnections = 0;
-    this.currentConnectionProgress = 0;
-    this.starActivationTimes.clear();
-    this.cosmicFlashTime = 0;
-    this.hoverTime = 0;
-    this._discoveryProgress = 0;
-    this.onAnimationComplete = null;
-    this.onConnectionRevealed = null;
-  }
-  isAnimatingDiscovery() {
-    return this.isAnimating;
-  }
-  update(deltaTime, isInView = true) {
-    if (!this.isAnimating)
-      return;
-    if (!isInView)
-      return;
-    const wasFirstFrame = this.animationTime === 0;
-    this.animationTime += deltaTime;
-    if (wasFirstFrame && this.data.connections.length > 0) {
-      const firstConnection = this.data.connections[0];
-      if (firstConnection) {
-        const [starIdx1] = firstConnection;
-        if (starIdx1 !== undefined) {
-          this.starActivationTimes.set(starIdx1, this.animationTime);
-          if (this.onConnectionRevealed) {
-            this.onConnectionRevealed(-1, this.data.connections.length);
-          }
-        }
-      }
-    }
-    const totalProgress = Math.min(1, this.animationTime / this.animationDuration);
-    const connectionProgress = totalProgress * this.data.connections.length;
-    const newRevealedConnections = Math.floor(connectionProgress);
-    this.currentConnectionProgress = connectionProgress - newRevealedConnections;
-    if (newRevealedConnections > this.revealedConnections) {
-      for (let i = this.revealedConnections;i < newRevealedConnections; i++) {
-        if (this.onConnectionRevealed) {
-          this.onConnectionRevealed(i, this.data.connections.length);
-        }
-        const connection = this.data.connections[i];
-        if (connection) {
-          const [, starIdx2] = connection;
-          if (starIdx2 !== undefined && !this.starActivationTimes.has(starIdx2)) {
-            this.starActivationTimes.set(starIdx2, this.animationTime);
-          }
-        }
-      }
-    }
-    this.revealedConnections = newRevealedConnections;
-    if (this.animationTime >= this.animationDuration) {
-      this.isAnimating = false;
-      this.revealedConnections = this.data.connections.length;
-      this.currentConnectionProgress = 0;
-      if (this.onAnimationComplete) {
-        this.onAnimationComplete();
-        this.onAnimationComplete = null;
-        this.onConnectionRevealed = null;
-      }
-    }
-  }
-  render(ctx, viewX, viewY, canvasWidth, canvasHeight, opacityMultiplier = 1) {
-    let effectiveViewX = viewX;
-    const dx = this.data.centerX - viewX;
-    const skyWidth = 6000;
-    if (dx < -skyWidth / 2)
-      effectiveViewX -= skyWidth;
-    else if (dx > skyWidth / 2)
-      effectiveViewX += skyWidth;
-    const centerScreenX = this.data.centerX - effectiveViewX + canvasWidth / 2;
-    const centerScreenY = this.data.centerY - viewY + canvasHeight / 2;
-    if (Math.abs(centerScreenX - canvasWidth / 2) > canvasWidth || Math.abs(centerScreenY - canvasHeight / 2) > canvasHeight) {
-      return;
-    }
-    if (this.data.discovered) {
-      this.renderDiscovered(ctx, effectiveViewX, viewY, canvasWidth, canvasHeight, opacityMultiplier);
-    } else if (this._discoveryProgress > 0) {
-      this.renderHint(ctx, effectiveViewX, viewY, canvasWidth, canvasHeight);
-    }
-  }
-  renderHint(ctx, viewX, viewY, canvasWidth, canvasHeight) {
-    const alpha = this._discoveryProgress * 0.5;
-    for (const star of this.data.stars) {
-      const pos = this.getScaledStarPosition(star);
-      const screenX = pos.x - viewX + canvasWidth / 2;
-      const screenY = pos.y - viewY + canvasHeight / 2;
-      const pulse = Math.sin(Date.now() * 0.005) * 0.3 + 0.7;
-      const size = 3 + star.brightness * 2;
-      ctx.beginPath();
-      ctx.arc(screenX, screenY, size * 3, 0, Math.PI * 2);
-      const glowGradient = ctx.createRadialGradient(screenX, screenY, 0, screenX, screenY, size * 3);
-      glowGradient.addColorStop(0, `rgba(255, 217, 61, ${alpha * pulse * 0.5})`);
-      glowGradient.addColorStop(1, "rgba(255, 217, 61, 0)");
-      ctx.fillStyle = glowGradient;
-      ctx.fill();
-    }
-  }
-  renderDiscovered(ctx, viewX, viewY, canvasWidth, canvasHeight, opacityMultiplier = 1) {
-    const centerScreenX = this.data.centerX - viewX + canvasWidth / 2;
-    const centerScreenY = this.data.centerY - viewY + canvasHeight / 2;
-    const justCompleted = this.isAnimating && this.revealedConnections === this.data.connections.length;
-    if (justCompleted && this.cosmicFlashTime === 0) {
-      this.cosmicFlashTime = this.animationTime;
-    }
-    let cosmicFlashIntensity = 0;
-    if (this.cosmicFlashTime > 0) {
-      const timeSinceFlash = this.animationTime - this.cosmicFlashTime;
-      if (timeSinceFlash < this.cosmicFlashDuration) {
-        const progress = timeSinceFlash / this.cosmicFlashDuration;
-        cosmicFlashIntensity = Math.sin(progress * Math.PI);
-      }
-    }
-    const baseAlpha = (this.isAnimating ? 0.8 : 0.6) * opacityMultiplier;
-    const lineAlpha = baseAlpha + cosmicFlashIntensity * 0.4;
-    if (cosmicFlashIntensity > 0) {
-      const shockwaveRadius = cosmicFlashIntensity * 350;
-      const shockwaveGradient = ctx.createRadialGradient(centerScreenX, centerScreenY, shockwaveRadius * 0.7, centerScreenX, centerScreenY, shockwaveRadius);
-      shockwaveGradient.addColorStop(0, `rgba(255, 220, 100, 0)`);
-      shockwaveGradient.addColorStop(0.5, `rgba(255, 180, 50, ${cosmicFlashIntensity * 0.4})`);
-      shockwaveGradient.addColorStop(1, `rgba(255, 140, 30, 0)`);
-      ctx.beginPath();
-      ctx.arc(centerScreenX, centerScreenY, shockwaveRadius, 0, Math.PI * 2);
-      ctx.fillStyle = shockwaveGradient;
-      ctx.fill();
-      const glowGradient = ctx.createRadialGradient(centerScreenX, centerScreenY, 0, centerScreenX, centerScreenY, 180);
-      glowGradient.addColorStop(0, `rgba(255, 250, 220, ${cosmicFlashIntensity * 0.5})`);
-      glowGradient.addColorStop(0.4, `rgba(255, 200, 100, ${cosmicFlashIntensity * 0.3})`);
-      glowGradient.addColorStop(1, `rgba(255, 160, 50, 0)`);
-      ctx.beginPath();
-      ctx.arc(centerScreenX, centerScreenY, 180, 0, Math.PI * 2);
-      ctx.fillStyle = glowGradient;
-      ctx.fill();
-    }
-    ctx.lineCap = "round";
-    const connectionsToRender = this.isAnimating ? this.revealedConnections : this.data.connections.length;
-    const shouldWrapLine = (x1, x2) => {
-      const skyWidth = 6000;
-      const distance = Math.abs(x2 - x1);
-      return distance > skyWidth / 2;
-    };
-    const drawWrappedLine = (x1Coord, y1Coord, x2Coord, y2Coord, viewXCoord, canvasWidthParam, alpha) => {
-      const skyWidth = 6000;
-      const screenX1 = x1Coord - viewXCoord + canvasWidthParam / 2;
-      const screenY1 = y1Coord;
-      const screenX2 = x2Coord - viewXCoord + canvasWidthParam / 2;
-      const screenY2 = y2Coord;
-      if (shouldWrapLine(x1Coord, x2Coord)) {
-        const leftX = x1Coord < x2Coord ? x1Coord : x2Coord;
-        const rightX = x1Coord < x2Coord ? x2Coord : x1Coord;
-        const leftY = x1Coord < x2Coord ? y1Coord : y2Coord;
-        const rightY = x1Coord < x2Coord ? y2Coord : y1Coord;
-        const leftScreenX = leftX - viewXCoord + canvasWidthParam / 2;
-        const rightScreenX = rightX - viewXCoord + canvasWidthParam / 2;
-        const wrappedRightX = rightX - skyWidth;
-        const wrappedScreenX = wrappedRightX - viewXCoord + canvasWidthParam / 2;
-        const wrappedLeftX = leftX + skyWidth;
-        const wrappedLeftScreenX = wrappedLeftX - viewXCoord + canvasWidthParam / 2;
-        const margin = 200;
-        const leftStarVisible = leftScreenX >= -margin && leftScreenX <= canvasWidthParam + margin;
-        const rightStarVisible = rightScreenX >= -margin && rightScreenX <= canvasWidthParam + margin;
-        if (leftStarVisible || wrappedScreenX >= -margin && wrappedScreenX <= canvasWidthParam + margin) {
-          this.drawGlowingLine(ctx, leftScreenX, leftY, wrappedScreenX, rightY, alpha);
-        }
-        if (rightStarVisible || wrappedLeftScreenX >= -margin && wrappedLeftScreenX <= canvasWidthParam + margin) {
-          this.drawGlowingLine(ctx, wrappedLeftScreenX, leftY, rightScreenX, rightY, alpha);
-        }
-      } else {
-        this.drawGlowingLine(ctx, screenX1, screenY1, screenX2, screenY2, alpha);
-      }
-    };
-    for (let i = 0;i < connectionsToRender; i++) {
-      const connection = this.data.connections[i];
-      if (!connection)
-        continue;
-      const [starIdx1, starIdx2] = connection;
-      const star1 = this.data.stars[starIdx1];
-      const star2 = this.data.stars[starIdx2];
-      if (!star1 || !star2)
-        continue;
-      const pos1 = this.getScaledStarPosition(star1);
-      const pos2 = this.getScaledStarPosition(star2);
-      const y1 = pos1.y - viewY + canvasHeight / 2;
-      const y2 = pos2.y - viewY + canvasHeight / 2;
-      drawWrappedLine(pos1.x, y1, pos2.x, y2, viewX, canvasWidth, lineAlpha);
-    }
-    if (this.isAnimating && this.revealedConnections < this.data.connections.length) {
-      const currentConnection = this.data.connections[this.revealedConnections];
-      if (currentConnection) {
-        const [starIdx1, starIdx2] = currentConnection;
-        const star1 = this.data.stars[starIdx1];
-        const star2 = this.data.stars[starIdx2];
-        if (star1 && star2) {
-          const pos1 = this.getScaledStarPosition(star1);
-          const pos2 = this.getScaledStarPosition(star2);
-          const y1 = pos1.y - viewY + canvasHeight / 2;
-          const y2 = pos2.y - viewY + canvasHeight / 2;
-          const progress = this.currentConnectionProgress;
-          const skyWidth = 6000;
-          let partialX = pos1.x;
-          let partialY = y1;
-          if (shouldWrapLine(pos1.x, pos2.x)) {
-            const dx = pos2.x - pos1.x;
-            if (Math.abs(dx) > skyWidth / 2) {
-              const adjustedX2 = dx > 0 ? pos2.x - skyWidth : pos2.x + skyWidth;
-              partialX = pos1.x + (adjustedX2 - pos1.x) * progress;
-              if (partialX < 0)
-                partialX += skyWidth;
-              if (partialX >= skyWidth)
-                partialX -= skyWidth;
-            }
-          } else {
-            partialX = pos1.x + (pos2.x - pos1.x) * progress;
-          }
-          partialY = y1 + (y2 - y1) * progress;
-          drawWrappedLine(pos1.x, y1, partialX, partialY, viewX, canvasWidth, lineAlpha);
-          const partialScreenX = partialX - viewX + canvasWidth / 2;
-          this.drawSparkHead(ctx, partialScreenX, partialY);
-        }
-      }
-    }
-    for (let starIdx = 0;starIdx < this.data.stars.length; starIdx++) {
-      const star = this.data.stars[starIdx];
-      if (!star)
-        continue;
-      const pos = this.getScaledStarPosition(star);
-      const screenX = pos.x - viewX + canvasWidth / 2;
-      const screenY = pos.y - viewY + canvasHeight / 2;
-      const activationTime = this.starActivationTimes.get(starIdx);
-      const isActivated = activationTime !== undefined;
-      let size = 3 + star.brightness * 3;
-      let starAlpha = baseAlpha + cosmicFlashIntensity * 0.3;
-      let flashProgress = 0;
-      if (this.isAnimating && !isActivated) {
-        const hintAlpha = 0.35;
-        const hintSize = 3 + star.brightness * 2;
-        const pulse = Math.sin(Date.now() * 0.005) * 0.3 + 0.7;
-        ctx.beginPath();
-        ctx.arc(screenX, screenY, hintSize * 3, 0, Math.PI * 2);
-        const glowGradient = ctx.createRadialGradient(screenX, screenY, 0, screenX, screenY, hintSize * 3);
-        glowGradient.addColorStop(0, `rgba(255, 217, 61, ${hintAlpha * pulse * 0.5})`);
-        glowGradient.addColorStop(1, "rgba(255, 217, 61, 0)");
-        ctx.fillStyle = glowGradient;
-        ctx.fill();
-        continue;
-      }
-      if (this.isAnimating && isActivated) {
-        const timeSinceActivation = this.animationTime - activationTime;
-        if (timeSinceActivation < this.starFlashDuration) {
-          flashProgress = Math.sin(timeSinceActivation / this.starFlashDuration * Math.PI);
-          size *= 1 + flashProgress * 0.4;
-          starAlpha = Math.min(1, starAlpha + flashProgress * 0.3);
-        }
-      }
-      this.renderCosmicStar(ctx, screenX, screenY, size, starAlpha, isActivated, flashProgress);
-    }
-    if (!this.isAnimating) {
-      ctx.font = '16px "Cormorant Garamond", serif';
-      ctx.fillStyle = `rgba(255, 220, 180, ${0.7 * opacityMultiplier})`;
-      ctx.textAlign = "center";
-      ctx.shadowColor = `rgba(255, 180, 80, ${0.5 * opacityMultiplier})`;
-      ctx.shadowBlur = 10;
-      ctx.fillText(this.data.name, centerScreenX, centerScreenY + this.data.radius + 35);
-      ctx.shadowBlur = 0;
-    }
-  }
-  drawGlowingLine(ctx, x1, y1, x2, y2, alpha) {
-    ctx.lineCap = "round";
-    ctx.beginPath();
-    ctx.moveTo(x1, y1);
-    ctx.lineTo(x2, y2);
-    ctx.strokeStyle = `${this.colors.outerGlow}${alpha * 0.2})`;
-    ctx.lineWidth = 12;
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.moveTo(x1, y1);
-    ctx.lineTo(x2, y2);
-    ctx.strokeStyle = `${this.colors.midAmber}${alpha * 0.4})`;
-    ctx.lineWidth = 6;
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.moveTo(x1, y1);
-    ctx.lineTo(x2, y2);
-    ctx.strokeStyle = `${this.colors.innerGold}${alpha * 0.7})`;
-    ctx.lineWidth = 3;
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.moveTo(x1, y1);
-    ctx.lineTo(x2, y2);
-    ctx.strokeStyle = `${this.colors.coreWhite}${alpha * 0.9})`;
-    ctx.lineWidth = 1.5;
-    ctx.stroke();
-  }
-  drawSparkHead(ctx, x, y) {
-    const sparkSize = 10;
-    const time = Date.now() * 0.01;
-    const flicker = 0.85 + Math.sin(time) * 0.15;
-    const outerGlow = ctx.createRadialGradient(x, y, 0, x, y, sparkSize * 2.5);
-    outerGlow.addColorStop(0, `rgba(255, 160, 60, ${0.8 * flicker})`);
-    outerGlow.addColorStop(0.5, `rgba(220, 100, 40, ${0.4 * flicker})`);
-    outerGlow.addColorStop(1, "rgba(180, 80, 60, 0)");
-    ctx.beginPath();
-    ctx.arc(x, y, sparkSize * 2.5, 0, Math.PI * 2);
-    ctx.fillStyle = outerGlow;
-    ctx.fill();
-    const coreGlow = ctx.createRadialGradient(x, y, 0, x, y, sparkSize);
-    coreGlow.addColorStop(0, `rgba(255, 255, 250, ${flicker})`);
-    coreGlow.addColorStop(0.4, `rgba(255, 230, 150, ${0.9 * flicker})`);
-    coreGlow.addColorStop(0.7, `rgba(255, 180, 80, ${0.5 * flicker})`);
-    coreGlow.addColorStop(1, "rgba(255, 140, 50, 0)");
-    ctx.beginPath();
-    ctx.arc(x, y, sparkSize, 0, Math.PI * 2);
-    ctx.fillStyle = coreGlow;
-    ctx.fill();
-    ctx.beginPath();
-    ctx.arc(x, y, sparkSize * 0.25, 0, Math.PI * 2);
-    ctx.fillStyle = `rgba(255, 255, 255, ${flicker})`;
-    ctx.fill();
-  }
-  renderCosmicStar(ctx, x, y, size, alpha, isActivated, flashProgress) {
-    const coronaMultiplier = isActivated ? 1 + flashProgress * 0.6 : 0.5;
-    if (isActivated) {
-      const outerRadius = size * 6 * coronaMultiplier;
-      const outerHaze = ctx.createRadialGradient(x, y, size * 2, x, y, outerRadius);
-      outerHaze.addColorStop(0, `${this.colors.outerGlow}${alpha * 0.15})`);
-      outerHaze.addColorStop(0.6, `${this.colors.cosmicHaze}${alpha * 0.08})`);
-      outerHaze.addColorStop(1, "rgba(180, 140, 100, 0)");
-      ctx.beginPath();
-      ctx.arc(x, y, outerRadius, 0, Math.PI * 2);
-      ctx.fillStyle = outerHaze;
-      ctx.fill();
-    }
-    const amberRadius = size * 4 * coronaMultiplier;
-    const amberGlow = ctx.createRadialGradient(x, y, size, x, y, amberRadius);
-    amberGlow.addColorStop(0, `${this.colors.midAmber}${alpha * 0.4})`);
-    amberGlow.addColorStop(0.6, `${this.colors.outerGlow}${alpha * 0.2})`);
-    amberGlow.addColorStop(1, "rgba(220, 160, 60, 0)");
-    ctx.beginPath();
-    ctx.arc(x, y, amberRadius, 0, Math.PI * 2);
-    ctx.fillStyle = amberGlow;
-    ctx.fill();
-    const goldRadius = size * 2.5 * coronaMultiplier;
-    const goldGlow = ctx.createRadialGradient(x, y, 0, x, y, goldRadius);
-    goldGlow.addColorStop(0, `${this.colors.innerGold}${alpha * 0.7})`);
-    goldGlow.addColorStop(0.5, `${this.colors.midAmber}${alpha * 0.4})`);
-    goldGlow.addColorStop(1, "rgba(255, 190, 80, 0)");
-    ctx.beginPath();
-    ctx.arc(x, y, goldRadius, 0, Math.PI * 2);
-    ctx.fillStyle = goldGlow;
-    ctx.fill();
-    ctx.beginPath();
-    ctx.arc(x, y, size * 0.8, 0, Math.PI * 2);
-    ctx.fillStyle = `${this.colors.coreWhite}${Math.min(1, alpha * 1.1)})`;
-    ctx.fill();
-  }
-}
-
-// src/game/Nebula.ts
-class Nebula {
-  id;
-  name;
-  x;
-  y;
-  radius;
-  isDiscovered = false;
-  discoveryProgress = 0;
-  data;
-  hoverTime = 0;
-  hoverTimeRequired = 2;
-  isAnimating = false;
-  animationTime = 0;
-  animationDuration = 4;
-  bloomProgress = 0;
-  onAnimationComplete = null;
-  timeOffset;
-  constructor(data) {
-    this.data = data;
-    this.id = data.id;
-    this.name = data.name;
-    this.x = data.x;
-    this.y = data.y;
-    this.radius = Math.max(data.width, data.height) * 1;
-    this.timeOffset = Math.random() * 1000;
-  }
-  getData() {
-    return this.data;
-  }
-  containsPoint(x, y) {
-    const dx = x - this.x;
-    const dy = y - this.y;
-    return dx * dx + dy * dy < this.radius * this.radius;
-  }
-  update(dt, _isInView) {
-    if (this.isAnimating) {
-      this.animationTime += dt;
-      this.bloomProgress = Math.min(1, this.animationTime / this.animationDuration);
-      if (this.animationTime >= this.animationDuration) {
-        this.isAnimating = false;
-        this.bloomProgress = 1;
-        if (this.onAnimationComplete) {
-          this.onAnimationComplete();
-          this.onAnimationComplete = null;
-        }
-      }
-    } else if (this.isDiscovered) {
-      this.bloomProgress = 1;
-    }
-  }
-  addHoverTime(dt) {
-    if (this.isDiscovered || this.isAnimating)
-      return false;
-    this.hoverTime += dt;
-    this.discoveryProgress = Math.min(1, this.hoverTime / this.hoverTimeRequired);
-    if (this.hoverTime >= this.hoverTimeRequired) {
-      this.discover();
-      return true;
-    }
-    return false;
-  }
-  resetHoverTime() {
-    this.hoverTime = 0;
-    this.discoveryProgress = 0;
-  }
-  discover() {
-    this.isDiscovered = true;
-    this.isAnimating = true;
-    this.animationTime = 0;
-    this.bloomProgress = 0;
-  }
-  setOnAnimationComplete(callback) {
-    this.onAnimationComplete = callback;
-  }
-  render(ctx, viewX, viewY, canvasWidth, canvasHeight, scale = 1, glowMultiplier = 1) {
-    if (this.x + this.radius < viewX || this.x - this.radius > viewX + canvasWidth || this.y + this.radius < viewY || this.y - this.radius > viewY + canvasHeight) {
-      return;
-    }
-    let globalAlpha = 0;
-    if (this.isDiscovered) {
-      globalAlpha = this.bloomProgress;
-    } else {
-      globalAlpha = 0.1 + this.discoveryProgress * 0.3;
-    }
-    if (globalAlpha <= 0.01)
-      return;
-    ctx.save();
-    ctx.translate(this.x - viewX + canvasWidth / 2, this.y - viewY + canvasHeight / 2);
-    ctx.scale(scale, scale);
-    if (this.data.rotation)
-      ctx.rotate(this.data.rotation);
-    const time = Date.now() / 1000 + this.timeOffset;
-    const breathScale = 1 + Math.sin(time * 0.5) * 0.03;
-    ctx.scale(breathScale, breathScale);
-    if (this.data.layers) {
-      for (const layer of this.data.layers) {
-        ctx.globalCompositeOperation = layer.blendMode || "screen";
-        this.drawLayer(ctx, layer, globalAlpha, time, glowMultiplier);
-      }
-    } else {}
-    if (this.isDiscovered && !this.isAnimating) {
-      ctx.setTransform(1, 0, 0, 1, 0, 0);
-      const screenX = this.x - viewX + canvasWidth / 2;
-      const screenY = this.y - viewY + canvasHeight / 2;
-      ctx.globalCompositeOperation = "source-over";
-      ctx.globalAlpha = 1;
-      ctx.font = '16px "Cormorant Garamond", serif';
-      ctx.fillStyle = `rgba(220, 200, 255, 0.7)`;
-      ctx.textAlign = "center";
-      ctx.fillText(this.name, screenX, screenY + this.radius * 0.8 + 20);
-    }
-    ctx.restore();
-  }
-  drawLayer(ctx, layer, globalAlpha, time, glowMultiplier = 1) {
-    const layerAlpha = layer.opacity * globalAlpha * glowMultiplier;
-    if (layerAlpha <= 0)
-      return;
-    ctx.save();
-    const layerSeed = layer.offsetX * 13 + layer.offsetY * 17;
-    const wanderX = Math.sin(time * 0.3 + layerSeed) * 5;
-    const wanderY = Math.cos(time * 0.4 + layerSeed) * 5;
-    ctx.translate(layer.offsetX + wanderX, layer.offsetY + wanderY);
-    if (layer.rotation)
-      ctx.rotate(layer.rotation);
-    const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, Math.max(layer.width, layer.height) / 2);
-    grad.addColorStop(0, layer.color);
-    grad.addColorStop(1, "rgba(0,0,0,0)");
-    ctx.fillStyle = grad;
-    ctx.globalAlpha = layerAlpha;
-    ctx.beginPath();
-    if (layer.shape === "ellipse") {
-      ctx.ellipse(0, 0, layer.width / 2, layer.height / 2, 0, 0, Math.PI * 2);
-    } else if (layer.shape === "streak") {
-      ctx.ellipse(0, 0, layer.width / 2, layer.height / 6, 0, 0, Math.PI * 2);
-    } else {
-      ctx.ellipse(0, 0, layer.width / 2, layer.height / 2, 0, 0, Math.PI * 2);
-    }
-    ctx.fill();
-    ctx.restore();
-  }
-}
-
-// src/game/StarCluster.ts
-class StarCluster {
-  id;
-  name;
-  x;
-  y;
-  radius;
-  isDiscovered = false;
-  discoveryProgress = 0;
-  data;
-  stars = [];
-  hoverTime = 0;
-  hoverTimeRequired = 2;
-  isAnimating = false;
-  animationTime = 0;
-  animationDuration = 2.5;
-  onAnimationComplete = null;
-  constructor(data) {
-    this.data = data;
-    this.id = data.id;
-    this.name = data.name;
-    this.x = data.x;
-    this.y = data.y;
-    this.radius = data.radius;
-    this.generateStars();
-  }
-  getData() {
-    return this.data;
-  }
-  generateStars() {
-    for (let i = 0;i < this.data.starCount; i++) {
-      const angle = Math.random() * Math.PI * 2;
-      const r = Math.pow(Math.random(), 0.5) * this.data.radius;
-      this.stars.push({
-        x: Math.cos(angle) * r,
-        y: Math.sin(angle) * r,
-        size: Math.random() * 1.5 + 0.5,
-        brightness: Math.random() * 0.5 + 0.5
-      });
-    }
-  }
-  containsPoint(x, y) {
-    const dx = x - this.x;
-    const dy = y - this.y;
-    return dx * dx + dy * dy < this.radius * this.radius;
-  }
-  addHoverTime(dt) {
-    if (this.isDiscovered || this.isAnimating)
-      return false;
-    this.hoverTime += dt;
-    this.discoveryProgress = Math.min(1, this.hoverTime / this.hoverTimeRequired);
-    if (this.hoverTime >= this.hoverTimeRequired) {
-      this.discover();
-      return true;
-    }
-    return false;
-  }
-  resetHoverTime() {
-    this.hoverTime = 0;
-    this.discoveryProgress = 0;
-  }
-  discover() {
-    this.isDiscovered = true;
-    this.isAnimating = true;
-    this.animationTime = 0;
-    const spread = this.animationDuration * 0.7;
-    for (const star of this.stars) {
-      star.activationTime = Math.random() * spread;
-    }
-  }
-  setOnAnimationComplete(callback) {
-    this.onAnimationComplete = callback;
-  }
-  update(dt, _isInView) {
-    if (this.isAnimating) {
-      this.animationTime += dt;
-      if (this.animationTime >= this.animationDuration) {
-        this.isAnimating = false;
-        if (this.onAnimationComplete) {
-          this.onAnimationComplete();
-          this.onAnimationComplete = null;
-        }
-      }
-    }
-  }
-  render(ctx, viewX, viewY, canvasWidth, canvasHeight, scale = 1, glowMultiplier = 1) {
-    const centerX = this.x - viewX + canvasWidth / 2;
-    const centerY = this.y - viewY + canvasHeight / 2;
-    ctx.save();
-    ctx.translate(centerX, centerY);
-    ctx.scale(scale, scale);
-    ctx.translate(-centerX, -centerY);
-    if (!this.isDiscovered && this.discoveryProgress > 0) {
-      ctx.save();
-      const hintAlpha = this.discoveryProgress * 0.3;
-      const pulse = 1 + Math.sin(Date.now() * 0.005) * 0.1;
-      const grad = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, this.radius * 1.5);
-      grad.addColorStop(0, `rgba(200, 220, 255, ${hintAlpha * pulse})`);
-      grad.addColorStop(1, "rgba(0,0,0,0)");
-      ctx.fillStyle = grad;
-      ctx.beginPath();
-      ctx.arc(centerX, centerY, this.radius * 1.5, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.restore();
-    }
-    if (this.isDiscovered) {
-      const alpha = this.isAnimating ? Math.min(1, this.animationTime / 1) : 1;
-      if (alpha > 0) {
-        ctx.save();
-        ctx.globalAlpha = alpha * glowMultiplier;
-        ctx.globalCompositeOperation = "screen";
-        for (const star of this.stars) {
-          if (star.brightness < 0.6)
-            continue;
-          const sx = centerX + star.x;
-          const sy = centerY + star.y;
-          const color = this.data.color || "#A0C0FF";
-          const grad = ctx.createRadialGradient(sx, sy, 0, sx, sy, star.size * 30);
-          grad.addColorStop(0, color + "22");
-          grad.addColorStop(1, "#00000000");
-          ctx.fillStyle = grad;
-          ctx.beginPath();
-          ctx.arc(sx, sy, star.size * 30, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.save();
-          ctx.translate(sx, sy);
-          ctx.rotate(star.x * 0.01 + star.y * 0.01);
-          const wispGrad = ctx.createLinearGradient(-20, 0, 20, 0);
-          wispGrad.addColorStop(0, "#00000000");
-          wispGrad.addColorStop(0.5, color + "11");
-          wispGrad.addColorStop(1, "#00000000");
-          ctx.fillStyle = wispGrad;
-          ctx.fillRect(-20, -10, 40, 20);
-          ctx.restore();
-        }
-        ctx.restore();
-      }
-      for (const star of this.stars) {
-        let starAlpha = 0;
-        let starSize = star.size;
-        if (this.isAnimating && star.activationTime !== undefined) {
-          if (this.animationTime < star.activationTime)
-            continue;
-          const timeSinceActive = this.animationTime - star.activationTime;
-          if (timeSinceActive < 0.3) {
-            const pop = Math.sin(timeSinceActive / 0.3 * Math.PI);
-            starSize = star.size * (1 + pop * 2);
-            starAlpha = 1;
-          } else {
-            starAlpha = star.brightness;
-          }
-        } else {
-          starAlpha = star.brightness;
-        }
-        const sx = centerX + star.x;
-        const sy = centerY + star.y;
-        ctx.beginPath();
-        ctx.arc(sx, sy, starSize, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255, 255, 255, ${starAlpha})`;
-        ctx.fill();
-        if (starAlpha > 0.5) {
-          ctx.beginPath();
-          ctx.arc(sx, sy, starSize * 3, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(160, 200, 255, ${starAlpha * 0.3})`;
-          ctx.fill();
-        }
-      }
-      if (!this.isAnimating) {
-        ctx.font = '14px "Cormorant Garamond", serif';
-        ctx.fillStyle = `rgba(200, 220, 255, 0.7)`;
-        ctx.textAlign = "center";
-        ctx.fillText(this.name, centerX, centerY + this.radius + 25);
-      }
-    }
-    ctx.restore();
-  }
-}
-
-// src/game/Galaxy.ts
-class Galaxy {
-  id;
-  name;
-  x;
-  y;
-  radius;
-  isDiscovered = false;
-  discoveryProgress = 0;
-  data;
-  hoverTime = 0;
-  hoverTimeRequired = 2;
-  isAnimating = false;
-  animationTime = 0;
-  animationDuration = 5;
-  bloomProgress = 0;
-  onAnimationComplete = null;
-  timeOffset;
-  rotationSpeed;
-  constructor(data) {
-    this.data = data;
-    this.id = data.id;
-    this.name = data.name;
-    this.x = data.x;
-    this.y = data.y;
-    this.radius = Math.max(data.width, data.height) * 1;
-    this.timeOffset = Math.random() * 1000;
-    this.rotationSpeed = data.galaxyType === "spiral" ? 0.00005 : 0;
-  }
-  getData() {
-    return this.data;
-  }
-  containsPoint(x, y) {
-    const dx = x - this.x;
-    const dy = y - this.y;
-    return dx * dx + dy * dy < this.radius * this.radius;
-  }
-  update(dt, _isInView) {
-    if (this.isAnimating) {
-      this.animationTime += dt;
-      this.bloomProgress = Math.min(1, this.animationTime / this.animationDuration);
-      if (this.animationTime >= this.animationDuration) {
-        this.isAnimating = false;
-        this.bloomProgress = 1;
-        if (this.onAnimationComplete) {
-          this.onAnimationComplete();
-          this.onAnimationComplete = null;
-        }
-      }
-    } else if (this.isDiscovered) {
-      this.bloomProgress = 1;
-    }
-  }
-  addHoverTime(dt) {
-    if (this.isDiscovered || this.isAnimating)
-      return false;
-    this.hoverTime += dt;
-    this.discoveryProgress = Math.min(1, this.hoverTime / this.hoverTimeRequired);
-    if (this.hoverTime >= this.hoverTimeRequired) {
-      this.discover();
-      return true;
-    }
-    return false;
-  }
-  resetHoverTime() {
-    this.hoverTime = 0;
-    this.discoveryProgress = 0;
-  }
-  discover() {
-    this.isDiscovered = true;
-    this.isAnimating = true;
-    this.animationTime = 0;
-    this.bloomProgress = 0;
-  }
-  setOnAnimationComplete(callback) {
-    this.onAnimationComplete = callback;
-  }
-  render(ctx, viewX, viewY, canvasWidth, canvasHeight, scale = 1, glowMultiplier = 1) {
-    if (this.x + this.radius < viewX || this.x - this.radius > viewX + canvasWidth || this.y + this.radius < viewY || this.y - this.radius > viewY + canvasHeight) {
-      return;
-    }
-    let globalAlpha = 0;
-    if (this.isDiscovered) {
-      globalAlpha = this.bloomProgress;
-    } else {
-      globalAlpha = 0.05 + this.discoveryProgress * 0.25;
-    }
-    if (globalAlpha <= 0.01)
-      return;
-    ctx.save();
-    ctx.translate(this.x - viewX + canvasWidth / 2, this.y - viewY + canvasHeight / 2);
-    ctx.scale(scale, scale);
-    if (this.data.rotation)
-      ctx.rotate(this.data.rotation);
-    if (this.rotationSpeed > 0) {
-      const time2 = Date.now() / 1000 + this.timeOffset;
-      ctx.rotate(time2 * this.rotationSpeed);
-    }
-    const time = Date.now() / 1000 + this.timeOffset;
-    const breathScale = 1 + Math.sin(time * 0.3) * 0.02;
-    ctx.scale(breathScale, breathScale);
-    if (this.data.layers) {
-      for (const layer of this.data.layers) {
-        ctx.globalCompositeOperation = layer.blendMode || "screen";
-        this.drawLayer(ctx, layer, globalAlpha, time, glowMultiplier);
-      }
-    }
-    if (this.isDiscovered && !this.isAnimating) {
-      ctx.setTransform(1, 0, 0, 1, 0, 0);
-      const screenX = this.x - viewX + canvasWidth / 2;
-      const screenY = this.y - viewY + canvasHeight / 2;
-      ctx.globalCompositeOperation = "source-over";
-      ctx.globalAlpha = 1;
-      ctx.font = '15px "Cormorant Garamond", serif';
-      ctx.fillStyle = `rgba(200, 210, 230, 0.75)`;
-      ctx.textAlign = "center";
-      ctx.fillText(this.name, screenX, screenY + this.radius * 0.8 + 22);
-    }
-    ctx.restore();
-  }
-  drawLayer(ctx, layer, globalAlpha, time, glowMultiplier = 1) {
-    const layerAlpha = layer.opacity * globalAlpha * glowMultiplier;
-    if (layerAlpha <= 0)
-      return;
-    ctx.save();
-    const layerSeed = layer.offsetX * 13 + layer.offsetY * 17;
-    const wanderX = Math.sin(time * 0.2 + layerSeed) * 3;
-    const wanderY = Math.cos(time * 0.25 + layerSeed) * 3;
-    ctx.translate(layer.offsetX + wanderX, layer.offsetY + wanderY);
-    if (layer.rotation)
-      ctx.rotate(layer.rotation);
-    const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, Math.max(layer.width, layer.height) / 2);
-    grad.addColorStop(0, layer.color);
-    grad.addColorStop(1, "rgba(0,0,0,0)");
-    ctx.fillStyle = grad;
-    ctx.globalAlpha = layerAlpha;
-    ctx.beginPath();
-    if (layer.shape === "ellipse") {
-      ctx.ellipse(0, 0, layer.width / 2, layer.height / 2, 0, 0, Math.PI * 2);
-    } else if (layer.shape === "streak") {
-      ctx.ellipse(0, 0, layer.width / 2, layer.height / 6, 0, 0, Math.PI * 2);
-    } else {
-      ctx.ellipse(0, 0, layer.width / 2, layer.height / 2, 0, 0, Math.PI * 2);
-    }
-    ctx.fill();
-    ctx.restore();
   }
 }
 
@@ -10085,6 +9157,932 @@ var CONSTELLATIONS = [
 function getConstellationsByObservatory(observatory) {
   return CONSTELLATIONS.filter((c) => c.observatory === observatory);
 }
+// src/game/Constellation.ts
+class Constellation {
+  get id() {
+    return this.data.id;
+  }
+  get name() {
+    return this.data.name;
+  }
+  get x() {
+    return this.data.centerX;
+  }
+  get y() {
+    return this.data.centerY;
+  }
+  get radius() {
+    return this.data.radius;
+  }
+  containsPoint(x, y) {
+    const dx = x - this.x;
+    const dy = y - this.y;
+    return dx * dx + dy * dy < this.radius * this.radius;
+  }
+  data;
+  hoverTime = 0;
+  _discoveryProgress = 0;
+  isAnimating = false;
+  animationTime = 0;
+  revealedConnections = 0;
+  currentConnectionProgress = 0;
+  lastRevealedConnections = 0;
+  onAnimationComplete = null;
+  onConnectionRevealed = null;
+  starActivationTimes = new Map;
+  cosmicFlashTime = 0;
+  colors = {
+    coreWhite: "rgba(255, 255, 245, ",
+    innerGold: "rgba(255, 225, 130, ",
+    midAmber: "rgba(255, 190, 80, ",
+    outerGlow: "rgba(220, 160, 60, ",
+    cosmicHaze: "rgba(180, 140, 100, "
+  };
+  hoverTimeRequired = 2;
+  animationDuration = 3.5;
+  starFlashDuration = 0.6;
+  cosmicFlashDuration = 1.2;
+  scale = 0.85;
+  constructor(data) {
+    this.data = { ...data };
+  }
+  getScaledStarPosition(star) {
+    const dx = star.x - this.data.centerX;
+    const dy = star.y - this.data.centerY;
+    return {
+      x: this.data.centerX + dx * this.scale,
+      y: this.data.centerY + dy * this.scale
+    };
+  }
+  getData() {
+    return this.data;
+  }
+  getAnimationDuration() {
+    return this.animationDuration;
+  }
+  setOnAnimationComplete(callback) {
+    this.onAnimationComplete = callback;
+  }
+  setOnConnectionRevealed(callback) {
+    this.onConnectionRevealed = callback;
+  }
+  get isDiscovered() {
+    return this.data.discovered;
+  }
+  get discoveryProgress() {
+    return this._discoveryProgress;
+  }
+  addHoverTime(deltaTime) {
+    if (this.data.discovered || this.isAnimating)
+      return false;
+    this.hoverTime += deltaTime;
+    this._discoveryProgress = Math.min(1, this.hoverTime / this.hoverTimeRequired);
+    if (this.hoverTime >= this.hoverTimeRequired) {
+      this.discover();
+      return true;
+    }
+    return false;
+  }
+  resetHoverTime() {
+    this.hoverTime = 0;
+    this._discoveryProgress = 0;
+  }
+  discover() {
+    this.data.discovered = true;
+    this.isAnimating = true;
+    this.animationTime = 0;
+    this.revealedConnections = 0;
+    this.starActivationTimes.clear();
+    this.cosmicFlashTime = 0;
+  }
+  cancelDiscovery() {
+    if (!this.isAnimating)
+      return;
+    this.data.discovered = false;
+    this.isAnimating = false;
+    this.animationTime = 0;
+    this.revealedConnections = 0;
+    this.currentConnectionProgress = 0;
+    this.starActivationTimes.clear();
+    this.cosmicFlashTime = 0;
+    this.hoverTime = 0;
+    this._discoveryProgress = 0;
+    this.onAnimationComplete = null;
+    this.onConnectionRevealed = null;
+  }
+  isAnimatingDiscovery() {
+    return this.isAnimating;
+  }
+  update(deltaTime, isInView = true) {
+    if (!this.isAnimating)
+      return;
+    if (!isInView)
+      return;
+    const wasFirstFrame = this.animationTime === 0;
+    this.animationTime += deltaTime;
+    if (wasFirstFrame && this.data.connections.length > 0) {
+      const firstConnection = this.data.connections[0];
+      if (firstConnection) {
+        const [starIdx1] = firstConnection;
+        if (starIdx1 !== undefined) {
+          this.starActivationTimes.set(starIdx1, this.animationTime);
+          if (this.onConnectionRevealed) {
+            this.onConnectionRevealed(-1, this.data.connections.length);
+          }
+        }
+      }
+    }
+    const totalProgress = Math.min(1, this.animationTime / this.animationDuration);
+    const connectionProgress = totalProgress * this.data.connections.length;
+    const newRevealedConnections = Math.floor(connectionProgress);
+    this.currentConnectionProgress = connectionProgress - newRevealedConnections;
+    if (newRevealedConnections > this.revealedConnections) {
+      for (let i = this.revealedConnections;i < newRevealedConnections; i++) {
+        if (this.onConnectionRevealed) {
+          this.onConnectionRevealed(i, this.data.connections.length);
+        }
+        const connection = this.data.connections[i];
+        if (connection) {
+          const [, starIdx2] = connection;
+          if (starIdx2 !== undefined && !this.starActivationTimes.has(starIdx2)) {
+            this.starActivationTimes.set(starIdx2, this.animationTime);
+          }
+        }
+      }
+    }
+    this.revealedConnections = newRevealedConnections;
+    if (this.animationTime >= this.animationDuration) {
+      this.isAnimating = false;
+      this.revealedConnections = this.data.connections.length;
+      this.currentConnectionProgress = 0;
+      if (this.onAnimationComplete) {
+        this.onAnimationComplete();
+        this.onAnimationComplete = null;
+        this.onConnectionRevealed = null;
+      }
+    }
+  }
+  render(ctx, viewX, viewY, canvasWidth, canvasHeight, opacityMultiplier = 1) {
+    let effectiveViewX = viewX;
+    const dx = this.data.centerX - viewX;
+    if (dx < -SKY_WIDTH / 2)
+      effectiveViewX -= SKY_WIDTH;
+    else if (dx > SKY_WIDTH / 2)
+      effectiveViewX += SKY_WIDTH;
+    const centerScreenX = this.data.centerX - effectiveViewX + canvasWidth / 2;
+    const centerScreenY = this.data.centerY - viewY + canvasHeight / 2;
+    if (Math.abs(centerScreenX - canvasWidth / 2) > canvasWidth || Math.abs(centerScreenY - canvasHeight / 2) > canvasHeight) {
+      return;
+    }
+    if (this.data.discovered) {
+      this.renderDiscovered(ctx, effectiveViewX, viewY, canvasWidth, canvasHeight, opacityMultiplier);
+    } else if (this._discoveryProgress > 0) {
+      this.renderHint(ctx, effectiveViewX, viewY, canvasWidth, canvasHeight);
+    }
+  }
+  renderHint(ctx, viewX, viewY, canvasWidth, canvasHeight) {
+    const alpha = this._discoveryProgress * 0.5;
+    for (const star of this.data.stars) {
+      const pos = this.getScaledStarPosition(star);
+      const screenX = pos.x - viewX + canvasWidth / 2;
+      const screenY = pos.y - viewY + canvasHeight / 2;
+      const pulse = Math.sin(Date.now() * 0.005) * 0.3 + 0.7;
+      const size = 3 + star.brightness * 2;
+      ctx.beginPath();
+      ctx.arc(screenX, screenY, size * 3, 0, Math.PI * 2);
+      const glowGradient = ctx.createRadialGradient(screenX, screenY, 0, screenX, screenY, size * 3);
+      glowGradient.addColorStop(0, `rgba(255, 217, 61, ${alpha * pulse * 0.5})`);
+      glowGradient.addColorStop(1, "rgba(255, 217, 61, 0)");
+      ctx.fillStyle = glowGradient;
+      ctx.fill();
+    }
+  }
+  renderDiscovered(ctx, viewX, viewY, canvasWidth, canvasHeight, opacityMultiplier = 1) {
+    const centerScreenX = this.data.centerX - viewX + canvasWidth / 2;
+    const centerScreenY = this.data.centerY - viewY + canvasHeight / 2;
+    const justCompleted = this.isAnimating && this.revealedConnections === this.data.connections.length;
+    if (justCompleted && this.cosmicFlashTime === 0) {
+      this.cosmicFlashTime = this.animationTime;
+    }
+    let cosmicFlashIntensity = 0;
+    if (this.cosmicFlashTime > 0) {
+      const timeSinceFlash = this.animationTime - this.cosmicFlashTime;
+      if (timeSinceFlash < this.cosmicFlashDuration) {
+        const progress = timeSinceFlash / this.cosmicFlashDuration;
+        cosmicFlashIntensity = Math.sin(progress * Math.PI);
+      }
+    }
+    const baseAlpha = (this.isAnimating ? 0.8 : 0.6) * opacityMultiplier;
+    const lineAlpha = baseAlpha + cosmicFlashIntensity * 0.4;
+    if (cosmicFlashIntensity > 0) {
+      const shockwaveRadius = cosmicFlashIntensity * 350;
+      const shockwaveGradient = ctx.createRadialGradient(centerScreenX, centerScreenY, shockwaveRadius * 0.7, centerScreenX, centerScreenY, shockwaveRadius);
+      shockwaveGradient.addColorStop(0, `rgba(255, 220, 100, 0)`);
+      shockwaveGradient.addColorStop(0.5, `rgba(255, 180, 50, ${cosmicFlashIntensity * 0.4})`);
+      shockwaveGradient.addColorStop(1, `rgba(255, 140, 30, 0)`);
+      ctx.beginPath();
+      ctx.arc(centerScreenX, centerScreenY, shockwaveRadius, 0, Math.PI * 2);
+      ctx.fillStyle = shockwaveGradient;
+      ctx.fill();
+      const glowGradient = ctx.createRadialGradient(centerScreenX, centerScreenY, 0, centerScreenX, centerScreenY, 180);
+      glowGradient.addColorStop(0, `rgba(255, 250, 220, ${cosmicFlashIntensity * 0.5})`);
+      glowGradient.addColorStop(0.4, `rgba(255, 200, 100, ${cosmicFlashIntensity * 0.3})`);
+      glowGradient.addColorStop(1, `rgba(255, 160, 50, 0)`);
+      ctx.beginPath();
+      ctx.arc(centerScreenX, centerScreenY, 180, 0, Math.PI * 2);
+      ctx.fillStyle = glowGradient;
+      ctx.fill();
+    }
+    ctx.lineCap = "round";
+    const connectionsToRender = this.isAnimating ? this.revealedConnections : this.data.connections.length;
+    const shouldWrapLine = (x1, x2) => {
+      const distance = Math.abs(x2 - x1);
+      return distance > SKY_WIDTH / 2;
+    };
+    const drawWrappedLine = (x1Coord, y1Coord, x2Coord, y2Coord, viewXCoord, canvasWidthParam, alpha) => {
+      const screenX1 = x1Coord - viewXCoord + canvasWidthParam / 2;
+      const screenY1 = y1Coord;
+      const screenX2 = x2Coord - viewXCoord + canvasWidthParam / 2;
+      const screenY2 = y2Coord;
+      if (shouldWrapLine(x1Coord, x2Coord)) {
+        const leftX = x1Coord < x2Coord ? x1Coord : x2Coord;
+        const rightX = x1Coord < x2Coord ? x2Coord : x1Coord;
+        const leftY = x1Coord < x2Coord ? y1Coord : y2Coord;
+        const rightY = x1Coord < x2Coord ? y2Coord : y1Coord;
+        const leftScreenX = leftX - viewXCoord + canvasWidthParam / 2;
+        const rightScreenX = rightX - viewXCoord + canvasWidthParam / 2;
+        const wrappedRightX = rightX - SKY_WIDTH;
+        const wrappedScreenX = wrappedRightX - viewXCoord + canvasWidthParam / 2;
+        const wrappedLeftX = leftX + SKY_WIDTH;
+        const wrappedLeftScreenX = wrappedLeftX - viewXCoord + canvasWidthParam / 2;
+        const margin = 200;
+        const leftStarVisible = leftScreenX >= -margin && leftScreenX <= canvasWidthParam + margin;
+        const rightStarVisible = rightScreenX >= -margin && rightScreenX <= canvasWidthParam + margin;
+        if (leftStarVisible || wrappedScreenX >= -margin && wrappedScreenX <= canvasWidthParam + margin) {
+          this.drawGlowingLine(ctx, leftScreenX, leftY, wrappedScreenX, rightY, alpha);
+        }
+        if (rightStarVisible || wrappedLeftScreenX >= -margin && wrappedLeftScreenX <= canvasWidthParam + margin) {
+          this.drawGlowingLine(ctx, wrappedLeftScreenX, leftY, rightScreenX, rightY, alpha);
+        }
+      } else {
+        this.drawGlowingLine(ctx, screenX1, screenY1, screenX2, screenY2, alpha);
+      }
+    };
+    for (let i = 0;i < connectionsToRender; i++) {
+      const connection = this.data.connections[i];
+      if (!connection)
+        continue;
+      const [starIdx1, starIdx2] = connection;
+      const star1 = this.data.stars[starIdx1];
+      const star2 = this.data.stars[starIdx2];
+      if (!star1 || !star2)
+        continue;
+      const pos1 = this.getScaledStarPosition(star1);
+      const pos2 = this.getScaledStarPosition(star2);
+      const y1 = pos1.y - viewY + canvasHeight / 2;
+      const y2 = pos2.y - viewY + canvasHeight / 2;
+      drawWrappedLine(pos1.x, y1, pos2.x, y2, viewX, canvasWidth, lineAlpha);
+    }
+    if (this.isAnimating && this.revealedConnections < this.data.connections.length) {
+      const currentConnection = this.data.connections[this.revealedConnections];
+      if (currentConnection) {
+        const [starIdx1, starIdx2] = currentConnection;
+        const star1 = this.data.stars[starIdx1];
+        const star2 = this.data.stars[starIdx2];
+        if (star1 && star2) {
+          const pos1 = this.getScaledStarPosition(star1);
+          const pos2 = this.getScaledStarPosition(star2);
+          const y1 = pos1.y - viewY + canvasHeight / 2;
+          const y2 = pos2.y - viewY + canvasHeight / 2;
+          const progress = this.currentConnectionProgress;
+          let partialX = pos1.x;
+          let partialY = y1;
+          if (shouldWrapLine(pos1.x, pos2.x)) {
+            const dx = pos2.x - pos1.x;
+            if (Math.abs(dx) > SKY_WIDTH / 2) {
+              const adjustedX2 = dx > 0 ? pos2.x - SKY_WIDTH : pos2.x + SKY_WIDTH;
+              partialX = pos1.x + (adjustedX2 - pos1.x) * progress;
+              if (partialX < 0)
+                partialX += SKY_WIDTH;
+              if (partialX >= SKY_WIDTH)
+                partialX -= SKY_WIDTH;
+            }
+          } else {
+            partialX = pos1.x + (pos2.x - pos1.x) * progress;
+          }
+          partialY = y1 + (y2 - y1) * progress;
+          drawWrappedLine(pos1.x, y1, partialX, partialY, viewX, canvasWidth, lineAlpha);
+          const partialScreenX = partialX - viewX + canvasWidth / 2;
+          this.drawSparkHead(ctx, partialScreenX, partialY);
+        }
+      }
+    }
+    for (let starIdx = 0;starIdx < this.data.stars.length; starIdx++) {
+      const star = this.data.stars[starIdx];
+      if (!star)
+        continue;
+      const pos = this.getScaledStarPosition(star);
+      const screenX = pos.x - viewX + canvasWidth / 2;
+      const screenY = pos.y - viewY + canvasHeight / 2;
+      const activationTime = this.starActivationTimes.get(starIdx);
+      const isActivated = activationTime !== undefined;
+      let size = 3 + star.brightness * 3;
+      let starAlpha = baseAlpha + cosmicFlashIntensity * 0.3;
+      let flashProgress = 0;
+      if (this.isAnimating && !isActivated) {
+        const hintAlpha = 0.35;
+        const hintSize = 3 + star.brightness * 2;
+        const pulse = Math.sin(Date.now() * 0.005) * 0.3 + 0.7;
+        ctx.beginPath();
+        ctx.arc(screenX, screenY, hintSize * 3, 0, Math.PI * 2);
+        const glowGradient = ctx.createRadialGradient(screenX, screenY, 0, screenX, screenY, hintSize * 3);
+        glowGradient.addColorStop(0, `rgba(255, 217, 61, ${hintAlpha * pulse * 0.5})`);
+        glowGradient.addColorStop(1, "rgba(255, 217, 61, 0)");
+        ctx.fillStyle = glowGradient;
+        ctx.fill();
+        continue;
+      }
+      if (this.isAnimating && isActivated) {
+        const timeSinceActivation = this.animationTime - activationTime;
+        if (timeSinceActivation < this.starFlashDuration) {
+          flashProgress = Math.sin(timeSinceActivation / this.starFlashDuration * Math.PI);
+          size *= 1 + flashProgress * 0.4;
+          starAlpha = Math.min(1, starAlpha + flashProgress * 0.3);
+        }
+      }
+      this.renderCosmicStar(ctx, screenX, screenY, size, starAlpha, isActivated, flashProgress);
+    }
+    if (!this.isAnimating) {
+      ctx.font = '16px "Cormorant Garamond", serif';
+      ctx.fillStyle = `rgba(255, 220, 180, ${0.7 * opacityMultiplier})`;
+      ctx.textAlign = "center";
+      ctx.shadowColor = `rgba(255, 180, 80, ${0.5 * opacityMultiplier})`;
+      ctx.shadowBlur = 10;
+      ctx.fillText(this.data.name, centerScreenX, centerScreenY + this.data.radius + 35);
+      ctx.shadowBlur = 0;
+    }
+  }
+  drawGlowingLine(ctx, x1, y1, x2, y2, alpha) {
+    ctx.lineCap = "round";
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.strokeStyle = `${this.colors.outerGlow}${alpha * 0.2})`;
+    ctx.lineWidth = 12;
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.strokeStyle = `${this.colors.midAmber}${alpha * 0.4})`;
+    ctx.lineWidth = 6;
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.strokeStyle = `${this.colors.innerGold}${alpha * 0.7})`;
+    ctx.lineWidth = 3;
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.strokeStyle = `${this.colors.coreWhite}${alpha * 0.9})`;
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+  }
+  drawSparkHead(ctx, x, y) {
+    const sparkSize = 10;
+    const time = Date.now() * 0.01;
+    const flicker = 0.85 + Math.sin(time) * 0.15;
+    const outerGlow = ctx.createRadialGradient(x, y, 0, x, y, sparkSize * 2.5);
+    outerGlow.addColorStop(0, `rgba(255, 160, 60, ${0.8 * flicker})`);
+    outerGlow.addColorStop(0.5, `rgba(220, 100, 40, ${0.4 * flicker})`);
+    outerGlow.addColorStop(1, "rgba(180, 80, 60, 0)");
+    ctx.beginPath();
+    ctx.arc(x, y, sparkSize * 2.5, 0, Math.PI * 2);
+    ctx.fillStyle = outerGlow;
+    ctx.fill();
+    const coreGlow = ctx.createRadialGradient(x, y, 0, x, y, sparkSize);
+    coreGlow.addColorStop(0, `rgba(255, 255, 250, ${flicker})`);
+    coreGlow.addColorStop(0.4, `rgba(255, 230, 150, ${0.9 * flicker})`);
+    coreGlow.addColorStop(0.7, `rgba(255, 180, 80, ${0.5 * flicker})`);
+    coreGlow.addColorStop(1, "rgba(255, 140, 50, 0)");
+    ctx.beginPath();
+    ctx.arc(x, y, sparkSize, 0, Math.PI * 2);
+    ctx.fillStyle = coreGlow;
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(x, y, sparkSize * 0.25, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(255, 255, 255, ${flicker})`;
+    ctx.fill();
+  }
+  renderCosmicStar(ctx, x, y, size, alpha, isActivated, flashProgress) {
+    const coronaMultiplier = isActivated ? 1 + flashProgress * 0.6 : 0.5;
+    if (isActivated) {
+      const outerRadius = size * 6 * coronaMultiplier;
+      const outerHaze = ctx.createRadialGradient(x, y, size * 2, x, y, outerRadius);
+      outerHaze.addColorStop(0, `${this.colors.outerGlow}${alpha * 0.15})`);
+      outerHaze.addColorStop(0.6, `${this.colors.cosmicHaze}${alpha * 0.08})`);
+      outerHaze.addColorStop(1, "rgba(180, 140, 100, 0)");
+      ctx.beginPath();
+      ctx.arc(x, y, outerRadius, 0, Math.PI * 2);
+      ctx.fillStyle = outerHaze;
+      ctx.fill();
+    }
+    const amberRadius = size * 4 * coronaMultiplier;
+    const amberGlow = ctx.createRadialGradient(x, y, size, x, y, amberRadius);
+    amberGlow.addColorStop(0, `${this.colors.midAmber}${alpha * 0.4})`);
+    amberGlow.addColorStop(0.6, `${this.colors.outerGlow}${alpha * 0.2})`);
+    amberGlow.addColorStop(1, "rgba(220, 160, 60, 0)");
+    ctx.beginPath();
+    ctx.arc(x, y, amberRadius, 0, Math.PI * 2);
+    ctx.fillStyle = amberGlow;
+    ctx.fill();
+    const goldRadius = size * 2.5 * coronaMultiplier;
+    const goldGlow = ctx.createRadialGradient(x, y, 0, x, y, goldRadius);
+    goldGlow.addColorStop(0, `${this.colors.innerGold}${alpha * 0.7})`);
+    goldGlow.addColorStop(0.5, `${this.colors.midAmber}${alpha * 0.4})`);
+    goldGlow.addColorStop(1, "rgba(255, 190, 80, 0)");
+    ctx.beginPath();
+    ctx.arc(x, y, goldRadius, 0, Math.PI * 2);
+    ctx.fillStyle = goldGlow;
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(x, y, size * 0.8, 0, Math.PI * 2);
+    ctx.fillStyle = `${this.colors.coreWhite}${Math.min(1, alpha * 1.1)})`;
+    ctx.fill();
+  }
+}
+
+// src/game/Nebula.ts
+class Nebula {
+  id;
+  name;
+  x;
+  y;
+  radius;
+  isDiscovered = false;
+  discoveryProgress = 0;
+  data;
+  hoverTime = 0;
+  hoverTimeRequired = 2;
+  isAnimating = false;
+  animationTime = 0;
+  animationDuration = 4;
+  bloomProgress = 0;
+  onAnimationComplete = null;
+  timeOffset;
+  constructor(data) {
+    this.data = data;
+    this.id = data.id;
+    this.name = data.name;
+    this.x = data.x;
+    this.y = data.y;
+    this.radius = Math.max(data.width, data.height) * 1;
+    this.timeOffset = Math.random() * 1000;
+  }
+  getData() {
+    return this.data;
+  }
+  containsPoint(x, y) {
+    const dx = x - this.x;
+    const dy = y - this.y;
+    return dx * dx + dy * dy < this.radius * this.radius;
+  }
+  update(dt, _isInView) {
+    if (this.isAnimating) {
+      this.animationTime += dt;
+      this.bloomProgress = Math.min(1, this.animationTime / this.animationDuration);
+      if (this.animationTime >= this.animationDuration) {
+        this.isAnimating = false;
+        this.bloomProgress = 1;
+        if (this.onAnimationComplete) {
+          this.onAnimationComplete();
+          this.onAnimationComplete = null;
+        }
+      }
+    } else if (this.isDiscovered) {
+      this.bloomProgress = 1;
+    }
+  }
+  addHoverTime(dt) {
+    if (this.isDiscovered || this.isAnimating)
+      return false;
+    this.hoverTime += dt;
+    this.discoveryProgress = Math.min(1, this.hoverTime / this.hoverTimeRequired);
+    if (this.hoverTime >= this.hoverTimeRequired) {
+      this.discover();
+      return true;
+    }
+    return false;
+  }
+  resetHoverTime() {
+    this.hoverTime = 0;
+    this.discoveryProgress = 0;
+  }
+  discover() {
+    this.isDiscovered = true;
+    this.isAnimating = true;
+    this.animationTime = 0;
+    this.bloomProgress = 0;
+  }
+  setOnAnimationComplete(callback) {
+    this.onAnimationComplete = callback;
+  }
+  render(ctx, viewX, viewY, canvasWidth, canvasHeight, scale = 1, glowMultiplier = 1) {
+    if (this.x + this.radius < viewX || this.x - this.radius > viewX + canvasWidth || this.y + this.radius < viewY || this.y - this.radius > viewY + canvasHeight) {
+      return;
+    }
+    let globalAlpha = 0;
+    if (this.isDiscovered) {
+      globalAlpha = this.bloomProgress;
+    } else {
+      globalAlpha = 0.1 + this.discoveryProgress * 0.3;
+    }
+    if (globalAlpha <= 0.01)
+      return;
+    ctx.save();
+    ctx.translate(this.x - viewX + canvasWidth / 2, this.y - viewY + canvasHeight / 2);
+    ctx.scale(scale, scale);
+    if (this.data.rotation)
+      ctx.rotate(this.data.rotation);
+    const time = Date.now() / 1000 + this.timeOffset;
+    const breathScale = 1 + Math.sin(time * 0.5) * 0.03;
+    ctx.scale(breathScale, breathScale);
+    if (this.data.layers) {
+      for (const layer of this.data.layers) {
+        ctx.globalCompositeOperation = layer.blendMode || "screen";
+        this.drawLayer(ctx, layer, globalAlpha, time, glowMultiplier);
+      }
+    } else {}
+    if (this.isDiscovered && !this.isAnimating) {
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      const screenX = this.x - viewX + canvasWidth / 2;
+      const screenY = this.y - viewY + canvasHeight / 2;
+      ctx.globalCompositeOperation = "source-over";
+      ctx.globalAlpha = 1;
+      ctx.font = '16px "Cormorant Garamond", serif';
+      ctx.fillStyle = `rgba(220, 200, 255, 0.7)`;
+      ctx.textAlign = "center";
+      ctx.fillText(this.name, screenX, screenY + this.radius * 0.8 + 20);
+    }
+    ctx.restore();
+  }
+  drawLayer(ctx, layer, globalAlpha, time, glowMultiplier = 1) {
+    const layerAlpha = layer.opacity * globalAlpha * glowMultiplier;
+    if (layerAlpha <= 0)
+      return;
+    ctx.save();
+    const layerSeed = layer.offsetX * 13 + layer.offsetY * 17;
+    const wanderX = Math.sin(time * 0.3 + layerSeed) * 5;
+    const wanderY = Math.cos(time * 0.4 + layerSeed) * 5;
+    ctx.translate(layer.offsetX + wanderX, layer.offsetY + wanderY);
+    if (layer.rotation)
+      ctx.rotate(layer.rotation);
+    const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, Math.max(layer.width, layer.height) / 2);
+    grad.addColorStop(0, layer.color);
+    grad.addColorStop(1, "rgba(0,0,0,0)");
+    ctx.fillStyle = grad;
+    ctx.globalAlpha = layerAlpha;
+    ctx.beginPath();
+    if (layer.shape === "ellipse") {
+      ctx.ellipse(0, 0, layer.width / 2, layer.height / 2, 0, 0, Math.PI * 2);
+    } else if (layer.shape === "streak") {
+      ctx.ellipse(0, 0, layer.width / 2, layer.height / 6, 0, 0, Math.PI * 2);
+    } else {
+      ctx.ellipse(0, 0, layer.width / 2, layer.height / 2, 0, 0, Math.PI * 2);
+    }
+    ctx.fill();
+    ctx.restore();
+  }
+}
+
+// src/game/StarCluster.ts
+class StarCluster {
+  id;
+  name;
+  x;
+  y;
+  radius;
+  isDiscovered = false;
+  discoveryProgress = 0;
+  data;
+  stars = [];
+  hoverTime = 0;
+  hoverTimeRequired = 2;
+  isAnimating = false;
+  animationTime = 0;
+  animationDuration = 2.5;
+  onAnimationComplete = null;
+  constructor(data) {
+    this.data = data;
+    this.id = data.id;
+    this.name = data.name;
+    this.x = data.x;
+    this.y = data.y;
+    this.radius = data.radius;
+    this.generateStars();
+  }
+  getData() {
+    return this.data;
+  }
+  generateStars() {
+    for (let i = 0;i < this.data.starCount; i++) {
+      const angle = Math.random() * Math.PI * 2;
+      const r = Math.pow(Math.random(), 0.5) * this.data.radius;
+      this.stars.push({
+        x: Math.cos(angle) * r,
+        y: Math.sin(angle) * r,
+        size: Math.random() * 1.5 + 0.5,
+        brightness: Math.random() * 0.5 + 0.5
+      });
+    }
+  }
+  containsPoint(x, y) {
+    const dx = x - this.x;
+    const dy = y - this.y;
+    return dx * dx + dy * dy < this.radius * this.radius;
+  }
+  addHoverTime(dt) {
+    if (this.isDiscovered || this.isAnimating)
+      return false;
+    this.hoverTime += dt;
+    this.discoveryProgress = Math.min(1, this.hoverTime / this.hoverTimeRequired);
+    if (this.hoverTime >= this.hoverTimeRequired) {
+      this.discover();
+      return true;
+    }
+    return false;
+  }
+  resetHoverTime() {
+    this.hoverTime = 0;
+    this.discoveryProgress = 0;
+  }
+  discover() {
+    this.isDiscovered = true;
+    this.isAnimating = true;
+    this.animationTime = 0;
+    const spread = this.animationDuration * 0.7;
+    for (const star of this.stars) {
+      star.activationTime = Math.random() * spread;
+    }
+  }
+  setOnAnimationComplete(callback) {
+    this.onAnimationComplete = callback;
+  }
+  update(dt, _isInView) {
+    if (this.isAnimating) {
+      this.animationTime += dt;
+      if (this.animationTime >= this.animationDuration) {
+        this.isAnimating = false;
+        if (this.onAnimationComplete) {
+          this.onAnimationComplete();
+          this.onAnimationComplete = null;
+        }
+      }
+    }
+  }
+  render(ctx, viewX, viewY, canvasWidth, canvasHeight, scale = 1, glowMultiplier = 1) {
+    const centerX = this.x - viewX + canvasWidth / 2;
+    const centerY = this.y - viewY + canvasHeight / 2;
+    ctx.save();
+    ctx.translate(centerX, centerY);
+    ctx.scale(scale, scale);
+    ctx.translate(-centerX, -centerY);
+    if (!this.isDiscovered && this.discoveryProgress > 0) {
+      ctx.save();
+      const hintAlpha = this.discoveryProgress * 0.3;
+      const pulse = 1 + Math.sin(Date.now() * 0.005) * 0.1;
+      const grad = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, this.radius * 1.5);
+      grad.addColorStop(0, `rgba(200, 220, 255, ${hintAlpha * pulse})`);
+      grad.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, this.radius * 1.5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+    if (this.isDiscovered) {
+      const alpha = this.isAnimating ? Math.min(1, this.animationTime / 1) : 1;
+      if (alpha > 0) {
+        ctx.save();
+        ctx.globalAlpha = alpha * glowMultiplier;
+        ctx.globalCompositeOperation = "screen";
+        for (const star of this.stars) {
+          if (star.brightness < 0.6)
+            continue;
+          const sx = centerX + star.x;
+          const sy = centerY + star.y;
+          const color = this.data.color || "#A0C0FF";
+          const grad = ctx.createRadialGradient(sx, sy, 0, sx, sy, star.size * 30);
+          grad.addColorStop(0, color + "22");
+          grad.addColorStop(1, "#00000000");
+          ctx.fillStyle = grad;
+          ctx.beginPath();
+          ctx.arc(sx, sy, star.size * 30, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.save();
+          ctx.translate(sx, sy);
+          ctx.rotate(star.x * 0.01 + star.y * 0.01);
+          const wispGrad = ctx.createLinearGradient(-20, 0, 20, 0);
+          wispGrad.addColorStop(0, "#00000000");
+          wispGrad.addColorStop(0.5, color + "11");
+          wispGrad.addColorStop(1, "#00000000");
+          ctx.fillStyle = wispGrad;
+          ctx.fillRect(-20, -10, 40, 20);
+          ctx.restore();
+        }
+        ctx.restore();
+      }
+      for (const star of this.stars) {
+        let starAlpha = 0;
+        let starSize = star.size;
+        if (this.isAnimating && star.activationTime !== undefined) {
+          if (this.animationTime < star.activationTime)
+            continue;
+          const timeSinceActive = this.animationTime - star.activationTime;
+          if (timeSinceActive < 0.3) {
+            const pop = Math.sin(timeSinceActive / 0.3 * Math.PI);
+            starSize = star.size * (1 + pop * 2);
+            starAlpha = 1;
+          } else {
+            starAlpha = star.brightness;
+          }
+        } else {
+          starAlpha = star.brightness;
+        }
+        const sx = centerX + star.x;
+        const sy = centerY + star.y;
+        ctx.beginPath();
+        ctx.arc(sx, sy, starSize, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${starAlpha})`;
+        ctx.fill();
+        if (starAlpha > 0.5) {
+          ctx.beginPath();
+          ctx.arc(sx, sy, starSize * 3, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(160, 200, 255, ${starAlpha * 0.3})`;
+          ctx.fill();
+        }
+      }
+      if (!this.isAnimating) {
+        ctx.font = '14px "Cormorant Garamond", serif';
+        ctx.fillStyle = `rgba(200, 220, 255, 0.7)`;
+        ctx.textAlign = "center";
+        ctx.fillText(this.name, centerX, centerY + this.radius + 25);
+      }
+    }
+    ctx.restore();
+  }
+}
+
+// src/game/Galaxy.ts
+class Galaxy {
+  id;
+  name;
+  x;
+  y;
+  radius;
+  isDiscovered = false;
+  discoveryProgress = 0;
+  data;
+  hoverTime = 0;
+  hoverTimeRequired = 2;
+  isAnimating = false;
+  animationTime = 0;
+  animationDuration = 5;
+  bloomProgress = 0;
+  onAnimationComplete = null;
+  timeOffset;
+  rotationSpeed;
+  constructor(data) {
+    this.data = data;
+    this.id = data.id;
+    this.name = data.name;
+    this.x = data.x;
+    this.y = data.y;
+    this.radius = Math.max(data.width, data.height) * 1;
+    this.timeOffset = Math.random() * 1000;
+    this.rotationSpeed = data.galaxyType === "spiral" ? 0.00005 : 0;
+  }
+  getData() {
+    return this.data;
+  }
+  containsPoint(x, y) {
+    const dx = x - this.x;
+    const dy = y - this.y;
+    return dx * dx + dy * dy < this.radius * this.radius;
+  }
+  update(dt, _isInView) {
+    if (this.isAnimating) {
+      this.animationTime += dt;
+      this.bloomProgress = Math.min(1, this.animationTime / this.animationDuration);
+      if (this.animationTime >= this.animationDuration) {
+        this.isAnimating = false;
+        this.bloomProgress = 1;
+        if (this.onAnimationComplete) {
+          this.onAnimationComplete();
+          this.onAnimationComplete = null;
+        }
+      }
+    } else if (this.isDiscovered) {
+      this.bloomProgress = 1;
+    }
+  }
+  addHoverTime(dt) {
+    if (this.isDiscovered || this.isAnimating)
+      return false;
+    this.hoverTime += dt;
+    this.discoveryProgress = Math.min(1, this.hoverTime / this.hoverTimeRequired);
+    if (this.hoverTime >= this.hoverTimeRequired) {
+      this.discover();
+      return true;
+    }
+    return false;
+  }
+  resetHoverTime() {
+    this.hoverTime = 0;
+    this.discoveryProgress = 0;
+  }
+  discover() {
+    this.isDiscovered = true;
+    this.isAnimating = true;
+    this.animationTime = 0;
+    this.bloomProgress = 0;
+  }
+  setOnAnimationComplete(callback) {
+    this.onAnimationComplete = callback;
+  }
+  render(ctx, viewX, viewY, canvasWidth, canvasHeight, scale = 1, glowMultiplier = 1) {
+    if (this.x + this.radius < viewX || this.x - this.radius > viewX + canvasWidth || this.y + this.radius < viewY || this.y - this.radius > viewY + canvasHeight) {
+      return;
+    }
+    let globalAlpha = 0;
+    if (this.isDiscovered) {
+      globalAlpha = this.bloomProgress;
+    } else {
+      globalAlpha = 0.05 + this.discoveryProgress * 0.25;
+    }
+    if (globalAlpha <= 0.01)
+      return;
+    ctx.save();
+    ctx.translate(this.x - viewX + canvasWidth / 2, this.y - viewY + canvasHeight / 2);
+    ctx.scale(scale, scale);
+    if (this.data.rotation)
+      ctx.rotate(this.data.rotation);
+    if (this.rotationSpeed > 0) {
+      const time2 = Date.now() / 1000 + this.timeOffset;
+      ctx.rotate(time2 * this.rotationSpeed);
+    }
+    const time = Date.now() / 1000 + this.timeOffset;
+    const breathScale = 1 + Math.sin(time * 0.3) * 0.02;
+    ctx.scale(breathScale, breathScale);
+    if (this.data.layers) {
+      for (const layer of this.data.layers) {
+        ctx.globalCompositeOperation = layer.blendMode || "screen";
+        this.drawLayer(ctx, layer, globalAlpha, time, glowMultiplier);
+      }
+    }
+    if (this.isDiscovered && !this.isAnimating) {
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      const screenX = this.x - viewX + canvasWidth / 2;
+      const screenY = this.y - viewY + canvasHeight / 2;
+      ctx.globalCompositeOperation = "source-over";
+      ctx.globalAlpha = 1;
+      ctx.font = '15px "Cormorant Garamond", serif';
+      ctx.fillStyle = `rgba(200, 210, 230, 0.75)`;
+      ctx.textAlign = "center";
+      ctx.fillText(this.name, screenX, screenY + this.radius * 0.8 + 22);
+    }
+    ctx.restore();
+  }
+  drawLayer(ctx, layer, globalAlpha, time, glowMultiplier = 1) {
+    const layerAlpha = layer.opacity * globalAlpha * glowMultiplier;
+    if (layerAlpha <= 0)
+      return;
+    ctx.save();
+    const layerSeed = layer.offsetX * 13 + layer.offsetY * 17;
+    const wanderX = Math.sin(time * 0.2 + layerSeed) * 3;
+    const wanderY = Math.cos(time * 0.25 + layerSeed) * 3;
+    ctx.translate(layer.offsetX + wanderX, layer.offsetY + wanderY);
+    if (layer.rotation)
+      ctx.rotate(layer.rotation);
+    const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, Math.max(layer.width, layer.height) / 2);
+    grad.addColorStop(0, layer.color);
+    grad.addColorStop(1, "rgba(0,0,0,0)");
+    ctx.fillStyle = grad;
+    ctx.globalAlpha = layerAlpha;
+    ctx.beginPath();
+    if (layer.shape === "ellipse") {
+      ctx.ellipse(0, 0, layer.width / 2, layer.height / 2, 0, 0, Math.PI * 2);
+    } else if (layer.shape === "streak") {
+      ctx.ellipse(0, 0, layer.width / 2, layer.height / 6, 0, 0, Math.PI * 2);
+    } else {
+      ctx.ellipse(0, 0, layer.width / 2, layer.height / 2, 0, 0, Math.PI * 2);
+    }
+    ctx.fill();
+    ctx.restore();
+  }
+}
+
 // src/data/sets.ts
 var CONSTELLATION_SETS = {
   zodiac: {
@@ -11071,6 +11069,12 @@ class DiscoveriesTab {
       this.addCardToSet(item);
     }
   }
+  destroy() {
+    this.setSections.clear();
+    if (this.listElement) {
+      this.listElement.innerHTML = "";
+    }
+  }
 }
 
 // src/ui/ModalManager.ts
@@ -11151,6 +11155,7 @@ class PatternMatchModal {
   offsetY = 0;
   animationFrameId = null;
   animationStartTime = 0;
+  clickHandler = null;
   animatingConnections = new Map;
   audioManager;
   constructor(constellation, onComplete, audioManager) {
@@ -11316,7 +11321,8 @@ class PatternMatchModal {
       this.renderChallengePhase();
       modalContent.classList.remove("phase-study", "phase-transitioning");
       modalContent.classList.add("phase-challenge");
-      this.canvas.addEventListener("click", this.handleClick.bind(this));
+      this.clickHandler = this.handleClick.bind(this);
+      this.canvas.addEventListener("click", this.clickHandler);
       this.startAnimationLoop();
     }, 350);
   }
@@ -11556,6 +11562,10 @@ class PatternMatchModal {
     if (this.animationFrameId) {
       cancelAnimationFrame(this.animationFrameId);
     }
+    if (this.clickHandler) {
+      this.canvas.removeEventListener("click", this.clickHandler);
+      this.clickHandler = null;
+    }
   }
 }
 
@@ -11734,6 +11744,16 @@ class BaseDSOModal {
   }
 }
 
+// src/utils/array.ts
+function shuffleArray(array) {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1;i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
+
 // src/ui/NebulaFeatureModal.ts
 class NebulaFeatureModal extends BaseDSOModal {
   nebula;
@@ -11757,19 +11777,11 @@ class NebulaFeatureModal extends BaseDSOModal {
     }
     const trueFeatures = features.filter((f) => f.isPresent);
     const falseFeatures = features.filter((f) => !f.isPresent);
-    const selectedTrue = this.shuffleArray([...trueFeatures]).slice(0, Math.min(3, trueFeatures.length));
-    const selectedFalse = this.shuffleArray([...falseFeatures]).slice(0, Math.min(2, falseFeatures.length));
+    const selectedTrue = shuffleArray([...trueFeatures]).slice(0, Math.min(3, trueFeatures.length));
+    const selectedFalse = shuffleArray([...falseFeatures]).slice(0, Math.min(2, falseFeatures.length));
     const combined = [...selectedTrue, ...selectedFalse];
-    const shuffled = this.shuffleArray(combined);
+    const shuffled = shuffleArray(combined);
     return shuffled.map((feature) => ({ feature, answer: null }));
-  }
-  shuffleArray(array) {
-    const shuffled = [...array];
-    for (let i = shuffled.length - 1;i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
-    return shuffled;
   }
   createChallengeContent() {
     const container = document.createElement("div");
@@ -11911,7 +11923,7 @@ class ClusterMatchModal extends BaseDSOModal {
     }));
     scored.sort((a, b) => b.score - a.score);
     const decoys = scored.slice(0, Math.min(3, scored.length)).map((s) => s.cluster);
-    this.options = this.shuffleArray([this.targetCluster, ...decoys]);
+    this.options = shuffleArray([this.targetCluster, ...decoys]);
   }
   calculateDissimilarity(target, candidate) {
     let score = 0;
@@ -11921,14 +11933,6 @@ class ClusterMatchModal extends BaseDSOModal {
     }
     score += Math.abs(target.radius - candidate.radius);
     return score;
-  }
-  shuffleArray(array) {
-    const shuffled = [...array];
-    for (let i = shuffled.length - 1;i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
-    return shuffled;
   }
   createChallengeContent() {
     const container = document.createElement("div");
@@ -12013,17 +12017,9 @@ class GalaxyStructureModal extends BaseDSOModal {
     if (features.length === 0) {
       return [];
     }
-    const shuffled = this.shuffleArray([...features]);
+    const shuffled = shuffleArray([...features]);
     const selected = shuffled.slice(0, Math.min(3, shuffled.length));
     return selected.map((feature) => ({ feature, answer: null }));
-  }
-  shuffleArray(array) {
-    const shuffled = [...array];
-    for (let i = shuffled.length - 1;i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
-    return shuffled;
   }
   createChallengeContent() {
     const container = document.createElement("div");
@@ -13073,8 +13069,12 @@ class Game {
   modalManager;
   audioManager;
   modalActive = false;
+  currentModal = null;
   lastFrameTime = 0;
   animationFrameId = 0;
+  mouseMoveHandler;
+  resizeHandler;
+  keyDownHandler;
   constructor(canvas, telescopeOverlay) {
     this.canvas = canvas;
     this.telescopeOverlay = telescopeOverlay;
@@ -13102,11 +13102,13 @@ class Game {
     this.resizeCanvas();
   }
   setupEventListeners() {
-    window.addEventListener("mousemove", (e) => {
+    this.mouseMoveHandler = (e) => {
       this.state.mouseX = e.clientX;
       this.state.mouseY = e.clientY;
-    });
-    window.addEventListener("resize", () => this.resizeCanvas());
+    };
+    window.addEventListener("mousemove", this.mouseMoveHandler);
+    this.resizeHandler = () => this.resizeCanvas();
+    window.addEventListener("resize", this.resizeHandler);
     const toggle = document.getElementById("discoveries-toggle");
     const panel = document.getElementById("discoveries-panel");
     const togglePanel = () => {
@@ -13139,7 +13141,7 @@ class Game {
       }
     };
     attachLensListeners();
-    window.addEventListener("keydown", (e) => {
+    this.keyDownHandler = (e) => {
       if (document.activeElement?.tagName === "INPUT" || document.activeElement?.tagName === "TEXTAREA") {
         return;
       }
@@ -13162,12 +13164,8 @@ class Game {
       if (e.key === "ArrowRight") {
         this.switchObservatory("southern");
       }
-    });
-  }
-  toggleLens() {
-    const currentMag = this.telescope.getMagnification();
-    const newMag = currentMag === 1 ? 0.5 : 1;
-    this.setLens(newMag);
+    };
+    window.addEventListener("keydown", this.keyDownHandler);
   }
   setLens(magnification) {
     const currentMag = this.telescope.getMagnification();
@@ -13264,6 +13262,17 @@ class Game {
       cancelAnimationFrame(this.animationFrameId);
     }
     this.audioManager.stopAmbient();
+    this.cleanup();
+  }
+  cleanup() {
+    window.removeEventListener("mousemove", this.mouseMoveHandler);
+    window.removeEventListener("resize", this.resizeHandler);
+    window.removeEventListener("keydown", this.keyDownHandler);
+    this.telescope.destroy();
+    if (this.currentModal) {
+      this.currentModal.destroy();
+      this.currentModal = null;
+    }
   }
   gameLoop = () => {
     if (!this.state.running)
@@ -13307,13 +13316,6 @@ class Game {
       const dy = skyY - obj.y;
       const distance = Math.hypot(dx, dy);
       const isInView = distance < obj.radius + effectiveTelescopeRadius * 0.6;
-      if (obj instanceof Constellation) {
-        if (!isInView && obj.isAnimatingDiscovery()) {
-          obj.cancelDiscovery();
-          if (this.state.discoveredCount > 0)
-            this.state.discoveredCount--;
-        }
-      }
       obj.update(deltaTime, isInView);
     }
   }
@@ -13393,6 +13395,7 @@ class Game {
     const modal = new PatternMatchModal(constellation, () => {
       this.onPatternMatchComplete(constellation);
     }, this.audioManager);
+    this.currentModal = modal;
     this.modalManager.show(modal.render());
   }
   onPatternMatchComplete(constellation) {
@@ -13402,6 +13405,10 @@ class Game {
     this.showDiscoveryNotification(data.name);
     if (data.set)
       this.checkSetCompletion(data.set);
+    if (this.currentModal) {
+      this.currentModal.destroy();
+      this.currentModal = null;
+    }
     this.modalManager.hide(() => {
       this.modalActive = false;
     });
@@ -13411,6 +13418,7 @@ class Game {
     const modal = new NebulaFeatureModal(nebula, () => {
       this.onDSOModalComplete(nebula);
     }, this.audioManager);
+    this.currentModal = modal;
     this.modalManager.show(modal.render());
   }
   openClusterMatchModal(cluster) {
@@ -13419,6 +13427,7 @@ class Game {
     const modal = new ClusterMatchModal(cluster, allClusters, () => {
       this.onDSOModalComplete(cluster);
     }, this.audioManager);
+    this.currentModal = modal;
     this.modalManager.show(modal.render());
   }
   openGalaxyStructureModal(galaxy) {
@@ -13426,12 +13435,17 @@ class Game {
     const modal = new GalaxyStructureModal(galaxy, () => {
       this.onDSOModalComplete(galaxy);
     }, this.audioManager);
+    this.currentModal = modal;
     this.modalManager.show(modal.render());
   }
   onDSOModalComplete(obj) {
     this.audioManager.playPatternCompletionChime();
     this.discoveriesTab.addDiscovery(obj.getData());
     this.showDiscoveryNotification(obj.name);
+    if (this.currentModal) {
+      this.currentModal.destroy();
+      this.currentModal = null;
+    }
     this.modalManager.hide(() => {
       this.modalActive = false;
     });
@@ -13646,4 +13660,5 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-//# debugId=43EC7609C2CAADBC64756E2164756E21
+//# debugId=8753600690BBEFD164756E2164756E21
+//# sourceMappingURL=main.js.map

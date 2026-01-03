@@ -35,6 +35,9 @@ export class PatternMatchModal {
   private animationFrameId: number | null = null;
   private animationStartTime: number = 0;
 
+  // Click handler reference for cleanup
+  private clickHandler: ((e: MouseEvent) => void) | null = null;
+
   // Connection animations
   private animatingConnections: Map<string, number> = new Map(); // key: "idx1-idx2", value: animationProgress 0-1
 
@@ -262,8 +265,9 @@ export class PatternMatchModal {
       modalContent.classList.remove('phase-study', 'phase-transitioning');
       modalContent.classList.add('phase-challenge');
 
-      // Enable click detection
-      this.canvas.addEventListener('click', this.handleClick.bind(this));
+      // Enable click detection (store reference for cleanup)
+      this.clickHandler = this.handleClick.bind(this);
+      this.canvas.addEventListener('click', this.clickHandler);
 
       // Start animation loop for pulse effects
       this.startAnimationLoop();
@@ -600,6 +604,10 @@ export class PatternMatchModal {
     }
     if (this.animationFrameId) {
       cancelAnimationFrame(this.animationFrameId);
+    }
+    if (this.clickHandler) {
+      this.canvas.removeEventListener('click', this.clickHandler);
+      this.clickHandler = null;
     }
   }
 }

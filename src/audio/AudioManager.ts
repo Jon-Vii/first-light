@@ -6,28 +6,28 @@
 // Ambient audio configuration - all tunable parameters in one place
 const AMBIENT_CONFIG = {
   // Master levels
-  AMBIENT_MASTER_GAIN: 0.25,
+  AMBIENT_MASTER_GAIN: 0.22,
   FADE_IN_TIME: 3.0,
   FADE_OUT_TIME: 2.0,
 
-  // Sub bass layer
+  // Sub bass layer - very subtle, just adds warmth
   SUB_BASS: {
-    FREQUENCY: 36.71,    // D1 - below pitch perception
-    GAIN: 0.06,
-    LFO_RATE: 0.02,      // Hz
-    LFO_DEPTH: 2,        // +/- Hz
+    FREQUENCY: 55,       // A1 - warmer, less ominous than D1
+    GAIN: 0.025,         // Reduced from 0.06 - much more subtle
+    LFO_RATE: 0.008,     // Slower drift
+    LFO_DEPTH: 3,        // Slightly wider drift for more movement
   },
 
-  // Drone pad layer
+  // Drone pad layer - brighter, more hopeful voicing
   DRONE: {
-    FREQUENCIES: [73.42, 110, 146.83],  // D2, A2, D3 (root, fifth, octave)
-    DETUNE_HZ: [0.5, 0.3, 0.4],         // Slight detuning for beating
-    GAINS: [0.025, 0.018, 0.012],       // Decreasing volume for higher partials
-    FILTER_FREQ: 400,
-    FILTER_Q: 0.7,
-    FILTER_LFO_RATE: 0.03,
-    FILTER_LFO_MIN: 300,
-    FILTER_LFO_MAX: 600,
+    FREQUENCIES: [130.81, 196, 261.63],  // C3, G3, C4 (major feel, brighter register)
+    DETUNE_HZ: [0.7, 0.5, 0.3],          // More variation in beating
+    GAINS: [0.018, 0.015, 0.012],        // Gentler overall
+    FILTER_FREQ: 500,                     // Higher cutoff - brighter
+    FILTER_Q: 0.5,                        // Softer resonance
+    FILTER_LFO_RATE: 0.025,
+    FILTER_LFO_MIN: 400,
+    FILTER_LFO_MAX: 800,                  // Wider sweep for more movement
   },
 
   // Texture bed layer (filtered noise)
@@ -41,24 +41,24 @@ const AMBIENT_CONFIG = {
     LFO_DEPTH: 400,
   },
 
-  // High shimmer layer
+  // High shimmer layer - more active, brighter
   SHIMMER: {
     FREQUENCIES: [1046.5, 1318.5, 1568, 2093],  // C6, E6, G6, C7
-    GAIN_MIN: 0.003,
-    GAIN_MAX: 0.008,
-    FADE_TIME_MIN: 8,
-    FADE_TIME_MAX: 15,
-    HOLD_TIME_MIN: 5,
-    HOLD_TIME_MAX: 20,
-    MAX_CONCURRENT: 2,
+    GAIN_MIN: 0.004,
+    GAIN_MAX: 0.012,       // Slightly louder
+    FADE_TIME_MIN: 5,      // Faster fades
+    FADE_TIME_MAX: 10,
+    HOLD_TIME_MIN: 3,      // Shorter waits between
+    HOLD_TIME_MAX: 12,
+    MAX_CONCURRENT: 3,     // More notes at once
   },
 
-  // Bus levels
+  // Bus levels - less bass, more air
   BUSES: {
-    SUB_BASS: 0.5,
-    DRONE: 0.7,
-    TEXTURE: 0.4,
-    SHIMMER: 0.3,
+    SUB_BASS: 0.25,    // Reduced from 0.5 - way less prominent
+    DRONE: 0.6,        // Slightly reduced
+    TEXTURE: 0.5,      // Boosted - more "air"
+    SHIMMER: 0.45,     // Boosted - more sparkle
   },
 
   // Spatial delay

@@ -2,6 +2,7 @@ import { BaseDSOModal } from './BaseDSOModal';
 import type { Galaxy } from '../game/Galaxy';
 import type { GalaxyFeature } from '../data/galaxies';
 import type { AudioManager } from '../audio/AudioManager';
+import { shuffleArray } from '../utils/array';
 
 /**
  * GalaxyStructureModal - Galaxy type and structure identification minigame
@@ -42,22 +43,10 @@ export class GalaxyStructureModal extends BaseDSOModal {
     }
 
     // Take 2-3 random features (mix of true and false)
-    const shuffled = this.shuffleArray([...features]);
+    const shuffled = shuffleArray([...features]);
     const selected = shuffled.slice(0, Math.min(3, shuffled.length));
 
     return selected.map(feature => ({ feature, answer: null }));
-  }
-
-  /**
-   * Fisher-Yates shuffle
-   */
-  private shuffleArray<T>(array: T[]): T[] {
-    const shuffled = [...array];
-    for (let i = shuffled.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
-    return shuffled;
   }
 
   /**

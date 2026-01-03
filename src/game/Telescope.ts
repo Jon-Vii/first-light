@@ -18,15 +18,19 @@ export class Telescope {
   private currentLagFactor = 0.06;
   private radiusMultiplier = 1.0;
 
+  // Event handler reference for cleanup
+  private resizeHandler: () => void;
+
   constructor(element: HTMLDivElement) {
     this.element = element;
     this.radius = this.calculateRadius();
 
-    // Update radius and position on resize
-    window.addEventListener('resize', () => {
+    // Update radius and position on resize (store reference for cleanup)
+    this.resizeHandler = () => {
       this.radius = this.calculateRadius();
       this.updateElementPosition();
-    });
+    };
+    window.addEventListener('resize', this.resizeHandler);
 
     // Position telescope at center
     this.updateElementPosition();
@@ -44,8 +48,16 @@ export class Telescope {
    * Higher = less lag (more stable)
    */
   setDriftFactor(factor: number): void {
-    // Map factor to lag range: 0.06 (default) to 0.2 (stabilized)
+    // Map factor to lag range: 0.06 (default drifty) to 0.2 (stabilized)
+    // Higher factor = higher lagFactor = faster tracking = more stable
     this.currentLagFactor = this.defaultLagFactor + (factor * 0.14);
+  }
+
+  /**
+   * Cleanup event listeners
+   */
+  destroy(): void {
+    window.removeEventListener('resize', this.resizeHandler);
   }
 
   /**

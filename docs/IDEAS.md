@@ -1,4 +1,4 @@
-# Seeing Stars — Future Ideas
+# First Light — Future Ideas
 
 > Brainstorm of potential features and enhancements.
 

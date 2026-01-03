@@ -1,5 +1,5 @@
 {
-  "name": "seeing-stars",
+  "name": "first-light",
   "version": "0.1.0",
   "description": "An atmospheric constellation discovery game viewed through an antique telescope",
   "module": "src/main.ts",

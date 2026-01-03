@@ -25,4 +25,4 @@ const server = Bun.serve({
   },
 });
 
-console.log(`🔭 Seeing Stars running at http://localhost:${server.port}`);
+console.log(`🔭 First Light running at http://localhost:${server.port}`);

@@ -1,5 +1,5 @@
 /**
- * Seeing Stars - Main Entry Point
+ * First Light - Main Entry Point
  */
 
 import { Game } from './game/Game';

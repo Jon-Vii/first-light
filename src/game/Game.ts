@@ -60,9 +60,15 @@ export class Game {
   private modalManager: ModalManager;
   private audioManager: AudioManager;
   private modalActive: boolean = false;
+  private currentModal: { destroy(): void } | null = null;
 
   private lastFrameTime: number = 0;
   private animationFrameId: number = 0;
+
+  // Event handler references for cleanup
+  private mouseMoveHandler: (e: MouseEvent) => void;
+  private resizeHandler: () => void;
+  private keyDownHandler: (e: KeyboardEvent) => void;
 
   constructor(canvas: HTMLCanvasElement, telescopeOverlay: HTMLDivElement) {
     this.canvas = canvas;
@@ -101,14 +107,16 @@ export class Game {
   }
 
   private setupEventListeners(): void {
-    // Mouse movement
-    window.addEventListener('mousemove', (e) => {
+    // Mouse movement (store reference for cleanup)
+    this.mouseMoveHandler = (e: MouseEvent) => {
       this.state.mouseX = e.clientX;
       this.state.mouseY = e.clientY;
-    });
+    };
+    window.addEventListener('mousemove', this.mouseMoveHandler);
 
-    // Window resize
-    window.addEventListener('resize', () => this.resizeCanvas());
+    // Window resize (store reference for cleanup)
+    this.resizeHandler = () => this.resizeCanvas();
+    window.addEventListener('resize', this.resizeHandler);
 
     // Discoveries panel toggle (click and keyboard)
     const toggle = document.getElementById('discoveries-toggle');
@@ -148,8 +156,8 @@ export class Game {
     };
     attachLensListeners();
 
-    // Keyboard shortcuts
-    window.addEventListener('keydown', (e) => {
+    // Keyboard shortcuts (store reference for cleanup)
+    this.keyDownHandler = (e: KeyboardEvent) => {
       // Skip if typing in an input
       if (document.activeElement?.tagName === 'INPUT' ||
           document.activeElement?.tagName === 'TEXTAREA') {
@@ -184,13 +192,8 @@ export class Game {
       if (e.key === 'ArrowRight') {
         this.switchObservatory('southern');
       }
-    });
-  }
-
-  private toggleLens(): void {
-    const currentMag = this.telescope.getMagnification();
-    const newMag = currentMag === 1.0 ? 0.5 : 1.0;
-    this.setLens(newMag);
+    };
+    window.addEventListener('keydown', this.keyDownHandler);
   }
 
   private setLens(magnification: number): void {
@@ -331,6 +334,21 @@ export class Game {
       cancelAnimationFrame(this.animationFrameId);
     }
     this.audioManager.stopAmbient();
+    this.cleanup();
+  }
+
+  /**
+   * Cleanup event listeners and resources
+   */
+  private cleanup(): void {
+    window.removeEventListener('mousemove', this.mouseMoveHandler);
+    window.removeEventListener('resize', this.resizeHandler);
+    window.removeEventListener('keydown', this.keyDownHandler);
+    this.telescope.destroy();
+    if (this.currentModal) {
+      this.currentModal.destroy();
+      this.currentModal = null;
+    }
   }
 
   /**
@@ -400,20 +418,12 @@ export class Game {
     const effectiveTelescopeRadius = this.telescope.getInWorldRadius();
 
     for (const obj of this.celestialObjects) {
-      // Calculate visibility genericly
+      // Calculate visibility generically
       const dx = this.getWrappedDeltaX(skyX, obj.x);
       const dy = skyY - obj.y;
       const distance = Math.hypot(dx, dy);
       // Use efficient radius
       const isInView = distance < obj.radius + effectiveTelescopeRadius * 0.6; // 0.6 safety margin
-
-      // Handle Constellation-specific cancellation logic
-      if (obj instanceof Constellation) {
-        if (!isInView && obj.isAnimatingDiscovery()) {
-          obj.cancelDiscovery();
-          if (this.state.discoveredCount > 0) this.state.discoveredCount--;
-        }
-      }
 
       obj.update(deltaTime, isInView);
     }
@@ -537,6 +547,7 @@ export class Game {
       this.audioManager // Pass audio manager for sound feedback
     );
 
+    this.currentModal = modal;
     this.modalManager.show(modal.render());
   }
 
@@ -553,6 +564,12 @@ export class Game {
     this.discoveriesTab.addDiscovery(data);
     this.showDiscoveryNotification(data.name);
     if (data.set) this.checkSetCompletion(data.set);
+
+    // Destroy modal before hiding
+    if (this.currentModal) {
+      this.currentModal.destroy();
+      this.currentModal = null;
+    }
 
     // Close modal - defer modalActive = false until after fade-out completes
     this.modalManager.hide(() => {
@@ -574,6 +591,7 @@ export class Game {
       this.audioManager
     );
 
+    this.currentModal = modal;
     this.modalManager.show(modal.render());
   }
 
@@ -597,6 +615,7 @@ export class Game {
       this.audioManager
     );
 
+    this.currentModal = modal;
     this.modalManager.show(modal.render());
   }
 
@@ -614,6 +633,7 @@ export class Game {
       this.audioManager
     );
 
+    this.currentModal = modal;
     this.modalManager.show(modal.render());
   }
 
@@ -627,6 +647,12 @@ export class Game {
     // Add to discoveries
     this.discoveriesTab.addDiscovery(obj.getData());
     this.showDiscoveryNotification(obj.name);
+
+    // Destroy modal before hiding
+    if (this.currentModal) {
+      this.currentModal.destroy();
+      this.currentModal = null;
+    }
 
     // Close modal - defer modalActive = false until after fade-out completes
     this.modalManager.hide(() => {

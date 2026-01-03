@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Seeing Stars is an atmospheric browser-based constellation discovery game. Players peer through an antique telescope viewport to explore a vast night sky and discover celestial objects (constellations, nebulae, star clusters).
+First Light is an atmospheric browser-based constellation discovery game. Players peer through an antique telescope viewport to explore a vast night sky and discover celestial objects (constellations, nebulae, star clusters).
 
 ## Commands
 

@@ -2,6 +2,7 @@ import { BaseDSOModal } from './BaseDSOModal';
 import { StarCluster } from '../game/StarCluster';
 import type { ClusterData } from '../data/clusters';
 import type { AudioManager } from '../audio/AudioManager';
+import { shuffleArray } from '../utils/array';
 
 /**
  * ClusterMatchModal - Visual matching minigame for star clusters
@@ -74,7 +75,7 @@ export class ClusterMatchModal extends BaseDSOModal {
     const decoys = scored.slice(0, Math.min(3, scored.length)).map(s => s.cluster);
 
     // Create shuffled options array (target + decoys)
-    this.options = this.shuffleArray([this.targetCluster, ...decoys]);
+    this.options = shuffleArray([this.targetCluster, ...decoys]);
   }
 
   /**
@@ -96,18 +97,6 @@ export class ClusterMatchModal extends BaseDSOModal {
     score += Math.abs(target.radius - candidate.radius);
 
     return score;
-  }
-
-  /**
-   * Fisher-Yates shuffle
-   */
-  private shuffleArray<T>(array: T[]): T[] {
-    const shuffled = [...array];
-    for (let i = shuffled.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
-    return shuffled;
   }
 
   /**

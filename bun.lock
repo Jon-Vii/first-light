@@ -6,8 +6,6 @@
       "name": "seeing-stars",
       "devDependencies": {
         "@types/bun": "latest",
-      },
-      "peerDependencies": {
         "typescript": "^5",
       },
     },
