@@ -13093,6 +13093,9 @@ class Game {
   mouseMoveHandler;
   resizeHandler;
   keyDownHandler;
+  touchStartHandler;
+  touchMoveHandler;
+  touchEndHandler;
   constructor(canvas, telescopeOverlay) {
     this.canvas = canvas;
     this.telescopeOverlay = telescopeOverlay;
@@ -13101,6 +13104,7 @@ class Game {
       throw new Error("Could not get 2D context");
     }
     this.ctx = ctx;
+    const isTouchDevice = "ontouchstart" in window || navigator.maxTouchPoints > 0;
     this.state = {
       running: false,
       mouseX: window.innerWidth / 2,
@@ -13108,7 +13112,13 @@ class Game {
       viewX: SKY_WIDTH / 2,
       viewY: SKY_HEIGHT / 2,
       discoveredCount: 0,
-      currentObservatory: "northern"
+      currentObservatory: "northern",
+      isTouchDevice,
+      isTouchDragging: false,
+      lastTouchX: 0,
+      lastTouchY: 0,
+      touchDragDeltaX: 0,
+      touchDragDeltaY: 0
     };
     this.starField = new StarField(SKY_WIDTH, SKY_HEIGHT);
     this.telescope = new Telescope(telescopeOverlay);
@@ -13125,6 +13135,33 @@ class Game {
       this.state.mouseY = e.clientY;
     };
     window.addEventListener("mousemove", this.mouseMoveHandler);
+    this.touchStartHandler = (e) => {
+      const touch = e.touches[0];
+      if (e.touches.length === 1 && touch) {
+        this.state.isTouchDragging = true;
+        this.state.lastTouchX = touch.clientX;
+        this.state.lastTouchY = touch.clientY;
+        this.state.touchDragDeltaX = 0;
+        this.state.touchDragDeltaY = 0;
+      }
+    };
+    this.touchMoveHandler = (e) => {
+      const touch = e.touches[0];
+      if (this.state.isTouchDragging && e.touches.length === 1 && touch) {
+        e.preventDefault();
+        this.state.touchDragDeltaX += this.state.lastTouchX - touch.clientX;
+        this.state.touchDragDeltaY += this.state.lastTouchY - touch.clientY;
+        this.state.lastTouchX = touch.clientX;
+        this.state.lastTouchY = touch.clientY;
+      }
+    };
+    this.touchEndHandler = () => {
+      this.state.isTouchDragging = false;
+    };
+    this.canvas.addEventListener("touchstart", this.touchStartHandler, { passive: true });
+    this.canvas.addEventListener("touchmove", this.touchMoveHandler, { passive: false });
+    this.canvas.addEventListener("touchend", this.touchEndHandler, { passive: true });
+    this.canvas.addEventListener("touchcancel", this.touchEndHandler, { passive: true });
     this.resizeHandler = () => this.resizeCanvas();
     window.addEventListener("resize", this.resizeHandler);
     const toggle = document.getElementById("discoveries-toggle");
@@ -13207,8 +13244,14 @@ class Game {
     }
   }
   resizeCanvas() {
-    this.canvas.width = window.innerWidth;
-    this.canvas.height = window.innerHeight;
+    const dpr = window.devicePixelRatio || 1;
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    this.canvas.width = width * dpr;
+    this.canvas.height = height * dpr;
+    this.canvas.style.width = `${width}px`;
+    this.canvas.style.height = `${height}px`;
+    this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   }
   loadCelestialObjects(observatory) {
     this.celestialObjects = [];
@@ -13286,6 +13329,10 @@ class Game {
     window.removeEventListener("mousemove", this.mouseMoveHandler);
     window.removeEventListener("resize", this.resizeHandler);
     window.removeEventListener("keydown", this.keyDownHandler);
+    this.canvas.removeEventListener("touchstart", this.touchStartHandler);
+    this.canvas.removeEventListener("touchmove", this.touchMoveHandler);
+    this.canvas.removeEventListener("touchend", this.touchEndHandler);
+    this.canvas.removeEventListener("touchcancel", this.touchEndHandler);
     this.telescope.destroy();
     if (this.currentModal) {
       this.currentModal.destroy();
@@ -13313,12 +13360,21 @@ class Game {
   update(deltaTime) {
     if (this.modalActive)
       return;
-    this.telescope.update(this.state.mouseX, this.state.mouseY, deltaTime);
-    const viewOffset = this.telescope.getViewOffset();
-    const viewSpeedX = viewOffset.x * 0.5;
-    const viewSpeedY = viewOffset.y * 0.5;
-    this.state.viewX += viewSpeedX * deltaTime;
-    this.state.viewY += viewSpeedY * deltaTime;
+    if (this.state.isTouchDevice && this.state.isTouchDragging) {
+      const mag = this.telescope.getMagnification();
+      const touchSensitivity = 1.5 / mag;
+      this.state.viewX += this.state.touchDragDeltaX * touchSensitivity;
+      this.state.viewY += this.state.touchDragDeltaY * touchSensitivity;
+      this.state.touchDragDeltaX = 0;
+      this.state.touchDragDeltaY = 0;
+    } else if (!this.state.isTouchDevice) {
+      this.telescope.update(this.state.mouseX, this.state.mouseY, deltaTime);
+      const viewOffset = this.telescope.getViewOffset();
+      const viewSpeedX = viewOffset.x * 0.5;
+      const viewSpeedY = viewOffset.y * 0.5;
+      this.state.viewX += viewSpeedX * deltaTime;
+      this.state.viewY += viewSpeedY * deltaTime;
+    }
     if (this.state.viewX < 0)
       this.state.viewX += SKY_WIDTH;
     if (this.state.viewX >= SKY_WIDTH)
@@ -13486,14 +13542,18 @@ class Game {
     }
   }
   render() {
-    const { ctx, canvas } = this;
+    const { ctx } = this;
     const { viewX, viewY } = this.state;
-    const gradient = ctx.createRadialGradient(canvas.width / 2, canvas.height / 2, 0, canvas.width / 2, canvas.height / 2, canvas.height);
+    const canvasWidth = window.innerWidth;
+    const canvasHeight = window.innerHeight;
+    const dpr = window.devicePixelRatio || 1;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const gradient = ctx.createRadialGradient(canvasWidth / 2, canvasHeight / 2, 0, canvasWidth / 2, canvasHeight / 2, canvasHeight);
     gradient.addColorStop(0, "#0f1020");
     gradient.addColorStop(0.6, "#0a0a18");
     gradient.addColorStop(1, "#050510");
     ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
     const telescopePos = this.telescope.getPosition();
     const telescopeRadius = this.telescope.getRadius();
     ctx.save();
@@ -13507,7 +13567,7 @@ class Game {
       vignetteGradient.addColorStop(0.7, "rgba(0, 0, 0, 0.15)");
       vignetteGradient.addColorStop(1, "rgba(0, 0, 0, 0.4)");
       ctx.fillStyle = vignetteGradient;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillRect(0, 0, canvasWidth, canvasHeight);
     }
     ctx.translate(telescopePos.x, telescopePos.y);
     ctx.scale(mag, mag);
@@ -13517,38 +13577,40 @@ class Game {
     const dsoGlow = mag === 3 ? 1.3 : 1;
     for (const obj of this.celestialObjects) {
       if (obj instanceof Galaxy) {
-        obj.render(ctx, viewX, viewY, canvas.width, canvas.height, dsoScale, dsoGlow);
+        obj.render(ctx, viewX, viewY, canvasWidth, canvasHeight, dsoScale, dsoGlow);
       }
     }
     for (const obj of this.celestialObjects) {
       if (obj instanceof Nebula) {
-        obj.render(ctx, viewX, viewY, canvas.width, canvas.height, dsoScale, dsoGlow);
+        obj.render(ctx, viewX, viewY, canvasWidth, canvasHeight, dsoScale, dsoGlow);
       }
     }
-    this.starField.render(ctx, viewX, viewY, canvas.width, canvas.height, telescopePos);
+    this.starField.render(ctx, viewX, viewY, canvasWidth, canvasHeight, telescopePos);
     for (const obj of this.celestialObjects) {
       if (obj instanceof Constellation) {
-        obj.render(ctx, viewX, viewY, canvas.width, canvas.height, constellationOpacity);
+        obj.render(ctx, viewX, viewY, canvasWidth, canvasHeight, constellationOpacity);
       } else if (obj instanceof StarCluster) {
-        obj.render(ctx, viewX, viewY, canvas.width, canvas.height, dsoScale, dsoGlow);
+        obj.render(ctx, viewX, viewY, canvasWidth, canvasHeight, dsoScale, dsoGlow);
       }
     }
     ctx.restore();
     this.renderBackgroundStars();
   }
   renderBackgroundStars() {
-    const { ctx, canvas } = this;
+    const { ctx } = this;
     const telescopePos = this.telescope.getPosition();
     const telescopeRadius = this.telescope.getRadius();
+    const canvasWidth = window.innerWidth;
+    const canvasHeight = window.innerHeight;
     const bgStars = this.starField.getBackgroundStars();
     ctx.save();
     ctx.beginPath();
-    ctx.rect(0, 0, canvas.width, canvas.height);
+    ctx.rect(0, 0, canvasWidth, canvasHeight);
     ctx.arc(telescopePos.x, telescopePos.y, telescopeRadius + 30, 0, Math.PI * 2, true);
     ctx.clip();
     for (const star of bgStars) {
-      const screenX = star.x / SKY_WIDTH * canvas.width;
-      const screenY = star.y / SKY_HEIGHT * canvas.height;
+      const screenX = star.x / SKY_WIDTH * canvasWidth;
+      const screenY = star.y / SKY_HEIGHT * canvasHeight;
       ctx.beginPath();
       ctx.arc(screenX, screenY, star.size * 0.5, 0, Math.PI * 2);
       ctx.fillStyle = `rgba(200, 210, 255, ${star.brightness * 0.3})`;
@@ -13678,5 +13740,5 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-//# debugId=1FADBA91E51A850964756E2164756E21
+//# debugId=A1B6D34E4BF4FE2264756E2164756E21
 //# sourceMappingURL=main.js.map

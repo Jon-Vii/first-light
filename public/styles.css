@@ -100,6 +100,9 @@ html, body {
   font-size: 16px;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  /* Prevent pull-to-refresh and overscroll effects on mobile */
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: touch;
 }
 
 
@@ -116,6 +119,8 @@ html, body {
   justify-content: center;
   background:
     radial-gradient(ellipse at 50% 50%, var(--sky-night) 0%, var(--sky-void) 70%);
+  /* Prevent all touch gestures on game area - we handle touch ourselves */
+  touch-action: none;
 }
 
 
@@ -129,6 +134,11 @@ html, body {
   width: 100%;
   height: 100%;
   cursor: none;
+  /* Prevent touch gestures - we handle touch ourselves */
+  touch-action: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 
@@ -281,6 +291,12 @@ html, body {
       transparent 50%,
       rgba(0,0,0,0.15) 100%),
     var(--leather-worn);
+}
+
+/* Touch feedback for mobile */
+.lens-slot:active {
+  transform: scale(0.95);
+  border-color: var(--brass-primary);
 }
 
 .lens-slot.active {
@@ -551,6 +567,12 @@ html, body {
 
 .dial-sector:not(.active):hover {
   background: rgba(255,255,255,0.1);
+}
+
+/* Touch feedback for mobile */
+.dial-sector:not(.active):active {
+  background: rgba(255,255,255,0.15);
+  transform: scale(0.95);
 }
 
 .sector-icon {
@@ -2179,6 +2201,11 @@ h1 {
 @media (max-width: 600px) {
   :root {
     --telescope-size: min(95vw, 65vh);
+  }
+
+  /* Hide keyboard hints on mobile - no keyboard */
+  .key-hint {
+    display: none;
   }
 
   #lens-case {

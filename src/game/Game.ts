@@ -39,6 +39,13 @@ export interface GameState {
   viewY: number;
   discoveredCount: number;
   currentObservatory: Observatory;
+  // Touch input state
+  isTouchDevice: boolean;
+  isTouchDragging: boolean;
+  lastTouchX: number;
+  lastTouchY: number;
+  touchDragDeltaX: number;  // Accumulated drag delta this frame
+  touchDragDeltaY: number;
 }
 
 export class Game {
@@ -66,9 +73,12 @@ export class Game {
   private animationFrameId: number = 0;
 
   // Event handler references for cleanup
-  private mouseMoveHandler: (e: MouseEvent) => void;
-  private resizeHandler: () => void;
-  private keyDownHandler: (e: KeyboardEvent) => void;
+  private mouseMoveHandler!: (e: MouseEvent) => void;
+  private resizeHandler!: () => void;
+  private keyDownHandler!: (e: KeyboardEvent) => void;
+  private touchStartHandler!: (e: TouchEvent) => void;
+  private touchMoveHandler!: (e: TouchEvent) => void;
+  private touchEndHandler!: (e: TouchEvent) => void;
 
   constructor(canvas: HTMLCanvasElement, telescopeOverlay: HTMLDivElement) {
     this.canvas = canvas;
@@ -81,6 +91,9 @@ export class Game {
     this.ctx = ctx;
 
     // Initialize state - start view in center of sky
+    // Detect touch device
+    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
     this.state = {
       running: false,
       mouseX: window.innerWidth / 2,
@@ -88,7 +101,14 @@ export class Game {
       viewX: SKY_WIDTH / 2,
       viewY: SKY_HEIGHT / 2,
       discoveredCount: 0,
-      currentObservatory: 'northern'
+      currentObservatory: 'northern',
+      // Touch input state
+      isTouchDevice,
+      isTouchDragging: false,
+      lastTouchX: 0,
+      lastTouchY: 0,
+      touchDragDeltaX: 0,
+      touchDragDeltaY: 0
     };
 
     // Initialize subsystems
@@ -113,6 +133,40 @@ export class Game {
       this.state.mouseY = e.clientY;
     };
     window.addEventListener('mousemove', this.mouseMoveHandler);
+
+    // Touch event handlers for mobile drag-to-pan
+    this.touchStartHandler = (e: TouchEvent) => {
+      const touch = e.touches[0];
+      if (e.touches.length === 1 && touch) {
+        this.state.isTouchDragging = true;
+        this.state.lastTouchX = touch.clientX;
+        this.state.lastTouchY = touch.clientY;
+        this.state.touchDragDeltaX = 0;
+        this.state.touchDragDeltaY = 0;
+      }
+    };
+
+    this.touchMoveHandler = (e: TouchEvent) => {
+      const touch = e.touches[0];
+      if (this.state.isTouchDragging && e.touches.length === 1 && touch) {
+        e.preventDefault(); // Prevent scroll/zoom
+        // Accumulate drag delta (inverted for natural panning)
+        this.state.touchDragDeltaX += this.state.lastTouchX - touch.clientX;
+        this.state.touchDragDeltaY += this.state.lastTouchY - touch.clientY;
+        this.state.lastTouchX = touch.clientX;
+        this.state.lastTouchY = touch.clientY;
+      }
+    };
+
+    this.touchEndHandler = () => {
+      this.state.isTouchDragging = false;
+    };
+
+    // Add touch listeners with passive: false to allow preventDefault
+    this.canvas.addEventListener('touchstart', this.touchStartHandler, { passive: true });
+    this.canvas.addEventListener('touchmove', this.touchMoveHandler, { passive: false });
+    this.canvas.addEventListener('touchend', this.touchEndHandler, { passive: true });
+    this.canvas.addEventListener('touchcancel', this.touchEndHandler, { passive: true });
 
     // Window resize (store reference for cleanup)
     this.resizeHandler = () => this.resizeCanvas();
@@ -225,8 +279,21 @@ export class Game {
   }
 
   private resizeCanvas(): void {
-    this.canvas.width = window.innerWidth;
-    this.canvas.height = window.innerHeight;
+    // High-DPI canvas support
+    const dpr = window.devicePixelRatio || 1;
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    // Set canvas internal resolution to match device pixels
+    this.canvas.width = width * dpr;
+    this.canvas.height = height * dpr;
+
+    // Scale canvas back down with CSS to match logical pixels
+    this.canvas.style.width = `${width}px`;
+    this.canvas.style.height = `${height}px`;
+
+    // Reset any existing transform and scale for high-DPI
+    this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   }
 
   /**
@@ -344,6 +411,10 @@ export class Game {
     window.removeEventListener('mousemove', this.mouseMoveHandler);
     window.removeEventListener('resize', this.resizeHandler);
     window.removeEventListener('keydown', this.keyDownHandler);
+    this.canvas.removeEventListener('touchstart', this.touchStartHandler);
+    this.canvas.removeEventListener('touchmove', this.touchMoveHandler);
+    this.canvas.removeEventListener('touchend', this.touchEndHandler);
+    this.canvas.removeEventListener('touchcancel', this.touchEndHandler);
     this.telescope.destroy();
     if (this.currentModal) {
       this.currentModal.destroy();
@@ -386,16 +457,29 @@ export class Game {
     // Skip game updates when modal is active
     if (this.modalActive) return;
 
-    // Update telescope view offset with drift effect
-    this.telescope.update(this.state.mouseX, this.state.mouseY, deltaTime);
+    // Handle input based on device type
+    if (this.state.isTouchDevice && this.state.isTouchDragging) {
+      // Touch: Apply accumulated drag delta directly (immediate response)
+      // Scale by magnification for consistent feel across zoom levels
+      const mag = this.telescope.getMagnification();
+      const touchSensitivity = 1.5 / mag;  // Higher zoom = more sensitive
+      this.state.viewX += this.state.touchDragDeltaX * touchSensitivity;
+      this.state.viewY += this.state.touchDragDeltaY * touchSensitivity;
 
-    // Update view position based on mouse offset (with smooth drift/parallax)
-    const viewOffset = this.telescope.getViewOffset();
-    const viewSpeedX = viewOffset.x * 0.5;
-    const viewSpeedY = viewOffset.y * 0.5;
+      // Reset delta after applying
+      this.state.touchDragDeltaX = 0;
+      this.state.touchDragDeltaY = 0;
+    } else if (!this.state.isTouchDevice) {
+      // Desktop: Use mouse drift/parallax effect
+      this.telescope.update(this.state.mouseX, this.state.mouseY, deltaTime);
 
-    this.state.viewX += viewSpeedX * deltaTime;
-    this.state.viewY += viewSpeedY * deltaTime;
+      const viewOffset = this.telescope.getViewOffset();
+      const viewSpeedX = viewOffset.x * 0.5;
+      const viewSpeedY = viewOffset.y * 0.5;
+
+      this.state.viewX += viewSpeedX * deltaTime;
+      this.state.viewY += viewSpeedY * deltaTime;
+    }
 
     // Wrap X horizontally (infinite horizontal scrolling like a celestial sphere)
     if (this.state.viewX < 0) this.state.viewX += SKY_WIDTH;
@@ -690,20 +774,28 @@ export class Game {
    * Render the game
    */
   private render(): void {
-    const { ctx, canvas } = this;
+    const { ctx } = this;
     const { viewX, viewY } = this.state;
+
+    // Use logical pixel dimensions (not canvas.width/height which are device pixels)
+    const canvasWidth = window.innerWidth;
+    const canvasHeight = window.innerHeight;
+
+    // Reset transform to DPR scale for fresh render
+    const dpr = window.devicePixelRatio || 1;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
     // Clear canvas with deep space gradient
     const gradient = ctx.createRadialGradient(
-      canvas.width / 2, canvas.height / 2, 0,
-      canvas.width / 2, canvas.height / 2, canvas.height
+      canvasWidth / 2, canvasHeight / 2, 0,
+      canvasWidth / 2, canvasHeight / 2, canvasHeight
     );
     gradient.addColorStop(0, '#0f1020');
     gradient.addColorStop(0.6, '#0a0a18');
     gradient.addColorStop(1, '#050510');
 
     ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
     // Get telescope position and radius for clipping
     const telescopePos = this.telescope.getPosition();
@@ -730,7 +822,7 @@ export class Game {
       vignetteGradient.addColorStop(1, 'rgba(0, 0, 0, 0.4)');
 
       ctx.fillStyle = vignetteGradient;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillRect(0, 0, canvasWidth, canvasHeight);
     }
 
     // Transform to center, scale, transform back
@@ -752,27 +844,27 @@ export class Game {
     // Galaxies (furthest)
     for (const obj of this.celestialObjects) {
       if (obj instanceof Galaxy) {
-        obj.render(ctx, viewX, viewY, canvas.width, canvas.height, dsoScale, dsoGlow);
+        obj.render(ctx, viewX, viewY, canvasWidth, canvasHeight, dsoScale, dsoGlow);
       }
     }
 
     // Nebulae
     for (const obj of this.celestialObjects) {
       if (obj instanceof Nebula) {
-        obj.render(ctx, viewX, viewY, canvas.width, canvas.height, dsoScale, dsoGlow);
+        obj.render(ctx, viewX, viewY, canvasWidth, canvasHeight, dsoScale, dsoGlow);
       }
     }
 
     // StarField (Stars)
     // Draw star field within telescope view
-    this.starField.render(ctx, viewX, viewY, canvas.width, canvas.height, telescopePos);
+    this.starField.render(ctx, viewX, viewY, canvasWidth, canvasHeight, telescopePos);
 
     // Constellations & Clusters
     for (const obj of this.celestialObjects) {
       if (obj instanceof Constellation) {
-        obj.render(ctx, viewX, viewY, canvas.width, canvas.height, constellationOpacity);
+        obj.render(ctx, viewX, viewY, canvasWidth, canvasHeight, constellationOpacity);
       } else if (obj instanceof StarCluster) {
-        obj.render(ctx, viewX, viewY, canvas.width, canvas.height, dsoScale, dsoGlow);
+        obj.render(ctx, viewX, viewY, canvasWidth, canvasHeight, dsoScale, dsoGlow);
       }
     }
 
@@ -786,9 +878,13 @@ export class Game {
    * Render faint background stars visible outside the telescope
    */
   private renderBackgroundStars(): void {
-    const { ctx, canvas } = this;
+    const { ctx } = this;
     const telescopePos = this.telescope.getPosition();
     const telescopeRadius = this.telescope.getRadius();
+
+    // Use logical pixel dimensions
+    const canvasWidth = window.innerWidth;
+    const canvasHeight = window.innerHeight;
 
     // Use seeded random for consistent background
     const bgStars = this.starField.getBackgroundStars();
@@ -797,13 +893,13 @@ export class Game {
 
     // Invert clip - draw outside telescope
     ctx.beginPath();
-    ctx.rect(0, 0, canvas.width, canvas.height);
+    ctx.rect(0, 0, canvasWidth, canvasHeight);
     ctx.arc(telescopePos.x, telescopePos.y, telescopeRadius + 30, 0, Math.PI * 2, true);
     ctx.clip();
 
     for (const star of bgStars) {
-      const screenX = (star.x / SKY_WIDTH) * canvas.width;
-      const screenY = (star.y / SKY_HEIGHT) * canvas.height;
+      const screenX = (star.x / SKY_WIDTH) * canvasWidth;
+      const screenY = (star.y / SKY_HEIGHT) * canvasHeight;
 
       ctx.beginPath();
       ctx.arc(screenX, screenY, star.size * 0.5, 0, Math.PI * 2);
