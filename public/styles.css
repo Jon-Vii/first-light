@@ -93,6 +93,7 @@
 html, body {
   width: 100%;
   height: 100%;
+  height: 100dvh;  /* Dynamic viewport height - accounts for mobile browser chrome */
   overflow: hidden;
   background: var(--sky-void);
   color: var(--parchment-light);
@@ -2217,24 +2218,35 @@ h1 {
 
   #discoveries-panel {
     width: 100%;
-    height: 50vh;
+    height: 35dvh;  /* Reduced from 50vh, using dvh for dynamic viewport */
     max-height: none;
     top: auto;
     bottom: 0;
     transform: translateY(0);
     border-radius: 16px 16px 0 0;
+    padding: 12px;
   }
 
   #discoveries-panel.collapsed {
-    transform: translateY(calc(100% - 60px));
+    transform: translateY(calc(100% - 44px));  /* Smaller peek */
   }
 
   #discoveries-toggle {
     top: 0;
     left: 50%;
     transform: translate(-50%, -100%) rotate(90deg);
-    width: 60px;
-    height: 100px;
+    width: 44px;  /* Smaller toggle */
+    height: 80px;
+  }
+
+  /* Tighter spacing in discoveries list */
+  .discoveries-content {
+    padding: 8px;
+  }
+
+  .discovery-card {
+    padding: 8px;
+    margin-bottom: 8px;
   }
 
   .journal-spine {
@@ -2248,6 +2260,112 @@ h1 {
 
   h1 {
     font-size: 2.5rem;
+  }
+
+  /* ========================================
+     MOBILE MODAL OVERRIDES
+     Scale down modals for phone screens
+     ======================================== */
+
+  /* Modal containers - reduce size and padding */
+  .dso-modal,
+  .pattern-match-modal {
+    max-height: 85dvh;
+    padding: 12px;
+    margin: 8px;
+    max-width: calc(100vw - 16px);
+  }
+
+  /* Canvas elements - scale down significantly */
+  .pattern-match-modal canvas,
+  .dso-modal canvas,
+  .modal-canvas {
+    width: 100% !important;
+    max-width: 280px !important;
+    height: auto !important;
+    aspect-ratio: 2/1;
+    margin: 0 auto;
+  }
+
+  /* Modal headers - smaller text */
+  .dso-modal h2,
+  .pattern-match-modal h2,
+  .modal-title {
+    font-size: 1.25rem;
+    margin-bottom: 8px;
+  }
+
+  .dso-modal h3,
+  .pattern-match-modal h3 {
+    font-size: 1rem;
+  }
+
+  /* Instructions and body text */
+  .dso-modal p,
+  .pattern-match-modal p,
+  .modal-instructions {
+    font-size: 0.85rem;
+    margin-bottom: 8px;
+  }
+
+  /* Challenge containers - tighter spacing */
+  .nebula-feature-challenge,
+  .galaxy-structure-challenge,
+  .cluster-match-challenge {
+    padding: 8px;
+    gap: 8px;
+  }
+
+  /* Feature items - stack on mobile */
+  .feature-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 10px;
+  }
+
+  .feature-toggles {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  /* Toggle buttons - larger for touch */
+  .toggle-btn {
+    padding: 10px 16px;
+    font-size: 0.8rem;
+    min-height: 44px;
+  }
+
+  /* Cluster options - single column on very small screens */
+  .cluster-options {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  /* Submit button - full width on mobile */
+  .submit-btn {
+    width: 100%;
+    margin-top: 12px;
+    padding: 14px 24px;
+    font-size: 1rem;
+  }
+
+  /* Hourglass timer - smaller */
+  .hourglass-container {
+    transform: scale(0.7);
+    margin: 8px auto;
+  }
+
+  /* Modal frame decorations - hide or reduce */
+  .modal-frame-corner {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* Progress indicators - smaller */
+  .discovery-progress {
+    width: 28px;
+    height: 28px;
   }
 }
 
@@ -3008,4 +3126,171 @@ h1 {
   text-align: center;
   padding: 40px 20px;
   opacity: 0.7;
+}
+
+
+/* ========================================
+   ROTATE TO LANDSCAPE PROMPT
+   Victorian astronomy manual aesthetic
+   ======================================== */
+
+.rotate-prompt {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background:
+    radial-gradient(ellipse at 50% 30%, rgba(15, 15, 35, 0.97) 0%, rgba(3, 3, 8, 0.99) 70%),
+    rgba(3, 3, 8, 0.98);
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 24px;
+}
+
+/* Show only in portrait on mobile */
+@media (max-width: 600px) and (orientation: portrait) {
+  .rotate-prompt {
+    display: flex;
+  }
+}
+
+.rotate-prompt-content {
+  position: relative;
+  max-width: 280px;
+}
+
+/* Subtle background stars */
+.rotate-prompt-stars {
+  position: absolute;
+  inset: -100px;
+  background-image:
+    radial-gradient(1px 1px at 20px 30px, rgba(255, 255, 255, 0.4), transparent),
+    radial-gradient(1px 1px at 40px 70px, rgba(255, 255, 255, 0.3), transparent),
+    radial-gradient(1.5px 1.5px at 90px 40px, rgba(255, 255, 255, 0.5), transparent),
+    radial-gradient(1px 1px at 130px 80px, rgba(255, 255, 255, 0.3), transparent),
+    radial-gradient(1.5px 1.5px at 160px 20px, rgba(255, 255, 255, 0.4), transparent),
+    radial-gradient(1px 1px at 200px 60px, rgba(255, 255, 255, 0.35), transparent),
+    radial-gradient(1px 1px at 60px 120px, rgba(255, 255, 255, 0.3), transparent),
+    radial-gradient(1.5px 1.5px at 120px 140px, rgba(255, 255, 255, 0.45), transparent),
+    radial-gradient(1px 1px at 180px 130px, rgba(255, 255, 255, 0.3), transparent);
+  background-size: 220px 160px;
+  opacity: 0.6;
+  animation: twinkle-stars 4s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+@keyframes twinkle-stars {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.7; }
+}
+
+/* Phone rotation icon */
+.rotate-icon {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 28px;
+  animation: gentle-rock 2.5s ease-in-out infinite;
+}
+
+@keyframes gentle-rock {
+  0%, 100% { transform: rotate(-5deg); }
+  50% { transform: rotate(85deg); }
+}
+
+.phone-outline {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 32px;
+  height: 56px;
+  border: 2px solid var(--brass-light, #d4a84b);
+  border-radius: 6px;
+  background: rgba(3, 3, 8, 0.8);
+  box-shadow:
+    0 0 20px rgba(212, 168, 75, 0.15),
+    inset 0 0 10px rgba(212, 168, 75, 0.05);
+}
+
+.phone-screen {
+  position: absolute;
+  top: 6px;
+  left: 4px;
+  right: 4px;
+  bottom: 10px;
+  background: linear-gradient(
+    180deg,
+    rgba(212, 168, 75, 0.1) 0%,
+    rgba(212, 168, 75, 0.05) 100%
+  );
+  border-radius: 2px;
+}
+
+/* Curved rotation arrow */
+.rotate-arrow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 70px;
+  height: 70px;
+  transform: translate(-50%, -50%);
+  border: 2px dashed rgba(212, 168, 75, 0.4);
+  border-radius: 50%;
+  border-top-color: transparent;
+  border-left-color: transparent;
+}
+
+.rotate-arrow::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  right: 8px;
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 8px solid rgba(212, 168, 75, 0.5);
+  transform: rotate(45deg);
+}
+
+/* Typography */
+.rotate-title {
+  font-family: var(--font-display, 'Cormorant Garamond'), 'Palatino Linotype', serif;
+  font-size: 1.75rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: var(--parchment-cream, #f5efe0);
+  margin: 0 0 8px;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.rotate-subtitle {
+  font-family: var(--font-body, 'Crimson Pro'), 'Georgia', serif;
+  font-size: 0.95rem;
+  font-style: italic;
+  font-weight: 300;
+  letter-spacing: 0.04em;
+  color: rgba(245, 239, 224, 0.7);
+  margin: 0 0 24px;
+}
+
+/* Decorative ornament */
+.rotate-ornament {
+  width: 120px;
+  height: 16px;
+  margin: 0 auto;
+  position: relative;
+  opacity: 0.5;
+}
+
+.rotate-ornament::before {
+  content: '✧ · ☽ · ✧';
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.85rem;
+  letter-spacing: 0.3em;
+  color: var(--brass-light, #d4a84b);
 }
