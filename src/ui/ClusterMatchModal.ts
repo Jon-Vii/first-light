@@ -16,6 +16,7 @@ export class ClusterMatchModal extends BaseDSOModal {
   private targetCluster: StarCluster;
   private allClusters: StarCluster[];
   private options: StarCluster[] = [];
+  private isProcessingClick: boolean = false;
 
   constructor(
     cluster: StarCluster,
@@ -148,8 +149,11 @@ export class ClusterMatchModal extends BaseDSOModal {
     // Render cluster using actual StarCluster instance
     this.renderClusterOnCanvas(canvas, cluster);
 
-    // Add click handler
-    option.onclick = () => this.handleOptionClick(cluster.id, option);
+    // Add click handler with stopPropagation to prevent backdrop closing
+    option.onclick = (e) => {
+      e.stopPropagation();
+      this.handleOptionClick(cluster.id, option);
+    };
 
     return option;
   }
@@ -189,6 +193,10 @@ export class ClusterMatchModal extends BaseDSOModal {
    * Handles cluster option click.
    */
   private handleOptionClick(clusterId: string, optionElement: HTMLElement): void {
+    // Prevent double-clicks and rapid interactions
+    if (this.isProcessingClick) return;
+    this.isProcessingClick = true;
+
     const targetId = this.targetCluster.getData().id;
 
     if (clusterId === targetId) {
@@ -206,9 +214,10 @@ export class ClusterMatchModal extends BaseDSOModal {
       this.playErrorTone();
       this.flashIncorrect();
 
-      // Remove incorrect class after animation
+      // Remove incorrect class after animation and reset lock
       setTimeout(() => {
         optionElement.classList.remove('incorrect');
+        this.isProcessingClick = false;
       }, 400);
     }
   }

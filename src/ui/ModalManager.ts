@@ -25,6 +25,9 @@ export class ModalManager {
 
     // Click backdrop to close modal
     this.backdrop.addEventListener('click', () => this.hide());
+
+    // Stop propagation on container to prevent clicks inside modals from reaching backdrop
+    this.container.addEventListener('click', (e) => e.stopPropagation());
   }
 
   show(modalElement: HTMLElement): void {

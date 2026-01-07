@@ -2492,6 +2492,91 @@ h1 {
   .discovery-card-modal {
     padding: 8px;
   }
+
+  /* Modal frame - drastically reduce padding */
+  .modal-frame {
+    padding: 8px 12px !important;
+  }
+
+  /* Modal content - minimal gaps */
+  .modal-content {
+    gap: 6px !important;
+  }
+
+  /* Countdown container - compact */
+  .countdown-container {
+    padding: 4px 0 !important;
+    gap: 4px !important;
+  }
+
+  /* Hourglass - much smaller in landscape */
+  .hourglass {
+    width: 24px !important;
+    height: 30px !important;
+    transform: scale(0.6);
+  }
+
+  .countdown-text {
+    font-size: 0.8rem !important;
+  }
+
+  /* Progress container - compact */
+  .progress-container {
+    padding: 6px 12px !important;
+    gap: 6px !important;
+  }
+
+  .progress-text {
+    font-size: 0.75rem !important;
+  }
+
+  /* Modal header - minimal */
+  .modal-header {
+    gap: 6px !important;
+    margin-bottom: 0 !important;
+  }
+
+  .modal-header h3,
+  .modal-title {
+    font-size: 0.9rem !important;
+    margin: 0 !important;
+  }
+
+  /* Header lines - hide to save space */
+  .header-line {
+    display: none !important;
+  }
+
+  /* Frame corners - minimal or hidden */
+  .frame-corner {
+    width: 16px !important;
+    height: 16px !important;
+  }
+
+  /* Challenge subheading - compact */
+  .challenge-subheading {
+    font-size: 0.7rem !important;
+    margin: 2px 0 !important;
+  }
+
+  /* Modal instruction text */
+  .modal-instruction {
+    font-size: 0.75rem !important;
+    margin: 2px 0 !important;
+  }
+
+  /* Prevent modal scrolling by ensuring content fits */
+  .pattern-match-modal,
+  .dso-modal {
+    overflow: hidden !important;
+    max-height: 100dvh !important;
+  }
+
+  /* Force canvas smaller if still overflowing */
+  .pattern-match-modal canvas {
+    height: 100px !important;
+    max-height: 100px !important;
+  }
 }
 
 

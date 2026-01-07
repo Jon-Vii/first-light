@@ -454,6 +454,17 @@ export class Game {
    * Update game state
    */
   private update(deltaTime: number): void {
+    // Safety check: if modalActive but ModalManager reports no modal,
+    // the modal was closed unexpectedly (e.g., backdrop click). Reset state.
+    if (this.modalActive && !this.modalManager.isModalActive()) {
+      // Clean up orphaned modal reference
+      if (this.currentModal) {
+        this.currentModal.destroy();
+        this.currentModal = null;
+      }
+      this.modalActive = false;
+    }
+
     // Skip game updates when modal is active
     if (this.modalActive) return;
 

@@ -1,6 +1,7 @@
 import type { Constellation } from '../game/Constellation';
 import type { ConstellationData, Star } from '../data/types';
 import type { AudioManager } from '../audio/AudioManager';
+import { SKY_WIDTH } from '../data/constellations';
 
 interface DecoyStar {
   x: number;
@@ -27,10 +28,13 @@ export class PatternMatchModal {
   private studyTimer: number | null = null;
 
   // Coordinate transformation
-  private bounds: { minX: number; maxX: number; minY: number; maxY: number; width: number; height: number };
+  private bounds!: { minX: number; maxX: number; minY: number; maxY: number; width: number; height: number };
   private scale: number = 1;
   private offsetX: number = 0;
   private offsetY: number = 0;
+
+  // Normalized star positions (handles wrap-around)
+  private normalizedStars: Array<{ x: number; y: number }> = [];
 
   // Animation loop
   private animationFrameId: number | null = null;
@@ -132,10 +136,13 @@ export class PatternMatchModal {
   }
 
   private calculateBounds(): void {
+    // First, normalize star positions to handle wrap-around
+    this.normalizeStarPositions();
+
     let minX = Infinity, maxX = -Infinity;
     let minY = Infinity, maxY = -Infinity;
 
-    for (const star of this.data.stars) {
+    for (const star of this.normalizedStars) {
       minX = Math.min(minX, star.x);
       maxX = Math.max(maxX, star.x);
       minY = Math.min(minY, star.y);
@@ -156,6 +163,43 @@ export class PatternMatchModal {
     // Calculate offset to center constellation
     this.offsetX = (this.canvas.width - width * this.scale) / 2;
     this.offsetY = (this.canvas.height - height * this.scale) / 2;
+  }
+
+  /**
+   * Normalizes star positions to handle constellations that span the wrap boundary.
+   * If a constellation has stars at both ends of the sky (e.g., x=100 and x=5900),
+   * this shifts them to be contiguous so they render together properly.
+   */
+  private normalizeStarPositions(): void {
+    // Start with original positions
+    this.normalizedStars = this.data.stars.map(star => ({ x: star.x, y: star.y }));
+
+    // Calculate initial bounds to detect wrap-around
+    let minX = Infinity, maxX = -Infinity;
+    for (const star of this.data.stars) {
+      minX = Math.min(minX, star.x);
+      maxX = Math.max(maxX, star.x);
+    }
+
+    const rawWidth = maxX - minX;
+
+    // If width is greater than half the sky, this constellation likely wraps
+    if (rawWidth > SKY_WIDTH / 2) {
+      // Find the center X of the constellation
+      const centerX = (minX + maxX) / 2;
+
+      // Shift stars to be contiguous around the wrap point
+      // Stars on the "far" side of center get shifted
+      for (const star of this.normalizedStars) {
+        // If star is far from center, shift it
+        const dx = star.x - centerX;
+        if (dx > SKY_WIDTH / 2) {
+          star.x -= SKY_WIDTH;
+        } else if (dx < -SKY_WIDTH / 2) {
+          star.x += SKY_WIDTH;
+        }
+      }
+    }
   }
 
   private worldToCanvas(x: number, y: number): { x: number; y: number } {
@@ -191,7 +235,7 @@ export class PatternMatchModal {
         validPosition = true;
 
         // Check distance from all actual stars (in canvas space)
-        for (const star of this.data.stars) {
+        for (const star of this.normalizedStars) {
           const starPos = this.worldToCanvas(star.x, star.y);
           const dx = x - starPos.x;
           const dy = y - starPos.y;
@@ -333,10 +377,10 @@ export class PatternMatchModal {
     for (let i = 0; i < this.data.stars.length; i++) {
       if (this.clickedStars.has(i)) continue; // Already clicked
 
-      const star = this.data.stars[i];
+      const normalizedStar = this.normalizedStars[i]!;
 
-      // Transform star position to canvas space
-      const starPos = this.worldToCanvas(star.x, star.y);
+      // Transform normalized star position to canvas space
+      const starPos = this.worldToCanvas(normalizedStar.x, normalizedStar.y);
 
       const dx = canvasX - starPos.x;
       const dy = canvasY - starPos.y;
@@ -463,8 +507,8 @@ export class PatternMatchModal {
     ctx.shadowBlur = 8;
 
     for (const [idx1, idx2] of this.data.connections) {
-      const star1 = this.data.stars[idx1];
-      const star2 = this.data.stars[idx2];
+      const star1 = this.normalizedStars[idx1]!;
+      const star2 = this.normalizedStars[idx2]!;
 
       // Transform world coordinates to canvas coordinates
       const pos1 = this.worldToCanvas(star1.x, star1.y);
@@ -477,11 +521,13 @@ export class PatternMatchModal {
     }
 
     // Draw stars (with coordinate transformation)
-    for (const star of this.data.stars) {
+    for (let i = 0; i < this.data.stars.length; i++) {
+      const star = this.data.stars[i]!;
+      const normalizedStar = this.normalizedStars[i]!;
       const size = 3 + star.brightness * 2;
 
-      // Transform world coordinates to canvas coordinates
-      const pos = this.worldToCanvas(star.x, star.y);
+      // Transform normalized coordinates to canvas coordinates
+      const pos = this.worldToCanvas(normalizedStar.x, normalizedStar.y);
 
       // Star glow
       ctx.shadowColor = 'rgba(255, 255, 255, 0.8)';
@@ -509,10 +555,10 @@ export class PatternMatchModal {
     for (const [idx1, idx2] of this.data.connections) {
       if (this.clickedStars.has(idx1) && this.clickedStars.has(idx2)) {
         const key = this.getConnectionKey(idx1, idx2);
-        const star1 = this.data.stars[idx1];
-        const star2 = this.data.stars[idx2];
+        const star1 = this.normalizedStars[idx1]!;
+        const star2 = this.normalizedStars[idx2]!;
 
-        // Transform world coordinates to canvas coordinates
+        // Transform normalized coordinates to canvas coordinates
         const pos1 = this.worldToCanvas(star1.x, star1.y);
         const pos2 = this.worldToCanvas(star2.x, star2.y);
 
@@ -562,11 +608,12 @@ export class PatternMatchModal {
 
     // Draw target stars (with coordinate transformation and pulse effect)
     for (let i = 0; i < this.data.stars.length; i++) {
-      const star = this.data.stars[i];
+      const star = this.data.stars[i]!;
+      const normalizedStar = this.normalizedStars[i]!;
       const isClicked = this.clickedStars.has(i);
 
-      // Transform world coordinates to canvas coordinates
-      const pos = this.worldToCanvas(star.x, star.y);
+      // Transform normalized coordinates to canvas coordinates
+      const pos = this.worldToCanvas(normalizedStar.x, normalizedStar.y);
 
       if (isClicked) {
         // Bright, glowing, steady
