@@ -1830,6 +1830,7 @@ h1 {
 .pattern-match-modal canvas {
   width: 600px;
   height: 300px;
+  touch-action: none; /* Prevent scroll/zoom gestures during star tapping */
   background:
     radial-gradient(
       ellipse at center,

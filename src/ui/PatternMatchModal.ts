@@ -40,8 +40,9 @@ export class PatternMatchModal {
   private animationFrameId: number | null = null;
   private animationStartTime: number = 0;
 
-  // Click handler reference for cleanup
+  // Click/touch handler references for cleanup
   private clickHandler: ((e: MouseEvent) => void) | null = null;
+  private touchHandler: ((e: TouchEvent) => void) | null = null;
 
   // Connection animations
   private animatingConnections: Map<string, number> = new Map(); // key: "idx1-idx2", value: animationProgress 0-1
@@ -311,9 +312,11 @@ export class PatternMatchModal {
       modalContent.classList.remove('phase-study', 'phase-transitioning');
       modalContent.classList.add('phase-challenge');
 
-      // Enable click detection (store reference for cleanup)
+      // Enable click/touch detection (store references for cleanup)
       this.clickHandler = this.handleClick.bind(this);
+      this.touchHandler = this.handleTouch.bind(this);
       this.canvas.addEventListener('click', this.clickHandler);
+      this.canvas.addEventListener('touchend', this.touchHandler);
 
       // Start animation loop for pulse effects
       this.startAnimationLoop();
@@ -369,9 +372,29 @@ export class PatternMatchModal {
     const rect = this.canvas.getBoundingClientRect();
     const canvasX = event.clientX - rect.left;
     const canvasY = event.clientY - rect.top;
+    this.processStarTap(canvasX, canvasY);
+  }
 
+  private handleTouch(event: TouchEvent): void {
+    // Prevent the delayed click event from also firing
+    event.preventDefault();
+
+    // Get the touch point that ended
+    const touch = event.changedTouches[0];
+    if (!touch) return;
+
+    const rect = this.canvas.getBoundingClientRect();
+    const canvasX = touch.clientX - rect.left;
+    const canvasY = touch.clientY - rect.top;
+    this.processStarTap(canvasX, canvasY);
+  }
+
+  /**
+   * Shared star tap detection logic for both click and touch events
+   */
+  private processStarTap(canvasX: number, canvasY: number): void {
     // Check if near any target star
-    const clickRadius = 15; // Forgiving click tolerance (in canvas pixels)
+    const clickRadius = 20; // Slightly larger for touch (was 15)
     let clicked = false;
 
     for (let i = 0; i < this.data.stars.length; i++) {
@@ -657,6 +680,10 @@ export class PatternMatchModal {
     if (this.clickHandler) {
       this.canvas.removeEventListener('click', this.clickHandler);
       this.clickHandler = null;
+    }
+    if (this.touchHandler) {
+      this.canvas.removeEventListener('touchend', this.touchHandler);
+      this.touchHandler = null;
     }
   }
 }
