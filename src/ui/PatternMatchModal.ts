@@ -74,6 +74,9 @@ export class PatternMatchModal {
     if (!ctx) throw new Error('Could not get 2D context');
     this.ctx = ctx;
 
+    // Apply high-DPI scaling for crisp rendering on retina displays
+    this.setupHighDPICanvas();
+
     // Calculate bounds and scaling for coordinate transformation
     this.calculateBounds();
 
@@ -130,6 +133,27 @@ export class PatternMatchModal {
     // Base 5 seconds + 0.3 seconds per star above 10
     // e.g., 10 stars = 5s, 15 stars = 6.5s, 20 stars = 8s
     return Math.max(5, 5 + (starCount - 10) * 0.3);
+  }
+
+  /**
+   * Setup high-DPI canvas scaling for crisp rendering on retina displays.
+   * Similar to Game.ts resizeCanvas() approach.
+   */
+  private setupHighDPICanvas(): void {
+    const dpr = window.devicePixelRatio || 1;
+    const logicalWidth = 600;
+    const logicalHeight = 300;
+
+    // Set canvas internal resolution to match device pixels
+    this.canvas.width = logicalWidth * dpr;
+    this.canvas.height = logicalHeight * dpr;
+
+    // CSS size remains at logical pixels
+    this.canvas.style.width = `${logicalWidth}px`;
+    this.canvas.style.height = `${logicalHeight}px`;
+
+    // Scale context so all drawing operations happen at device resolution
+    this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   }
 
   private getConnectionKey(idx1: number, idx2: number): string {
@@ -394,7 +418,7 @@ export class PatternMatchModal {
    */
   private processStarTap(canvasX: number, canvasY: number): void {
     // Check if near any target star
-    const clickRadius = 20; // Slightly larger for touch (was 15)
+    const clickRadius = 30; // Increased for better touch interaction on mobile
     let clicked = false;
 
     for (let i = 0; i < this.data.stars.length; i++) {
@@ -547,7 +571,7 @@ export class PatternMatchModal {
     for (let i = 0; i < this.data.stars.length; i++) {
       const star = this.data.stars[i]!;
       const normalizedStar = this.normalizedStars[i]!;
-      const size = 3 + star.brightness * 2;
+      const size = 4 + star.brightness * 3; // Slightly larger for better visibility on mobile
 
       // Transform normalized coordinates to canvas coordinates
       const pos = this.worldToCanvas(normalizedStar.x, normalizedStar.y);
@@ -640,7 +664,7 @@ export class PatternMatchModal {
 
       if (isClicked) {
         // Bright, glowing, steady
-        const size = 3 + star.brightness * 2;
+        const size = 4 + star.brightness * 3; // Slightly larger for better visibility on mobile
         ctx.shadowColor = 'rgba(255, 255, 255, 0.8)';
         ctx.shadowBlur = 12;
         ctx.fillStyle = '#ffffff';
