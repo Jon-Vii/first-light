@@ -49,7 +49,7 @@ export class Constellation implements CelestialObject {
 
   // Discovery parameters
   private readonly hoverTimeRequired = 2.0;  // Seconds of hover to discover
-  private readonly animationDuration = 2.5;  // Duration of discovery animation
+  private readonly animationDuration: number;  // Computed based on connection count
   private readonly starFlashDuration = 0.6;  // How long the star flash lasts
   private readonly cosmicFlashDuration = 1.2;  // Duration of completion flash
 
@@ -58,6 +58,11 @@ export class Constellation implements CelestialObject {
 
   constructor(data: ConstellationData) {
     this.data = { ...data };
+
+    // Scale animation duration with constellation complexity
+    // ~0.4 seconds per connection for consistent light-travel speed
+    const connectionCount = this.data.connections.length;
+    this.animationDuration = Math.max(2.0, connectionCount * 0.4);
   }
 
   /**
