@@ -10907,6 +10907,9 @@ class DiscoveriesTab {
     } else if (type === "galaxy") {
       setDiscoveries = discoveries.filter((d) => ("galaxyType" in d)).length;
       setTotal = GALAXIES.length;
+    } else if (type === "constellation" && !setId) {
+      setDiscoveries = discoveries.filter((d) => ("connections" in d) && d.set === undefined).length;
+      setTotal = getConstellationsByObservatory(this.currentObservatory).filter((d) => d.set === undefined).length;
     } else {
       return;
     }
@@ -13803,5 +13806,5 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-//# debugId=592479EA85DD14DA64756E2164756E21
+//# debugId=59FB3E9474F93DA864756E2164756E21
 //# sourceMappingURL=main.js.map

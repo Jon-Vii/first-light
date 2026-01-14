@@ -207,6 +207,11 @@ export class DiscoveriesTab {
     } else if (type === 'galaxy') {
       setDiscoveries = discoveries.filter(d => 'galaxyType' in d).length;
       setTotal = GALAXIES.length;
+    } else if (type === 'constellation' && !setId) {
+      // Handle "Other Constellations" - constellations without a set
+      setDiscoveries = discoveries.filter(d => 'connections' in d && (d as ConstellationData).set === undefined).length;
+      setTotal = getConstellationsByObservatory(this.currentObservatory)
+        .filter(d => d.set === undefined).length;
     } else {
       return;
     }
