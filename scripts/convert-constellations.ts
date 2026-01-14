@@ -244,22 +244,14 @@ async function main() {
     const avgDec = points.reduce((sum, p) => sum + p.dec, 0) / points.length;
     const observatory = getObservatory(avgDec);
 
-    // Create star entries (normalize X coordinates to 0-SKY_WIDTH range)
-    const stars = points.map((p, i) => {
-      let x = p.x;
-      if (x < 0) {
-        x = x + SKY_WIDTH;
-      } else if (x >= SKY_WIDTH) {
-        x = x - SKY_WIDTH;
-      }
-
-      return {
-        id: `${finalId}-${i}`,
-        x,
-        y: p.y,
-        brightness: 0.8 + Math.random() * 0.2, // Random brightness 0.8-1.0
-      };
-    });
+    // Create star entries (keep wrap-fixed coordinates - may be negative)
+    // Rendering handles wrap-around via effectiveViewX
+    const stars = points.map((p, i) => ({
+      id: `${finalId}-${i}`,
+      x: p.x,
+      y: p.y,
+      brightness: 0.8 + Math.random() * 0.2, // Random brightness 0.8-1.0
+    }));
 
     // Lookup set ID
     // Use the 3-letter code (lowercase) to check against our set mapping
