@@ -21,6 +21,9 @@ export class Telescope {
   // Event handler reference for cleanup
   private resizeHandler: () => void;
 
+  // Cached position object to avoid garbage collection pressure
+  private cachedPosition: { x: number; y: number } = { x: 0, y: 0 };
+
   constructor(element: HTMLDivElement) {
     this.element = element;
     this.radius = this.calculateRadius();
@@ -29,11 +32,13 @@ export class Telescope {
     this.resizeHandler = () => {
       this.radius = this.calculateRadius();
       this.updateElementPosition();
+      this.updateCachedPosition();
     };
     window.addEventListener('resize', this.resizeHandler);
 
     // Position telescope at center
     this.updateElementPosition();
+    this.updateCachedPosition();
   }
 
   private calculateRadius(): number {
@@ -94,14 +99,21 @@ export class Telescope {
     this.element.style.top = `${centerY}px`;
   }
 
+  private updateCachedPosition(): void {
+    // Update cached position object without creating a new one
+    this.cachedPosition.x = window.innerWidth / 2;
+    this.cachedPosition.y = window.innerHeight / 2;
+  }
+
   /**
    * Get telescope center position (always screen center)
+   * Returns cached object to avoid garbage collection pressure
    */
   getPosition(): { x: number; y: number } {
-    return {
-      x: window.innerWidth / 2,
-      y: window.innerHeight / 2
-    };
+    // Update values each call (cheap) but reuse same object (avoids GC)
+    this.cachedPosition.x = window.innerWidth / 2;
+    this.cachedPosition.y = window.innerHeight / 2;
+    return this.cachedPosition;
   }
 
   /**

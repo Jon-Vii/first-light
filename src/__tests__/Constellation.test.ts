@@ -47,7 +47,7 @@ describe('Constellation', () => {
     });
 
     test('starts with zero discovery progress', () => {
-      expect(constellation.getDiscoveryProgress()).toBe(0);
+      expect(constellation.discoveryProgress).toBe(0);
     });
 
     test('is not animating initially', () => {
@@ -66,12 +66,12 @@ describe('Constellation', () => {
   describe('hover time accumulation', () => {
     test('accumulates hover time', () => {
       constellation.addHoverTime(0.5);
-      expect(constellation.getDiscoveryProgress()).toBe(0.25); // 0.5 / 2.0
+      expect(constellation.discoveryProgress).toBe(0.25); // 0.5 / 2.0
     });
 
     test('caps progress at 1.0', () => {
       constellation.addHoverTime(3.0); // More than required
-      expect(constellation.getDiscoveryProgress()).toBe(1);
+      expect(constellation.discoveryProgress).toBe(1);
     });
 
     test('returns false when not yet discovered', () => {
@@ -95,11 +95,11 @@ describe('Constellation', () => {
   describe('resetHoverTime', () => {
     test('resets hover time to zero', () => {
       constellation.addHoverTime(1.5);
-      expect(constellation.getDiscoveryProgress()).toBeGreaterThan(0);
+      expect(constellation.discoveryProgress).toBeGreaterThan(0);
 
       constellation.resetHoverTime();
 
-      expect(constellation.getDiscoveryProgress()).toBe(0);
+      expect(constellation.discoveryProgress).toBe(0);
     });
 
     test('allows discovery process to restart', () => {
@@ -146,44 +146,8 @@ describe('Constellation', () => {
 
     test('getAnimationDuration returns expected value', () => {
       const duration = constellation.getAnimationDuration();
-      expect(duration).toBe(3.5);
-    });
-  });
-
-  describe('cancelDiscovery', () => {
-    test('resets discovered state', () => {
-      constellation.addHoverTime(2.0);
-      expect(constellation.isDiscovered).toBe(true);
-
-      constellation.cancelDiscovery();
-
-      expect(constellation.isDiscovered).toBe(false);
-    });
-
-    test('stops animation', () => {
-      constellation.addHoverTime(2.0);
-      constellation.update(0.5, true);
-      expect(constellation.isAnimatingDiscovery()).toBe(true);
-
-      constellation.cancelDiscovery();
-
-      expect(constellation.isAnimatingDiscovery()).toBe(false);
-    });
-
-    test('resets hover progress', () => {
-      constellation.addHoverTime(2.0);
-      constellation.cancelDiscovery();
-
-      expect(constellation.getDiscoveryProgress()).toBe(0);
-    });
-
-    test('has no effect if not animating', () => {
-      constellation.addHoverTime(1.0);
-      constellation.cancelDiscovery();
-
-      // Should still work normally
-      constellation.addHoverTime(2.0);
-      expect(constellation.isDiscovered).toBe(true);
+      // Test data has 2 connections: max(2.0, 2 * 0.4) = 2.0
+      expect(duration).toBe(2.0);
     });
   });
 
@@ -256,7 +220,7 @@ describe('Constellation', () => {
 
       discovered.addHoverTime(2.0);
 
-      expect(discovered.getDiscoveryProgress()).toBe(0);
+      expect(discovered.discoveryProgress).toBe(0);
       expect(discovered.isAnimatingDiscovery()).toBe(false);
     });
   });

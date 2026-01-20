@@ -91,15 +91,18 @@ class Telescope {
   currentLagFactor = 0.06;
   radiusMultiplier = 1;
   resizeHandler;
+  cachedPosition = { x: 0, y: 0 };
   constructor(element) {
     this.element = element;
     this.radius = this.calculateRadius();
     this.resizeHandler = () => {
       this.radius = this.calculateRadius();
       this.updateElementPosition();
+      this.updateCachedPosition();
     };
     window.addEventListener("resize", this.resizeHandler);
     this.updateElementPosition();
+    this.updateCachedPosition();
   }
   calculateRadius() {
     return Math.min(window.innerWidth, window.innerHeight) * 0.36 * this.radiusMultiplier;
@@ -129,11 +132,14 @@ class Telescope {
     this.element.style.left = `${centerX}px`;
     this.element.style.top = `${centerY}px`;
   }
+  updateCachedPosition() {
+    this.cachedPosition.x = window.innerWidth / 2;
+    this.cachedPosition.y = window.innerHeight / 2;
+  }
   getPosition() {
-    return {
-      x: window.innerWidth / 2,
-      y: window.innerHeight / 2
-    };
+    this.cachedPosition.x = window.innerWidth / 2;
+    this.cachedPosition.y = window.innerHeight / 2;
+    return this.cachedPosition;
   }
   getViewOffset() {
     return {
@@ -9231,6 +9237,9 @@ class Constellation {
   get isDiscovered() {
     return this.data.discovered;
   }
+  set isDiscovered(value) {
+    this.data.discovered = value;
+  }
   get discoveryProgress() {
     return this._discoveryProgress;
   }
@@ -9256,21 +9265,6 @@ class Constellation {
     this.revealedConnections = 0;
     this.starActivationTimes.clear();
     this.cosmicFlashTime = 0;
-  }
-  cancelDiscovery() {
-    if (!this.isAnimating)
-      return;
-    this.data.discovered = false;
-    this.isAnimating = false;
-    this.animationTime = 0;
-    this.revealedConnections = 0;
-    this.currentConnectionProgress = 0;
-    this.starActivationTimes.clear();
-    this.cosmicFlashTime = 0;
-    this.hoverTime = 0;
-    this._discoveryProgress = 0;
-    this.onAnimationComplete = null;
-    this.onConnectionRevealed = null;
   }
   isAnimatingDiscovery() {
     return this.isAnimating;
@@ -11471,24 +11465,7 @@ class PatternMatchModal {
     }
   }
   playErrorTone() {
-    if (!this.audioManager || !this.audioManager.audioContext)
-      return;
-    const ctx = this.audioManager.audioContext;
-    const masterGain = this.audioManager.masterGain;
-    if (!ctx || !masterGain)
-      return;
-    const now = ctx.currentTime;
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.type = "sine";
-    osc.frequency.value = 150;
-    gain.gain.setValueAtTime(0, now);
-    gain.gain.linearRampToValueAtTime(0.03, now + 0.01);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
-    osc.connect(gain);
-    gain.connect(masterGain);
-    osc.start(now);
-    osc.stop(now + 0.15);
+    this.audioManager?.playErrorTone();
   }
   flashIncorrect() {
     this.canvas.style.filter = "brightness(1.3) sepia(0.3)";
@@ -11761,24 +11738,7 @@ class BaseDSOModal {
     }
   }
   playErrorTone() {
-    if (!this.audioManager || !this.audioManager.audioContext)
-      return;
-    const ctx = this.audioManager.audioContext;
-    const masterGain = this.audioManager.masterGain;
-    if (!ctx || !masterGain)
-      return;
-    const now = ctx.currentTime;
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.type = "sine";
-    osc.frequency.value = 150;
-    gain.gain.setValueAtTime(0, now);
-    gain.gain.linearRampToValueAtTime(0.03, now + 0.01);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
-    osc.connect(gain);
-    gain.connect(masterGain);
-    osc.start(now);
-    osc.stop(now + 0.15);
+    this.audioManager?.playErrorTone();
   }
   flashIncorrect() {
     this.canvas.style.filter = "brightness(1.3) sepia(0.3)";
@@ -12933,6 +12893,24 @@ class AudioManager {
       osc.stop(endTime);
     });
   }
+  playErrorTone() {
+    if (!this.ensureInitialized() || !this.audioContext || !this.masterGain) {
+      return;
+    }
+    const ctx = this.audioContext;
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = "sine";
+    osc.frequency.value = 150;
+    gain.gain.setValueAtTime(0, now);
+    gain.gain.linearRampToValueAtTime(0.03, now + 0.01);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+    osc.connect(gain);
+    gain.connect(this.masterGain);
+    osc.start(now);
+    osc.stop(now + 0.15);
+  }
   playStarConnectionSound(index, total) {
     if (!this.ensureInitialized() || !this.audioContext || !this.masterGain) {
       return;
@@ -13155,6 +13133,7 @@ class Game {
   touchStartHandler;
   touchMoveHandler;
   touchEndHandler;
+  backgroundGradient = null;
   constructor(canvas, telescopeOverlay) {
     this.canvas = canvas;
     this.telescopeOverlay = telescopeOverlay;
@@ -13311,6 +13290,10 @@ class Game {
     this.canvas.style.width = `${width}px`;
     this.canvas.style.height = `${height}px`;
     this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    this.backgroundGradient = this.ctx.createRadialGradient(width / 2, height / 2, 0, width / 2, height / 2, height);
+    this.backgroundGradient.addColorStop(0, "#0f1020");
+    this.backgroundGradient.addColorStop(0.6, "#0a0a18");
+    this.backgroundGradient.addColorStop(1, "#050510");
   }
   loadCelestialObjects(observatory) {
     this.celestialObjects = [];
@@ -13614,12 +13597,10 @@ class Game {
     const canvasHeight = window.innerHeight;
     const dpr = window.devicePixelRatio || 1;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    const gradient = ctx.createRadialGradient(canvasWidth / 2, canvasHeight / 2, 0, canvasWidth / 2, canvasHeight / 2, canvasHeight);
-    gradient.addColorStop(0, "#0f1020");
-    gradient.addColorStop(0.6, "#0a0a18");
-    gradient.addColorStop(1, "#050510");
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+    if (this.backgroundGradient) {
+      ctx.fillStyle = this.backgroundGradient;
+      ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+    }
     const telescopePos = this.telescope.getPosition();
     const telescopeRadius = this.telescope.getRadius();
     ctx.save();
@@ -13806,5 +13787,5 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-//# debugId=59FB3E9474F93DA864756E2164756E21
+//# debugId=85D7A2D75BB9584E64756E2164756E21
 //# sourceMappingURL=main.js.map

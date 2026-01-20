@@ -80,6 +80,9 @@ export class Game {
   private touchMoveHandler!: (e: TouchEvent) => void;
   private touchEndHandler!: (e: TouchEvent) => void;
 
+  // Cached background gradient (recreated on resize)
+  private backgroundGradient: CanvasGradient | null = null;
+
   constructor(canvas: HTMLCanvasElement, telescopeOverlay: HTMLDivElement) {
     this.canvas = canvas;
     this.telescopeOverlay = telescopeOverlay;
@@ -294,6 +297,15 @@ export class Game {
 
     // Reset any existing transform and scale for high-DPI
     this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    // Recreate background gradient for new dimensions
+    this.backgroundGradient = this.ctx.createRadialGradient(
+      width / 2, height / 2, 0,
+      width / 2, height / 2, height
+    );
+    this.backgroundGradient.addColorStop(0, '#0f1020');
+    this.backgroundGradient.addColorStop(0.6, '#0a0a18');
+    this.backgroundGradient.addColorStop(1, '#050510');
   }
 
   /**
@@ -796,17 +808,11 @@ export class Game {
     const dpr = window.devicePixelRatio || 1;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-    // Clear canvas with deep space gradient
-    const gradient = ctx.createRadialGradient(
-      canvasWidth / 2, canvasHeight / 2, 0,
-      canvasWidth / 2, canvasHeight / 2, canvasHeight
-    );
-    gradient.addColorStop(0, '#0f1020');
-    gradient.addColorStop(0.6, '#0a0a18');
-    gradient.addColorStop(1, '#050510');
-
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+    // Clear canvas with cached deep space gradient
+    if (this.backgroundGradient) {
+      ctx.fillStyle = this.backgroundGradient;
+      ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+    }
 
     // Get telescope position and radius for clipping
     const telescopePos = this.telescope.getPosition();

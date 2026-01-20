@@ -970,6 +970,35 @@ export class AudioManager {
   }
 
   /**
+   * Play a brief low tone for incorrect click feedback
+   */
+  playErrorTone(): void {
+    if (!this.ensureInitialized() || !this.audioContext || !this.masterGain) {
+      return;
+    }
+
+    const ctx = this.audioContext;
+    const now = ctx.currentTime;
+
+    // Low frequency tone (150 Hz) with quick decay
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+
+    osc.type = 'sine';
+    osc.frequency.value = 150;
+
+    gain.gain.setValueAtTime(0, now);
+    gain.gain.linearRampToValueAtTime(0.03, now + 0.01);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+
+    osc.connect(gain);
+    gain.connect(this.masterGain);
+
+    osc.start(now);
+    osc.stop(now + 0.15);
+  }
+
+  /**
    * Play a single star connection sound - rich bell-like chime
    * Uses pentatonic scale, layered oscillators with detuning
    */

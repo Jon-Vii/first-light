@@ -114,6 +114,13 @@ export class Constellation implements CelestialObject {
   }
 
   /**
+   * Set discovered state
+   */
+  set isDiscovered(value: boolean) {
+    this.data.discovered = value;
+  }
+
+  /**
    * Get current discovery progress (0-1)
    */
   get discoveryProgress(): number {
@@ -159,28 +166,6 @@ export class Constellation implements CelestialObject {
     this.cosmicFlashTime = 0;
   }
 
-  /**
-   * Cancel an in-progress discovery animation
-   * Called when player moves away before animation completes
-   */
-  cancelDiscovery(): void {
-    if (!this.isAnimating) return;
-
-    // Reset all state
-    this.data.discovered = false;
-    this.isAnimating = false;
-    this.animationTime = 0;
-    this.revealedConnections = 0;
-    this.currentConnectionProgress = 0;
-    this.starActivationTimes.clear();
-    this.cosmicFlashTime = 0;
-    this.hoverTime = 0;
-    this._discoveryProgress = 0;
-
-    // Clear callbacks
-    this.onAnimationComplete = null;
-    this.onConnectionRevealed = null;
-  }
 
   /**
    * Check if currently animating

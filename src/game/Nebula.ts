@@ -1,5 +1,5 @@
 import type { CelestialObject } from './CelestialObject';
-import type { NebulaData } from '../data/nebulae';
+import type { NebulaData, NebulaLayer } from '../data/nebulae';
 
 export class Nebula implements CelestialObject {
   readonly id: string;
@@ -178,7 +178,7 @@ export class Nebula implements CelestialObject {
     ctx.restore();
   }
 
-  private drawLayer(ctx: CanvasRenderingContext2D, layer: any, globalAlpha: number, time: number, glowMultiplier: number = 1.0) {
+  private drawLayer(ctx: CanvasRenderingContext2D, layer: NebulaLayer, globalAlpha: number, time: number, glowMultiplier: number = 1.0) {
     const layerAlpha = layer.opacity * globalAlpha * glowMultiplier;
     if (layerAlpha <= 0) return;
 
