@@ -1,4 +1,4 @@
-# Seeing Stars
+# First Light
 
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)
 ![Bun](https://img.shields.io/badge/Bun-000?logo=bun&logoColor=white)
