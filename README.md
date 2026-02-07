@@ -54,6 +54,7 @@ Guide your telescope across a vast star field spanning both hemispheres. When st
 
 ## Getting Started
 
+You can play the game at [First Light](https://first-light.vercel.app/) or by cloning the repo and following the instructions below
 Requires [Bun](https://bun.sh).
 
 ```bash
